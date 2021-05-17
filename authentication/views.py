@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 import json
+from django.conf import settings
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from validate_email import validate_email
@@ -9,12 +10,12 @@ from django.core.mail import send_mail
 from django.urls import reverse
 from django.contrib import auth
 from django.core.mail import EmailMessage
-
 from django.utils.encoding import force_bytes, force_text, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
+import requests
 
 
 from .utils import token_generator
@@ -31,83 +32,99 @@ class EmailThread(threading.Thread):
 # Create your views here.
 class RegistrationView(View):
     def get(self, request):
-        return render(request, 'authentication/register.html')
+        return render(request, 'authentication/register.html', {'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
     def post(self, request):
-        # Get user data
-        username = request.POST['username']
-        email = request.POST['email']
-        password = request.POST['password']
-
-        context = {
-            'fieldValues': request.POST
+        # reCAPTCHA validation
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        data = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
         }
 
-        everything_ok = True
+        r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+        result = r.json()
 
-        # Username validation
-        if not str(username).isalnum():
-            everything_ok = False
-            error_msg = 'Username should only contain alphanumeric characters.'
+        print(result)
 
-        if User.objects.filter(username=username).exists():
-            everything_ok = False
-            error_msg = 'Sorry, this username is already in use.'
+        if result['success']:
+            # Get user data
+            username = request.POST['username']
+            email = request.POST['email']
+            password = request.POST['password']
 
-        # Email validaiton
-        if not validate_email(email):
-            everything_ok = False
-            error_msg = 'Email is invalid.'
+            context = {
+                'fieldValues': request.POST
+            }
 
-        if User.objects.filter(email=email).exists():
-            everything_ok = False
-            error_msg = 'This email is already taken.'
+            everything_ok = True
 
-        if len(password) < 6 or len(password) > 40:
-            everything_ok = False
-            error_msg = 'Password must be between 6 or 40 characters.'
+            # Username validation
+            if not str(username).isalnum():
+                everything_ok = False
+                error_msg = 'Username should only contain alphanumeric characters.'
 
-        if everything_ok == True:
-            user = User.objects.create_user(username=username, email=email)
-            user.set_password(password)
-            user.is_active = False
-            user.save()
+            if User.objects.filter(username=username).exists():
+                everything_ok = False
+                error_msg = 'Sorry, this username is already in use.'
 
-            email_subject = 'Activate your account'
+            # Email validaiton
+            if not validate_email(email):
+                everything_ok = False
+                error_msg = 'Email is invalid.'
 
-            # Path to view
-            uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+            if User.objects.filter(email=email).exists():
+                everything_ok = False
+                error_msg = 'This email is already taken.'
 
-            domain = get_current_site(request).domain
-            link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
+            if len(password) < 6 or len(password) > 40:
+                everything_ok = False
+                error_msg = 'Password must be between 6 or 40 characters.'
 
-            activate_url = 'http://' + domain + link
+            if everything_ok == True:
+                user = User.objects.create_user(username=username, email=email)
+                user.set_password(password)
+                user.is_active = False
+                user.save()
 
-            email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
+                email_subject = 'Activate your account'
 
-            '''
-            email = send_mail(
-                email_subject,
-                email_body,
-                'czakowski.biznes@gmail.com',
-                [email],
-            )
-            '''
-            email = EmailMessage(
-                email_subject,
-                email_body,
-                'czajkowski.biznes@gmail.com',
-                [email],
-            )
-            EmailThread(email).start()
+                # Path to view
+                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
 
-            #email.send(fail_silently=False) # show errors if there are any
+                domain = get_current_site(request).domain
+                link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
 
-            messages.success(request, 'Account created. Activate your account in gmail.')
+                activate_url = 'http://' + domain + link
+
+                email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
+
+                '''
+                email = send_mail(
+                    email_subject,
+                    email_body,
+                    'czakowski.biznes@gmail.com',
+                    [email],
+                )
+                '''
+                email = EmailMessage(
+                    email_subject,
+                    email_body,
+                    'czajkowski.biznes@gmail.com',
+                    [email],
+                )
+                EmailThread(email).start()
+
+                #email.send(fail_silently=False) # show errors if there are any
+
+                messages.success(request, 'Account created. Activate your account in gmail.')
+            else:
+                messages.error(request, error_msg)
+
         else:
-            messages.error(request, error_msg)
+            messages.error(request, 'Invalid reCAPTCHA. Please try again.')
 
-        return render(request, 'authentication/register.html')
+        return render(request, 'authentication/register.html', {'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
 
 class VerificationView(View):
