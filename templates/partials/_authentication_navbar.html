@@ -1,0 +1,17 @@
+<nav class="navbar px-0 mx-0 navbar-expand-md navbar-light py-1 shadow-sm sticky-top row">
+
+<!-- Log In or Logout part -->
+    <a class="nav-link py-0 col-4 d-flex" href="{% url 'login' %}">
+        <span class="link font-weight-bold mx-auto text-dark">Log In</span>
+    </a>
+
+    <!-- Logo Part -->
+    <a class="col-4 d-flex" href="index.php">
+        <img src="https://static.wikia.nocookie.net/dogelore/images/2/26/Walter.png/revision/latest?cb=20190617095152" alt="" style="width: auto!important; height: 35px;" class="mx-auto">
+    </a>
+
+    <!-- Sign In or Settings part -->
+    <a class="nav-link py-0 col-4 d-flex" href="{% url 'register' %}">
+        <span class="font-weight-bold mx-auto text-dark">Sign Up!</span>
+    </a>
+</nav>
