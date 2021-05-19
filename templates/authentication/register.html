@@ -64,7 +64,7 @@
                 </div>
 
                 <!-- reCAPTCHA input -->
-                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response"> 
+                <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
 
                 <!-- Submit -->
                 <input type="submit" name='submitBtn' value='Sign Up' id='submitBtn' class='btn btn-success font-weight-bold btn-block mt-2' style='letter-spacing: 0.7px;'>
@@ -73,6 +73,9 @@
         </div>
     </div>
 </div>
+
+{% include 'partials/_cookieBanner.html' %}
+
 <script src='{% static "js/register.js" %}'></script>
 
 {% endblock %}
