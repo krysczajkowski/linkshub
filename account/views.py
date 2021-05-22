@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views import View
+import json
+from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.validators import URLValidator
@@ -146,11 +149,12 @@ def add_link(request):
             everything_ok = False
             error_msg = 'Please provide valid URL.'
         
-        image_extention = imghdr.what(image)
-        
-        if image_extention is None:
-            everything_ok = False
-            error_msg = 'Please provide a valid image.'
+        if image:
+            image_extention = imghdr.what(image)
+            
+            if image_extention is None:
+                everything_ok = False
+                error_msg = 'Please provide a valid image.'
 
 
         if everything_ok:
@@ -166,3 +170,19 @@ def add_link(request):
             messages.error(request, error_msg)
 
     return render(request, 'account/add_link.html')
+
+
+class activate_link(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        link_id = data['link_id']
+        is_active = data['is_active']
+
+        try:
+            link = CustomLink.objects.get(id=link_id, user=request.user)
+            link.is_active = is_active 
+            link.save()
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
