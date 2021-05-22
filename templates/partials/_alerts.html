@@ -1,17 +1,29 @@
 {% if messages %}
     <div>
         {% for message in messages %}
-            <div {% if message.tags %} class="alert alert-{{ message.tags }} my-3 py-2">
+            <div {% if message.tags %} class="alert alert-{{ message.tags }} my-3 py-2" style='font-size: 1.1rem;'>
                 {% if message.tags == 'success' %}
-                    <i class="fas fa-check-circle"></i>
+                    <div style="color: #00A874;">
+                        <i class="fas fa-check-circle me-2"></i>
+                        {{ message }}
+                    </div> 
                 {% elif message.tags == 'danger' %}
-                    <i class="fas fa-exclamation-circle"></i>
+                    <div style='color: #e5365a;'>
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        {{ message }}
+                    </div>
                 {% else %}
-                    <i class="fas fa-info-circle"></i>
+                    <div style='color: #039ec8;'>
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
                 {% endif %}
-                {{ message }}
+                
             </div>
             {% endif %}
         {% endfor %}
     </div>
 {% endif %}
+
+
+

@@ -1,5 +1,3 @@
-
-
 // Podgląd url
 function previewURL(input_id, div_name, link) {
   var input = document.getElementById(input_id)

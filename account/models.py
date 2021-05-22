@@ -18,3 +18,13 @@ class Platform(models.Model):
 
     def __str__(self):
         return self.name
+
+class CustomLink(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=220)
+    description = models.CharField(max_length=220, blank=True)
+    url = models.URLField(max_length=300)
+    image = models.ImageField(upload_to='link_img', blank=True, null=True)
+
+    def __str__(self):
+        return self.title

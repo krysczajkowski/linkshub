@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Social Media Platforms{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12 col-lg-10 offset-lg-1">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4 class="card-title">Add Link</h4>
+
+                    <form method='POST' class='mt-4' enctype="multipart/form-data" id='add-link-form'>
+                        {% csrf_token %}
+                        <input type="text" name='title' class='form-control' placeholder='Title' id='titleField'>
+                        <div class="title-feedback invalid-feedback" style='display:none;'>
+                        </div>
+
+                        <input type="text" name='description' class='form-control mt-2' placeholder='Description (optional)' id='descriptionField'>
+                        <div class="description-feedback invalid-feedback" style='display:none;'>
+                        </div>
+
+                        <input type="url" name='url' class='form-control mt-2' placeholder='https://url.com' id='urlField'>
+                        <div class="url-feedback invalid-feedback" style='display:none;'>
+                        </div>
+
+                        <div class="input-group">
+                          <input type="file" class="form-control mt-2" name='image' id='imageField' accept=".jpg, .png">
+                        </div>
+                        <small class="text-muted super-small-font mb-3">Only .jpg, .jpeg or .png allowed</small>
+                        <div class="image-feedback invalid-feedback" style='display:none;'>
+                        </div>
+
+                        {% include 'partials/_alerts.html' %}
+
+                        <div class="d-grid gap-2 mt-3">
+                            <!-- <input type="submit" class='btn btn-primary fw-bold' value='Save' id='submitBtn'> -->
+                            <button type="submit" class='btn btn-primary fw-bold' id='submitBtn'>
+                                <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
+                                Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="{% static 'js/links.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Social Media Platforms{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+
+    <div class="row mt-5 mb-3">
+        <div class="col-6">
+            <h4 class='mb-3 mt-2'>Links: {{ links_count }}</h4>
+        </div>
+        <div class="col-6 d-flex">
+            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-dark'><i class="fas fa-plus"></i> Add Link</a></span>
+        </div>
+    </div>
+    {% for link in links %}
+        {% if link.image %}
+        <div class="card shadow-sm mb-3">
+          <div class="row g-0">
+            <div class="col-4 col-md-2">
+                <img src="{{ link.image.url }}" class="img-fluid rounded" alt="...">
+            </div>
+            <div class="col-7 col-md-9">
+              <div class="card-body py-1 pl-0">
+                <h5 class="">{{ link.title }}</h5>
+                <p class="mb-1">{{ link.description }}</p>
+                <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% else %}
+        <div class="card shadow-sm mb-3">
+          <div class="row g-0">
+            <div class="col-12">
+              <div class="card-body py-1">
+                <h5 class="">{{ link.title }}</h5>
+                <p class="mb-1">{{ link.description }}</p>
+                <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+</div>
+{% endblock %}

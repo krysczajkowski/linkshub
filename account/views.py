@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
+from django.contrib import messages
+import imghdr
 
-from .models import UserPlatform, Platform
+
+from .models import UserPlatform, Platform, CustomLink
 
 # Create your views here.
 @login_required(login_url='/authentication/login/')
@@ -75,8 +78,8 @@ def platforms(request):
             everything_ok = 1
 
             # Walidacja długości username
-            platform_username = str(form_data[platform.name]).strip()
-            if len(platform_username) > 220:
+            platform_username = str(form_data[platform.name]).replace(" ", "")
+            if len(platform_username) > 120:
                 everything_ok = 0
                 error_msg_platform = f'{platform.name}'
                 error_msg = f"Your {platform.name} username is too long."
@@ -103,3 +106,63 @@ def platforms(request):
         'error_msg': error_msg
     }
     return render(request, 'account/platforms.html', context)
+
+
+@login_required(login_url='/authentication/login/')
+def links(request):
+    links = CustomLink.objects.filter(user=request.user).order_by('-id')
+
+    links_count = links.count()
+
+    context = {
+    'links': links,
+    'links_count': links_count
+    }
+
+    return render(request, 'account/links.html', context)
+
+@login_required(login_url='/authentication/login/')
+def add_link(request):
+    if request.method == 'POST':
+        everything_ok = True
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        url = request.POST.get('url')
+        image = request.FILES.get('image', False)
+
+        if len(title) < 1 or len(title) > 70:
+            everything_ok = False 
+            error_msg = 'Title length must be between 1 and 70 characters.'
+
+        if len(description) > 150:
+            everything_ok = False 
+            error_msg = 'Description length can not be over 150 characters.'
+        
+        validator = URLValidator()
+        try:
+            validator(url)
+        except ValidationError as exception:
+            everything_ok = False
+            error_msg = 'Please provide valid URL.'
+        
+        image_extention = imghdr.what(image)
+        
+        if image_extention is None:
+            everything_ok = False
+            error_msg = 'Please provide a valid image.'
+
+
+        if everything_ok:
+            if image:
+                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, image=image)
+            else:
+                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url)
+
+            messages.success(request, 'Link added successfully.')
+            return redirect('links')
+
+        else:
+            messages.error(request, error_msg)
+
+    return render(request, 'account/add_link.html')
