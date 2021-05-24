@@ -1,3 +1,22 @@
+// CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+const csrftoken = getCookie('csrftoken');
+
+
 const activeLinkSlider = document.querySelectorAll('.active_link_slider')
 const deleteLink = document.querySelectorAll('.delete-link-btn')
 
@@ -10,6 +29,11 @@ activeLinkSlider.forEach(item => {
         fetch('activate', {
             body: JSON.stringify({'is_active': is_active, 'link_id': link_id}),
             method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+              },
         }).then(res=>res.json()).then(data=>{
             console.log('data', data)
             if(data.error) {
@@ -32,6 +56,11 @@ deleteLink.forEach(item => {
         fetch('delete', {
             body: JSON.stringify({'link_id': link_id}),
             method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+              },
         }).then(res=>res.json()).then(data=>{
             console.log('data', data)
             if(data.error) {

@@ -154,11 +154,34 @@ function validateFile(){
 
 // Submit saving effect
 submitBtn.addEventListener('click', (e) => {
-    
-    submitBtn.disabled = true
-    document.querySelector('#submitSpinner').classList.remove('d-none')
+    if (titleField.value.length <= 0 && urlField.value.length <= 0) {
+        // Title field error
+        titleField.classList.add('is-invalid')
+        titleFeedback.style.display = 'block'
+        titleFeedback.innerHTML = 'Title length must be between 1 and 70 characters.'
 
-    document.getElementById("add-link-form").submit();
+        // URL field error
+        urlField.classList.add('is-invalid')
+        urlFeedback.style.display = 'block'
+        urlFeedback.innerHTML = 'Please provide valid URL.'
+    } else if (titleField.value.length <= 0) {
+        // Title field error
+        titleField.classList.add('is-invalid')
+        titleFeedback.style.display = 'block'
+        titleFeedback.innerHTML = 'Title length must be between 1 and 70 characters.'
+    } else if (urlField.value.length <= 0) {
+        // URL field error
+        urlField.classList.add('is-invalid')
+        urlFeedback.style.display = 'block'
+        urlFeedback.innerHTML = 'Please provide valid URL.'
+    } else {
+        document.querySelector('#submitSpinner').classList.remove('d-none')
+
+        document.getElementById("add-link-form").submit();
+    }
+
+    submitBtn.disabled = true
+
 })
 
 
