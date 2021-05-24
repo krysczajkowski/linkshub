@@ -4,11 +4,13 @@
 
 {% block content %}
 <div class="container">
-    <form action="" class='mt-3' method='POST'>
+    {% include 'partials/_alerts.html' %}
+
+    <form action="" class='mt-3' method='POST' id='platforms-form'>
         {% csrf_token %}
         {% for platform in platforms %}
           <div class="input-group mb-2"> <!-- id="{{platform.platform}}-input-group-id" -->
-              <span class='input-group-text' style='width: 30%;'>
+              <span class='input-group-text platform-text'>
                 <img src="/media/platforms/{{platform.platform}}.svg" style='width: 20px; height: auto;' class='me-2' alt="">
                 {{ platform.platform_url }}
               </span>
@@ -40,7 +42,13 @@
 
           <div class="w-100 text-center" id="{{platform.platform}}-url-preview"></div>
         {% endfor %}
-        <input type="submit" value='Submit form' class='btn btn-dark'>
+
+
+        <button type="submit" class='btn btn-dark fw-bold w-100' id='PlatformSubmitBtn'>
+          <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
+          Save
+        </button>
+
     </form>
 </div>
 <div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>

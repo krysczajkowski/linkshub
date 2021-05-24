@@ -5,22 +5,27 @@
 {% block content %}
 <div class="container mt-5">
     <div class="row">
+        <div class='col-12 col-lg-10 offset-lg-1 mb-2'>
+            <a href="{% url 'links' %}" class='link font-size-11 text-dark'><i class="fas fa-angle-left"></i> All Links</a>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-12 col-lg-10 offset-lg-1">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h4 class="card-title">Add Link</h4>
+                    <h4 class="card-title">{{ page_title }}</h4>
 
                     <form method='POST' class='mt-4' enctype="multipart/form-data" id='add-link-form'>
                         {% csrf_token %}
-                        <input type="text" name='title' class='form-control' placeholder='Title' id='titleField'>
+                        <input type="text" name='title' class='form-control' placeholder='Title' id='titleField' value='{{ title }}'>
                         <div class="title-feedback invalid-feedback" style='display:none;'>
                         </div>
 
-                        <input type="text" name='description' class='form-control mt-2' placeholder='Description (optional)' id='descriptionField'>
+                        <input type="text" name='description' class='form-control mt-2' placeholder='Description (optional)' id='descriptionField'  value='{{ description }}'>
                         <div class="description-feedback invalid-feedback" style='display:none;'>
                         </div>
 
-                        <input type="url" name='url' class='form-control mt-2' placeholder='https://url.com' id='urlField'>
+                        <input type="url" name='url' class='form-control mt-2' placeholder='https://url.com' id='urlField'  value='{{ url }}'>
                         <div class="url-feedback invalid-feedback" style='display:none;'>
                         </div>
 
@@ -30,6 +35,16 @@
                         <small class="text-muted super-small-font mb-3">Only .jpg, .jpeg or .png allowed</small>
                         <div class="image-feedback invalid-feedback" style='display:none;'>
                         </div>
+                        {% if delete_existing_image_checkbox %}
+                            {% if image %}
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="delete_existing_thumbnail" name='delete_existing_thumbnail'>
+                                <label class="form-check-label" for="delete_existing_thumbnail">
+                                Delete existing thumbnail
+                                </label>
+                            </div>
+                            {% endif %}
+                        {% endif %}
 
                         {% include 'partials/_alerts.html' %}
 

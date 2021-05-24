@@ -15,3 +15,17 @@ function clearURL(div_name) {
   var div = document.getElementById(div_name);
   div.innerHTML = "";
 }
+
+
+// Form submit spinning effect
+const submitBtn = document.querySelector('#PlatformSubmitBtn')
+const form = document.querySelector('#platforms-form')
+
+submitBtn.addEventListener('click', (e) => {
+  // Spinngin effect
+  submitBtn.disabled = true
+  document.querySelector('#submitSpinner').classList.remove('d-none')
+
+  // Submit form 
+  form.submit()
+})

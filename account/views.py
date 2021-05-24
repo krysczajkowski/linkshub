@@ -9,9 +9,13 @@ from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 from django.contrib import messages
 import imghdr
+from imghdr import tests
+
+from requests.api import delete
 
 
 from .models import UserPlatform, Platform, CustomLink
+from .utils import validate_link_form
 
 # Create your views here.
 @login_required(login_url='/authentication/login/')
@@ -103,6 +107,9 @@ def platforms(request):
                 UserPlatformInstance.username = platform_username
                 UserPlatformInstance.save()
 
+        messages.success(request, 'Social media platforms updated successfully.')                
+
+
     context = {
         'platforms': user_platforms,
         'error_msg_platform': error_msg_platform,
@@ -127,35 +134,16 @@ def links(request):
 @login_required(login_url='/authentication/login/')
 def add_link(request):
     if request.method == 'POST':
-        everything_ok = True
 
         title = request.POST.get('title')
         description = request.POST.get('description')
         url = request.POST.get('url')
         image = request.FILES.get('image', False)
 
-        if len(title) < 1 or len(title) > 70:
-            everything_ok = False 
-            error_msg = 'Title length must be between 1 and 70 characters.'
+        data = validate_link_form(title, description, url, image)
 
-        if len(description) > 150:
-            everything_ok = False 
-            error_msg = 'Description length can not be over 150 characters.'
-        
-        validator = URLValidator()
-        try:
-            validator(url)
-        except ValidationError as exception:
-            everything_ok = False
-            error_msg = 'Please provide valid URL.'
-        
-        if image:
-            image_extention = imghdr.what(image)
-            
-            if image_extention is None:
-                everything_ok = False
-                error_msg = 'Please provide a valid image.'
-
+        everything_ok = data['everything_ok']
+        error_msg = data['error_msg']
 
         if everything_ok:
             if image:
@@ -169,7 +157,11 @@ def add_link(request):
         else:
             messages.error(request, error_msg)
 
-    return render(request, 'account/add_link.html')
+    context = {
+        'page_title': 'Add Link'
+    }
+
+    return render(request, 'account/add_link.html', context)
 
 
 class activate_link(View):
@@ -186,3 +178,73 @@ class activate_link(View):
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})
+
+
+class delete_link(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        link_id = data['link_id']
+
+        try:
+            link = CustomLink.objects.get(id=link_id, user=request.user)
+            link.delete()
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+
+        messages.success(request, 'Link deleted successfully.')
+        return JsonResponse({'success': True})
+
+
+@login_required(login_url='/authentication/login/')
+def edit_link(request, link_id):
+    try:
+        link = CustomLink.objects.get(id=link_id, user=request.user)
+    except:
+        return redirect('profile')
+
+    context = {
+        'page_title': 'Edit Link',
+        'delete_existing_image_checkbox': True, 
+        'title': link.title,
+        'description': link.description,
+        'url': link.url,
+        'image': link.image
+    }
+
+    if request.method == 'POST':
+        everything_ok = True
+
+        title = request.POST.get('title')
+        description = request.POST.get('description')
+        url = request.POST.get('url')
+        image = request.FILES.get('image', False)
+        delete_existing_thumbnail = request.POST.get('delete_existing_thumbnail', False)
+
+        data = validate_link_form(title, description, url, image)
+
+        everything_ok = data['everything_ok']
+        error_msg = data['error_msg']
+
+        if everything_ok:
+            link.title = title 
+            link.description = description 
+            link.url = url 
+
+            if image:
+                link.image = image
+                
+            else:
+                if delete_existing_thumbnail:
+                    link.image = None 
+
+            link.save()
+            messages.success(request, 'Link updated successfully.')
+            return redirect('links')
+
+        else:
+            messages.error(request, error_msg)
+
+
+    print(context)
+    return render(request, 'account/add_link.html', context)
