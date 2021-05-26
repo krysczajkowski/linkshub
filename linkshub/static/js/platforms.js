@@ -5,7 +5,7 @@ function previewURL(input_id, div_name, link) {
   var URL = link + input.value;
   div.innerHTML = `
   <div class='py-3'>
-    <span class='text-dark fw-bold' style='font-size: 0.8rem;'>CURRENT LINK PREVIEW: </span><br>
+    <span class='text-dark fw-bold font-size-09'>CURRENT LINK PREVIEW: </span><br>
     <span class='font-weight-bold text-primary'>${URL}</span>
   </div>`;
 }

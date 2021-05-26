@@ -15,13 +15,31 @@ from requests.api import delete
 
 
 from .models import UserPlatform, Platform, CustomLink
+from appearance.models import BackgroundTheme, Theme, UserTheme
 from .utils import validate_link_form
 
 # Create your views here.
 @login_required(login_url='/authentication/login/')
 def profile(request):
+    links = CustomLink.objects.filter(user=request.user, is_active=1)
+    background_theme_name = UserTheme.objects.get(user=request.user).background_theme
+
+    if background_theme_name:
+        background_data = BackgroundTheme.objects.get(name=background_theme_name)
+
+        background_color = background_data.background_color
+        font_color = background_data.font_color
+    else:
+        background_data = UserTheme.objects.get(user=request.user).custom_background_theme
+
+        background_color = background_data.background_color
+        font_color = background_data.font_color
+
     context = {
-        'profile': request.user
+        'profile': request.user,
+        'links': links,
+        'background_color': background_color,
+        'font_color': font_color
     }
 
     return render(request, 'account/profile.html', context)
@@ -248,3 +266,7 @@ def edit_link(request, link_id):
 
     print(context)
     return render(request, 'account/add_link.html', context)
+
+@login_required(login_url='/authentication/login/')
+def themes(request):
+    return render(request, 'account/themes.html')
