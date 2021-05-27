@@ -1,10 +1,15 @@
 body {
     background-color: #FBFBFB;
     font-family: 'Lato', sans-serif;
-    height: 100vh!important;
+
+}
+
+.profile-container {
+    min-height: 100vh!important;
 }
 
 a{text-decoration: none}
+
 
 /* Font sizes */
 .font-size-08 {
@@ -106,6 +111,27 @@ a{text-decoration: none}
     }
 }
 
+/* custom scrollbar */
+::-webkit-scrollbar {
+    width: 20px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+  }
+
+
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
     .platform-text {
@@ -128,6 +154,14 @@ a{text-decoration: none}
 
     .link-image-size {
         width: 60px!important;
+    }
+
+    .appearance-left-panel {
+        overflow: scroll; max-height: 90vh;
+    }
+
+    .appearance-right-panel {
+        overflow: scroll; max-height: 90vh; 
     }
 }
 

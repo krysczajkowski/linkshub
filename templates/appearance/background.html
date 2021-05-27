@@ -2,47 +2,99 @@
 
 {% load static %}
 
-{% block title %}{{ profile.username }}{% endblock %}
+{% block title %}Appearance{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    {% include 'partials/_alerts.html' %}
-    <h3 class='mb-1'>Choose your background theme</h3>
-    <p class='text-muted mt-0'>Apply theme by clicking on the kafelka</p>
+<div class="mx-4 mt-4">
     <div class="row">
-        {% for theme in themes %}
-        <div class="col-6 col-md-3 col-lg-2 mt-4">
-            <div class="card theme-contrainer" id="{{ theme.id }}" style='background-color: {{ theme.background_color }}; color: {{ theme.font_color }};'>
-                <div class="row my-5">
-                    <div class="col-10 offset-1 py-1 text-center">
-                        Click to apply theme
-                    </div>
+        <div class="col-12">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-2 appearance-left-panel">
+            {% include 'partials/_alerts.html' %}
+
+            <div class="card mb-4">
+                <div class="card-body text-center">
+                    <p class='m-0 p-0'><strong>My Linkshub: </strong> <a href="#" class='link text-muted'>https://linkshub.io/kczajkowski</a></p>
+                    <p class='text-muted fw-bold font-size-08 text-center p-0 m-0'>Click to Copy</p>
                 </div>
             </div>
+
+            <div class="accordion" id="accordionExample">
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingOne">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      Background Theme
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p class="form-label fw-bold font-size-12">Background Themes</p>
+                        <div class="">
+                            <p class='fw-bold font-size-08 text-muted mb-0 mt-3'>COLORS</p>
+                            {% for theme in color_themes %}
+                            <div class="mb-3 mt-1" style='display: inline-block;'>
+                                <div class="theme-contrainer border" id="{{ theme.id }}" style='height: 50px; width: 50px; {{ theme.background_color }}; color: {{ theme.font_color }};'>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            <p class='fw-bold font-size-08 text-muted mb-0 mt-3'>GRADIENTS</p>
+                            {% for theme in gradient_themes %}
+                            <div class="mb-3 mt-1" style='display: inline-block;'>
+                                <div class="theme-contrainer border" id="{{ theme.id }}" style='height: 50px; width: 50px; {{ theme.background_color }}; color: {{ theme.font_color }};'>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    
+                        <div class="mt-5">
+                            <p class="form-label fw-bold font-size-12">Custom Background Theme</p>
+                            
+                            <label for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background color:</label>
+                            <input type="color" class="form-control form-control-color" id="background_color" name='background_color' value="#563d7c" title="Choose background color">
+            
+            
+                            <label for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</label>
+                            <input type="color" class="form-control form-control-color" id="font_color" name='font_color' value="#000" title="Choose your color">
+            
+            
+            
+                            <button class='btn btn-primary py-1 px-3 my-3' id='custom_bg_submit'>
+                                <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
+                                Save
+                            </button>
+                        </div>
+
+                    </div>
+                  </div>
+                </div>
+                <div class="accordion-item">
+                  <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      Links Theme
+                    </button>
+                  </h2>
+                  <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                      <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         </div>
-        {% endfor %}
-    </div>
-
-    <div class="mt-5">
-        <form action="{% url 'choose_custom_background' %}" method='POST' id='custom_bg_form'>
-            <p class="form-label fw-bold font-size-13">Set your own background color</p>
-            {% csrf_token %}
-            <label for="background_color" class="form-label">Background color:</label>
-            <input type="color" class="form-control form-control-color" id="background_color" name='background_color' value="#563d7c" title="Choose background color">
-
-            <label for="font_color" class="form-label mt-3">Font color:</label>
-            <input type="color" class="form-control form-control-color" id="font_color" name='font_color' value="#000" title="Choose your color">
-            <button class='btn btn-primary py-1 px-3 my-3' id='custom_bg_submit'>
-                <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
-                Save
-            </button>
-        </form>
+    
+        <div class="col-12 col-lg-10 mt-5 mt-lg-0">
+            <p class='text-center font-size-09 fw-bold d-lg-none'>LIVE PROFILE PREVIEW</p>
+            <div id="profile_preview" class='card appearance-right-panel'>
+            
+            </div>
+        </div>
     </div>
 </div>
-
-
-
-
 
 <script src="{% static 'js/background.js' %}"></script>
 {% endblock %}

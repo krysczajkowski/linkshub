@@ -12,10 +12,12 @@ from .models import Theme, UserTheme, BackgroundTheme, CustomBackgroundTheme
 # Create your views here.
 @login_required(login_url='/authentication/login/')
 def appearance(request):
-    themes = BackgroundTheme.objects.all()
+    color_themes = BackgroundTheme.objects.filter(type='color')
+    gradient_themes = BackgroundTheme.objects.filter(type='gradient')
 
     context = {
-        'themes': themes
+        'color_themes': color_themes,
+        'gradient_themes': gradient_themes
     }
 
     return render(request, 'appearance/background.html', context)
@@ -32,8 +34,6 @@ class choose_background(View):
             user_theme_relationship.custom_background_theme = None
             user_theme_relationship.save()
 
-            messages.success(request, 'Background theme changed successfully.')
-            
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
@@ -42,8 +42,9 @@ class choose_background(View):
     
 class choose_custom_background(View):
     def post(self, request):
-        background_color = request.POST.get('background_color')
-        font_color = request.POST.get('font_color')
+        data = json.loads(request.body)
+        background_color = data['bg_color']
+        font_color = data['font_color']
 
         bg_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', background_color)
 
@@ -63,9 +64,8 @@ class choose_custom_background(View):
                 user_theme.save()
                 
             except:
-                return JsonResponse({'success': False})
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
         else:
-            return JsonResponse({'success': False})
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-        messages.success(request, 'Background theme changed successfully.')
-        return redirect('appearance')
+        return JsonResponse({'success': True})
