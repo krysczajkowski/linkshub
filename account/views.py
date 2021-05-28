@@ -15,31 +15,46 @@ from requests.api import delete
 
 
 from .models import UserPlatform, Platform, CustomLink
-from appearance.models import BackgroundTheme, Theme, UserTheme
+from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 
 # Create your views here.
 @login_required(login_url='/authentication/login/')
 def profile(request):
     links = CustomLink.objects.filter(user=request.user, is_active=1)
-    background_theme_name = UserTheme.objects.get(user=request.user).background_theme
+    bg_theme_name = UserTheme.objects.get(user=request.user).background_theme
 
-    if background_theme_name:
-        background_data = BackgroundTheme.objects.get(name=background_theme_name)
+    if bg_theme_name:
+        bg_data = BackgroundTheme.objects.get(name=bg_theme_name)
 
-        background_color = background_data.background_color
-        font_color = background_data.font_color
+        bg_bg_color = bg_data.background_color
+        bg_font_color = bg_data.font_color
     else:
-        background_data = UserTheme.objects.get(user=request.user).custom_background_theme
+        bg_data = UserTheme.objects.get(user=request.user).custom_background_theme
 
-        background_color = background_data.background_color
-        font_color = background_data.font_color
+        bg_bg_color = bg_data.background_color
+        bg_font_color = bg_data.font_color
+
+    btn_theme_name = UserTheme.objects.get(user=request.user).button_theme
+
+    if btn_theme_name:
+        btn_data = ButtonTheme.objects.get(name=btn_theme_name)
+
+        btn_bg_color = btn_data.background_color
+        btn_font_color = btn_data.font_color
+    else:
+        btn_data = UserTheme.objects.get(user=request.user).custom_button_theme
+
+        btn_bg_color = btn_data.background_color
+        btn_font_color = btn_data.font_color
 
     context = {
         'profile': request.user,
         'links': links,
-        'background_color': background_color,
-        'font_color': font_color
+        'bg_bg_color': bg_bg_color,
+        'bg_font_color': bg_font_color,
+        'btn_font_color': btn_font_color,
+        'btn_bg_color': btn_bg_color
     }
 
     return render(request, 'account/profile.html', context)
