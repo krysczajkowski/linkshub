@@ -53,7 +53,7 @@
                             </div>
                     
                         <div class="mt-5">
-                            <p class="form-label fw-bold font-size-12">Custom Background Theme</p>
+                            <p class="form-label fw-bold font-size-12">Custom Theme</p>
                             
                             <label for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background color:</label>
                             <input type="color" class="form-control form-control-color" id="bg_background_color" name='background_color' value="#563d7c" title="Choose background color">
@@ -81,32 +81,46 @@
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-                        <p class='fw-bold font-size-08 text-muted mb-0 mt-1'>COLORS</p>
-                        <div class='color-div'>
-                            {% for theme in button_color_themes %}
-                            <div class="mb-3 mt-1" style='display: inline-block;'>
-                                <div class="theme-contrainer button-theme border" id="{{ theme.id }}" style='height: 50px; width: 50px; background-color: {{ theme.background_color }}; color: {{ theme.font_color }};'>
+
+                        <div id='btn-color-area' class='mb-4'>
+                            <p class='fw-bold font-size-08 text-muted mb-0 mt-1'>COLORS</p>
+                            <div class='color-div'>
+                                {% for theme in button_color_themes %}
+                                <div class="mb-3 mt-1" style='display: inline-block;'>
+                                    <div class="theme-contrainer button-theme border" id="{{ theme.id }}" style='height: 50px; width: 50px; background-color: {{ theme.background_color }}; color: {{ theme.font_color }};'>
+                                    </div>
                                 </div>
+                                {% endfor %}
                             </div>
-                            {% endfor %}
+
+                            <div class="mt-3">
+                                <p class="form-label fw-bold font-size-12">Custom Theme</p>
+                                
+                                <label for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background/Border color:</label>
+                                <input type="color" class="form-control form-control-color" id="btn_background_color" name='background_color' value="#563d7c" title="Choose background color">
+                
+                
+                                <label for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</label>
+                                <input type="color" class="form-control form-control-color" id="btn_font_color" name='font_color' value="#000" title="Choose your color">
+                
+                
+                
+                                <button class='btn btn-primary py-1 px-3 my-3' id='btn_custom_submit'>
+                                    <span class="spinner-border spinner-border-sm me-2 d-none" id='btn_submitSpinner' role="status" aria-hidden="true"></span>
+                                    Save
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="mt-3">
-                            <p class="form-label fw-bold font-size-12">Custom Button Theme</p>
+                        <div>
+                            <p class="form-label fw-bold font-size-12">Fill</p>
                             
-                            <label for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background/Border color:</label>
-                            <input type="color" class="form-control form-control-color" id="btn_background_color" name='background_color' value="#563d7c" title="Choose background color">
+                            <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Transparent</p>
+                            <button class='btn-transparent' id='btn-transparent'></button>
+
+                            <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Filled</p>
+                            <button class='btn-filled' id='btn-filled'></button>
             
-            
-                            <label for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</label>
-                            <input type="color" class="form-control form-control-color" id="btn_font_color" name='font_color' value="#000" title="Choose your color">
-            
-            
-            
-                            <button class='btn btn-primary py-1 px-3 my-3' id='btn_custom_submit'>
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id='btn_submitSpinner' role="status" aria-hidden="true"></span>
-                                Save
-                            </button>
                         </div>
                     </div>
                   </div>
@@ -117,7 +131,7 @@
     
         <div class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
             <p class='text-center font-size-09 fw-bold d-lg-none'>LIVE PROFILE PREVIEW</p>
-            <div id="profile_preview" class='card appearance-right-panel mb-4 mb-lg-0'>
+            <div id="profile_preview" class='border rounded appearance-right-panel mb-4 mb-lg-0'>
             
             </div>
         </div>

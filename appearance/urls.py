@@ -8,4 +8,5 @@ urlpatterns = [
     path('background/custom/choose', views.choose_custom_background.as_view(), name='choose_custom_background'),
     path('button/choose', views.choose_button.as_view(), name='choose_button'),
     path('button/custom/choose', views.choose_custom_button.as_view(), name='choose_custom_button'),
+    path('button/fill', views.button_fill.as_view(), name='button_fill'),
 ]

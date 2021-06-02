@@ -29,19 +29,19 @@
         Username: {{ profile.username }}
         
         
-        <div class="row mx-0">
+        <div class="row mx-0 pb-5">
             {% for link in links %}
-            <div class="col-12 col-md-10 offset-md-1 col-xl-8 offset-xl-2">
+            <div class="col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3">
                 <div class="row my-2">
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn btn-light mt-2 mx-0 row" target="_blank" style='display: flex; background-color: {{btn_bg_color}}; color: {{btn_font_color}}; border: {{btn_bg_color}};'>
+                        <a href="#" class="btn link-btn mt-2 mx-0 row d-flex" target="_blank" style='background-color: {{btn_bg_color}}; color: {{btn_font_color}}; border: 2px solid {{btn_border_color}};'>
                             {% if link.image %}
                             <div class="col-1 col-md-2 ms-2 ms-md-0" style="display: flex; align-items: center; justify-content: center;">
                                 <img src="{{ link.image.url }}" class="rounded link-image-size">
                             </div>
                             <div class="col-9 col-md-8 py-2" style="display: flex; align-items: center; justify-content: center;">
                                 <div class="d-flex flex-column text-center">
-                                    <span class='font-size-12 link-title'>{{ link.title }}</span>
+                                    <span class='font-size-11 link-title'>{{ link.title }}</span>
                                     <span class="font-size-08 link-description">{{ link.description }}</span>
                                 </div>
                             </div>

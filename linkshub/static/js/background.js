@@ -158,3 +158,47 @@ btn_custom_submit.addEventListener('click', event => {
         }
     });
 })
+
+
+btn_color_area = document.getElementById('btn-color-area')
+
+btn_transparent = document.getElementById('btn-transparent')
+btn_transparent.addEventListener('click', (e) => {
+    fetch('button/fill', {
+        body: JSON.stringify({'transparent': true, 'filled': false}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            alert(data.error)
+        } else {
+            load_profile()
+        }
+    });
+})
+
+btn_filled = document.getElementById('btn-filled')
+btn_filled.addEventListener('click', (e) => {
+    console.log('filled btn clicked')
+    fetch('button/fill', {
+        body: JSON.stringify({'transparent': false, 'filled': true}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            alert(data.error)
+        } else {
+            load_profile()
+        }
+    });
+})

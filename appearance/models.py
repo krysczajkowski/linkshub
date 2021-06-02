@@ -16,7 +16,7 @@ class BackgroundTheme(models.Model):
     ('color', 'color'),
     ('gradient', 'gradient'),
     ('moving_gradient', 'moving_gradient'),
-]
+    ]
 
     name = models.CharField(max_length=100)
     background_color = models.CharField(max_length=100, blank=True)
@@ -60,6 +60,7 @@ class UserTheme(models.Model):
     custom_background_theme = models.ForeignKey(CustomBackgroundTheme, on_delete=models.CASCADE, null=True, blank=True)
     button_theme = models.ForeignKey(ButtonTheme, on_delete=models.CASCADE, null=True, blank=True)
     custom_button_theme = models.ForeignKey(CustomButtonTheme, on_delete=models.CASCADE, null=True, blank=True)
+    button_fill = models.CharField(max_length=120, blank=True)
 
     def __str__(self):
         return f'{self.user.username}'

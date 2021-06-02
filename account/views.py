@@ -48,13 +48,24 @@ def profile(request):
         btn_bg_color = btn_data.background_color
         btn_font_color = btn_data.font_color
 
+    btn_border_color = btn_bg_color
+
+    theme_data = UserTheme.objects.get(user=request.user)
+    if theme_data.button_fill == 'transparent':
+        btn_font_color = btn_bg_color
+        btn_border_color = btn_bg_color
+        btn_bg_color = 'transparent'
+
+    
+
     context = {
         'profile': request.user,
         'links': links,
         'bg_bg_color': bg_bg_color,
         'bg_font_color': bg_font_color,
         'btn_font_color': btn_font_color,
-        'btn_bg_color': btn_bg_color
+        'btn_bg_color': btn_bg_color,
+        'btn_border_color': btn_border_color,
     }
 
     return render(request, 'account/profile.html', context)

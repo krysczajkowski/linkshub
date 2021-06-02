@@ -17,10 +17,17 @@ def appearance(request):
 
     button_color_themes = ButtonTheme.objects.all()
 
+    theme_data = UserTheme.objects.get(user=request.user)
+
+    btn_transparent = False
+    if theme_data.button_fill == 'transparent':
+        btn_transparent = True
+
     context = {
         'bg_color_themes': bg_color_themes,
         'bg_gradient_themes': bg_gradient_themes,
-        'button_color_themes': button_color_themes
+        'button_color_themes': button_color_themes,
+        'btn_transparent': btn_transparent
     }
 
     return render(request, 'appearance/background.html', context)
@@ -118,6 +125,28 @@ class choose_custom_button(View):
             except:
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
         else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+
+class button_fill(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        transparent = data['transparent']
+        filled = data['filled']
+
+        try:
+            if transparent:
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.button_fill = 'transparent'
+                user_theme.save()
+            else:
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.button_fill = 'filled'
+                user_theme.save()
+
+        except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})
