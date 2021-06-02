@@ -57,6 +57,7 @@ def profile(request):
         btn_bg_color = 'transparent'
 
     
+    platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
     context = {
         'profile': request.user,
@@ -66,6 +67,7 @@ def profile(request):
         'btn_font_color': btn_font_color,
         'btn_bg_color': btn_bg_color,
         'btn_border_color': btn_border_color,
+        'platforms': platforms
     }
 
     return render(request, 'account/profile.html', context)

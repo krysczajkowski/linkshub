@@ -45,6 +45,16 @@ a{text-decoration: none}
     height: auto!important;
 }
 
+.platform-link {
+    font-size: 1.5rem;
+    transition: transform .1s;
+}
+
+.platform-link:hover {
+    transform: scale(1.15) rotate(10deg); 
+    cursor: pointer;
+}
+
 
 /* THEME BUTTONS */
 
