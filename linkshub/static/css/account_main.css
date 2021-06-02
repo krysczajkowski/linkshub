@@ -51,10 +51,22 @@ a{text-decoration: none}
 }
 
 .platform-link:hover {
-    transform: scale(1.15) rotate(10deg); 
+    transform: scale(1.15) rotate(5deg); 
     cursor: pointer;
 }
 
+/* OUTLINES  */
+.outline-sharp {
+    border-radius: 0px!important;
+}
+
+.outline-normal {
+    border-radius: 6px!important;
+}
+
+.outline-rounded {
+    border-radius: 40px!important;
+}
 
 /* THEME BUTTONS */
 

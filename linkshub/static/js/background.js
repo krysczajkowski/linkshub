@@ -184,7 +184,6 @@ btn_transparent.addEventListener('click', (e) => {
 
 btn_filled = document.getElementById('btn-filled')
 btn_filled.addEventListener('click', (e) => {
-    console.log('filled btn clicked')
     fetch('button/fill', {
         body: JSON.stringify({'transparent': false, 'filled': true}),
         method: 'POST',
@@ -201,4 +200,31 @@ btn_filled.addEventListener('click', (e) => {
             load_profile()
         }
     });
+})
+
+
+btn_outline = document.querySelectorAll('.choose_outline')
+btn_outline.forEach(item => {
+    item.addEventListener('click', (e) => {
+        const outline = item.dataset.outline 
+        console.log(outline)
+    
+        fetch('button/outline', {
+            body: JSON.stringify({'outline': outline}),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+            },
+        }).then(res=>res.json()).then(data=>{
+            console.log('data', data)
+            if(data.error) {
+                alert(data.error)
+            } else {
+                load_profile()
+            }
+        });
+    
+    })
 })

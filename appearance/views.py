@@ -150,3 +150,25 @@ class button_fill(View):
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})
+
+
+class choose_outline(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        outline = data['outline']
+
+        acceptable_outlines = ['outline-sharp', 'outline-normal', 
+        'outline-rounded']
+
+        if outline in acceptable_outlines:
+            try:
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.button_outline = outline
+                user_theme.save()
+
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+        else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})

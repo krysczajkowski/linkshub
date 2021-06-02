@@ -61,6 +61,7 @@ class UserTheme(models.Model):
     button_theme = models.ForeignKey(ButtonTheme, on_delete=models.CASCADE, null=True, blank=True)
     custom_button_theme = models.ForeignKey(CustomButtonTheme, on_delete=models.CASCADE, null=True, blank=True)
     button_fill = models.CharField(max_length=120, blank=True)
+    button_outline = models.CharField(max_length=120, blank=True)
 
     def __str__(self):
         return f'{self.user.username}'
