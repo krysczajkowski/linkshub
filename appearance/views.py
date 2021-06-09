@@ -172,3 +172,24 @@ class choose_outline(View):
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})
+
+
+class choose_shadow(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        shadow = data['shadow']
+
+        acceptable_shadows = ['shadow-none', 'shadow-soft', 'shadow-normal', 'shadow-hard']
+
+        if shadow in acceptable_shadows:
+            try:
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.button_shadow = shadow
+                user_theme.save()
+
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+        else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})

@@ -10,4 +10,5 @@ urlpatterns = [
     path('button/custom/choose', views.choose_custom_button.as_view(), name='choose_custom_button'),
     path('button/fill', views.button_fill.as_view(), name='button_fill'),
     path('button/outline', views.choose_outline.as_view(), name='choose_outline'),
+    path('button/shadow', views.choose_shadow.as_view(), name='choose_shadow'),
 ]

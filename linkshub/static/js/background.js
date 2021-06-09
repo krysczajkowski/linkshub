@@ -207,10 +207,36 @@ btn_outline = document.querySelectorAll('.choose_outline')
 btn_outline.forEach(item => {
     item.addEventListener('click', (e) => {
         const outline = item.dataset.outline 
-        console.log(outline)
     
         fetch('button/outline', {
             body: JSON.stringify({'outline': outline}),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+            },
+        }).then(res=>res.json()).then(data=>{
+            console.log('data', data)
+            if(data.error) {
+                alert(data.error)
+            } else {
+                load_profile()
+            }
+        });
+    
+    })
+})
+
+
+btn_shadow = document.querySelectorAll('.choose_shadow')
+btn_shadow.forEach(item => {
+    item.addEventListener('click', (e) => {
+        const shadow = item.dataset.shadow 
+        console.log(shadow)
+    
+        fetch('button/shadow', {
+            body: JSON.stringify({'shadow': shadow}),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

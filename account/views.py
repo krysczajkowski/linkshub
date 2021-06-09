@@ -57,6 +57,7 @@ def profile(request):
         btn_bg_color = 'transparent'
 
     btn_outline = theme_data.button_outline
+    btn_shadow = theme_data.button_shadow
 
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
@@ -70,6 +71,7 @@ def profile(request):
         'btn_border_color': btn_border_color,
         'platforms': platforms,
         'btn_outline': btn_outline,
+        'btn_shadow': btn_shadow
     }
 
     return render(request, 'account/profile.html', context)

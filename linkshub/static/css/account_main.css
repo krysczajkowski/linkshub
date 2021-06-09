@@ -51,7 +51,7 @@ a{text-decoration: none}
 }
 
 .platform-link:hover {
-    transform: scale(1.15) rotate(5deg); 
+    transform: scale(1.15); 
     cursor: pointer;
 }
 
@@ -68,16 +68,36 @@ a{text-decoration: none}
     border-radius: 40px!important;
 }
 
+/* SHADOWS */
+.shadow-none {
+    box-shadow: 0;
+}
+
+.shadow-soft {
+    box-shadow: 5px 5px 20px -10px rgba(0,0,0,0.75);
+}
+
+.shadow-soft:hover {
+    box-shadow: 2px 2px 10px -5px rgba(0,0,0,0.75);
+}
+
+.shadow-normal {
+    box-shadow: 10px 10px 20px -12px rgba(0,0,0,0.75);
+}
+
+.shadow-normal:hover {
+    box-shadow: 5px 5px 10px -6px rgba(0,0,0,0.75);
+}
+
+.shadow-hard {
+    box-shadow: 5px 5px 3px 0px rgba(0,0,0,0.75);
+}
+
+.shadow-hard:hover {
+    box-shadow: 3px 3px 2px 0px rgba(0,0,0,0.75);
+}
+
 /* THEME BUTTONS */
-
-.link-btn {
-    box-shadow: 0 .2rem .5rem rgba(0,0,0,.15)!important
-}
-
-.link-btn:hover {
-    box-shadow: 0 .1rem .2rem rgba(0,0,0,.15)!important
-}
-
 .btn-transparent {
     background-color: #fff;
     border: 2px solid #303030;
@@ -104,11 +124,6 @@ a{text-decoration: none}
         width: 100%;
     }
 
-    .link-title {
-        padding-left: 10px;
-        padding-right: 10px;
-    }
-
     .link-description {
         padding-left: 10px;
         padding-right: 10px;
@@ -119,11 +134,6 @@ a{text-decoration: none}
 @media only screen and (min-width: 600px) {
     .platform-text {
         width: 100%;
-    }
-
-    .link-title {
-        padding-left: 10px;
-        padding-right: 10px;
     }
 
     .link-description {
