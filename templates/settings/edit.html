@@ -19,9 +19,6 @@
                     <a href="#" class='text-dark'>Edit Profile</a>
                 </span>
                 <span class='my-1'>
-                    <a href="#" class='text-dark'>Change Email</a>
-                </span>
-                <span class='my-1'>
                     <a href="#" class='text-dark'>Change Password</a>
                 </span>
                 <span class='my-1'>
@@ -64,20 +61,20 @@
                         </div>
                     </div>
                     <div class="row mt-4">
-                        <div class="col-3 d-flex justify-content-end mt-1">
+                        <div class="col-12 col-md-3 d-md-flex justify-content-end mt-1">
                             <span class='fw-bold'>Username</span>
                         </div>
-                        <div class="col-9 col-md-6">
+                        <div class="col-12 col-md-6">
                             <input type="text" name='username' placeholder='Username' id='usernameField' class='form-control' value='{{username}}'>
                             <div class="username-feedback invalid-feedback" style='display:none;'>
                             </div>
                         </div>
                     </div>
                     <div class="row mt-4">
-                        <div class="col-3 d-flex justify-content-end mt-1">
+                        <div class="col-12 col-md-3 d-md-flex justify-content-end mt-1">
                             <span class='fw-bold'>Description</span>
                         </div>
-                        <div class="col-9 col-md-6">
+                        <div class="col-12 col-md-6">
                             <textarea class='form-control' name='description' id='descriptionField'>{{description}}</textarea>
                             <div class="description-feedback invalid-feedback" style='display:none;'>
                             </div>
@@ -86,7 +83,7 @@
                     <div class="row mt-2">
                         <div class="col-3 d-flex justify-content-end mt-1">
                         </div>
-                        <div class="col-9 col-md-6">
+                        <div class="col-12 col-md-6">
                             <button class='btn btn-primary py-1 fw-bold' id='submitBtn'>
                                 <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
                                 Save

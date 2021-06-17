@@ -77,7 +77,7 @@ usernameField.addEventListener('keyup', (e) => {
     usernameField.classList.remove('is-valid')
     usernameFeedback.style.display = 'none'
 
-    if (usernameValue.length > 0) {
+    if (usernameValue.length >= 2 && usernameValue.length <= 80) {
         fetch('/authentication/validate-username', {
             body: JSON.stringify({'username': usernameValue}),
             method: 'POST',
@@ -99,6 +99,15 @@ usernameField.addEventListener('keyup', (e) => {
                 usernameField.classList.add('is-valid')
             }
         });
+    } else {
+        // Dispable submit button
+        submitBtn.setAttribute('disabled', 'disabled')
+        submitBtn.disabled = true
+
+        usernameField.classList.add('is-invalid')
+
+        usernameFeedback.style.display = 'block'
+        usernameFeedback.innerHTML = `<p>Username must be between 2 and 80 characters.</p>`
     }
 })
 

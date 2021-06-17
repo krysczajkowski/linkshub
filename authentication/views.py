@@ -18,7 +18,7 @@ import threading
 import requests
 
 
-from .utils import token_generator
+from .utils import token_generator, username_validation
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -58,19 +58,12 @@ class RegistrationView(View):
             }
 
             everything_ok = True
+            error_msg = ''
 
             # Username validation
-            if not str(username).isalnum():
-                everything_ok = False
-                error_msg = 'Username should only contain alphanumeric characters.'
-
-            if User.objects.filter(username=username).exists():
-                everything_ok = False
-                error_msg = 'Sorry, this username is already in use.'
-
-            if len(username) < 2 or len(username) > 80:
-                everything_ok = False
-                error_msg = 'Username must be between 2 or 80 characters.'
+            validated_username = username_validation(request, username, everything_ok, error_msg)
+            everything_ok = validated_username['everything_ok']
+            error_msg = validated_username['error_msg']
 
             # Email validaiton
             if not validate_email(email):
@@ -322,7 +315,11 @@ class EmailValidationView(View):
             return JsonResponse({'email_error': 'Email is invalid.'}, status=400)
 
         if User.objects.filter(email=email).exists():
-            return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
+            if request.user:
+                if request.user.email != email:
+                    return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
+            else:
+                return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
 
         return JsonResponse({'email_valid': True})
 
