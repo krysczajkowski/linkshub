@@ -20,13 +20,23 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/account_main.css' %}">
 
-    <title>{{ profile.username }} | Linkshub.io</title>
+    <title>{{ username }} | Linkshub.io</title>
   </head>
   <body>
     <div class="profile-container" style='{{bg_bg_color}}; color: {{bg_font_color}}'>
         {% include 'partials/_navbar.html' %}
 
-        Username: {{ profile.username }}
+        <div class="row mt-4 mx-0">
+            <div class='col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3'>
+                <div class="d-flex justify-content-center">
+                    <img src="{{ profile_picture.url }}" alt="" style='width: 90px; height: 90x;' class='rounded-circle'> 
+                </div>     
+                <div class="col-12 text-center mt-2">
+                    <p class='fw-bold font-size-11 mb-2'>{{username}}</p>
+                    <p style='white-space: pre-line; '>{{description}}</p>
+                </div>
+            </div>
+        </div>
         
         
         <div class="row mx-0 pb-4">

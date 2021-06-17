@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="mx-4 mt-4">
+    <div class="row">
+        <div class="col-12">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3 col-xl-2 offset-xl-1 appearance-left-panel">
+        
+            <div class="card card-body text-center font-size-12">
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Edit Profile</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Change Email</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Change Password</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Privacy</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Cancel Subscription</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-dark'>Logout</a>
+                </span>
+                <span class='my-1'>
+                    <a href="#" class='text-danger'>Delete Account</a>
+                </span>
+                
+            </div>
+
+
+        </div>
+
+        <div class="col-12 col-lg-9 col-xl-8 mt-5 mt-lg-0">
+            {% include 'partials/_alerts.html' %}
+            <div class="card card-body">
+                <form method='POST' enctype="multipart/form-data" id='edit-form'>
+                    {% csrf_token %}
+                    <input type="file" class='d-none' id='imageField' name='imageField' accept='.jpg, .png'>
+                    <div class="row">
+                        <div class="col-3 d-flex justify-content-end">
+                            {% if image %}
+                                <img src="{{image.url}}" class='img-fluid rounded-circle mt-1' style='height: 50px; width: 50px;' id='imgPreview'>
+                            {% else %}
+                                <img src="https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fae01.alicdn.com%2Fkf%2FHTB1QesBKpXXXXbqXXXXq6xXFXXXb%2F5-inches-photo-square-wooden-small-size-cheap-picture-frames-wall-combination-creative-household-crafts-handmade.jpg&f=1&nofb=1" class='img-fluid rounded-circle mt-1' style='height: 50px; width: 50px;' id='imgPreview'>
+                            {% endif %}
+                        </div>
+                        <div class="col-9 col-md-6">
+                            <p class='fw-bold mb-0'>_kczajkowski</p>
+                            <a href="#" class='fw-bold' onclick="document.getElementById('imageField').click(); return false" id='profile_img_change'>Change Profile Picture</a>
+                            <div class="image-feedback invalid-feedback" style='display:none;'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 d-flex justify-content-end mt-1">
+                            <span class='fw-bold'>Username</span>
+                        </div>
+                        <div class="col-9 col-md-6">
+                            <input type="text" name='username' placeholder='Username' id='usernameField' class='form-control' value='{{username}}'>
+                            <div class="username-feedback invalid-feedback" style='display:none;'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-3 d-flex justify-content-end mt-1">
+                            <span class='fw-bold'>Description</span>
+                        </div>
+                        <div class="col-9 col-md-6">
+                            <textarea class='form-control' name='description' id='descriptionField'>{{description}}</textarea>
+                            <div class="description-feedback invalid-feedback" style='display:none;'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-3 d-flex justify-content-end mt-1">
+                        </div>
+                        <div class="col-9 col-md-6">
+                            <button class='btn btn-primary py-1 fw-bold' id='submitBtn'>
+                                <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
+                                Save
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/edit.js' %}"></script>
+{% endblock %}

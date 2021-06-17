@@ -152,6 +152,7 @@ function validateFile(){
 
 }
 
+
 // Submit saving effect
 submitBtn.addEventListener('click', (e) => {
     if (titleField.value.length <= 0 && urlField.value.length <= 0) {

@@ -68,6 +68,10 @@ class RegistrationView(View):
                 everything_ok = False
                 error_msg = 'Sorry, this username is already in use.'
 
+            if len(username) < 2 or len(username) > 80:
+                everything_ok = False
+                error_msg = 'Username must be between 2 or 80 characters.'
+
             # Email validaiton
             if not validate_email(email):
                 everything_ok = False
@@ -303,7 +307,9 @@ class UsernameValidationView(View):
             return JsonResponse({'username_error': 'Username should only contain alphanumeric characters.'}, status=400)
 
         if User.objects.filter(username=username).exists():
-            return JsonResponse({'username_error': 'Sorry, this username is already in use.'}, status=409)
+            if request.user:
+                if request.user.username != username:
+                    return JsonResponse({'username_error': 'Sorry, this username is already in use.'}, status=409)
 
         return JsonResponse({'username_valid': True})
 

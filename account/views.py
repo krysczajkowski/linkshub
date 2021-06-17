@@ -14,13 +14,18 @@ from imghdr import tests
 from requests.api import delete
 
 
-from .models import UserPlatform, Platform, CustomLink
+from .models import UserPlatform, Platform, CustomLink, Profile
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 
 # Create your views here.
 @login_required(login_url='/authentication/login/')
 def profile(request):
+    profile = Profile.objects.get(user=request.user)
+    username = request.user.username
+    description = profile.description
+    profile_picture = profile.image
+
     links = CustomLink.objects.filter(user=request.user, is_active=1)
     bg_theme_name = UserTheme.objects.get(user=request.user).background_theme
 
@@ -62,7 +67,9 @@ def profile(request):
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
     context = {
-        'profile': request.user,
+        'username': username,
+        'description': description,
+        'profile_picture': profile_picture,
         'links': links,
         'bg_bg_color': bg_bg_color,
         'bg_font_color': bg_font_color,

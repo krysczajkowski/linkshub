@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'authentication',
     'account',
     'appearance',
+    'settings',
 ]
 
 MIDDLEWARE = [
