@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -7,8 +7,13 @@ import imghdr
 from imghdr import tests
 from django.contrib.auth.decorators import login_required
 from validate_email import validate_email
+from django.views import View
+import json
+from django.contrib.auth.views import PasswordChangeView
+from django.contrib.auth.forms import PasswordChangeForm
+from django.urls import reverse_lazy
 
-from .forms import EditForm
+from .forms import EditForm, PasswordChangingForm
 from account.utils import validate_image
 from authentication.utils import username_validation
 from account.models import Profile
@@ -71,3 +76,11 @@ def edit(request):
     }
 
     return render(request, 'settings/edit.html', context)
+
+
+class PasswordChangeView(PasswordChangeView):
+    form_class = PasswordChangingForm
+    success_url = reverse_lazy('password_reset_done') 
+
+def password_reset_done(request):
+    return render(request, 'settings/password_reset_done.html')
