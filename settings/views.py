@@ -12,6 +12,7 @@ import json
 from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
+from django.contrib.auth import logout as django_logout
 
 from .forms import EditForm, PasswordChangingForm
 from account.utils import validate_image
@@ -82,5 +83,14 @@ class PasswordChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
     success_url = reverse_lazy('password_reset_done') 
 
+
+@login_required(login_url='/authentication/login/')
 def password_reset_done(request):
     return render(request, 'settings/password_reset_done.html')
+
+
+@login_required(login_url='/authentication/login/')
+def logout(request):
+    django_logout(request)
+    messages.info(request, "Logged out successfully!")
+    return redirect("login")

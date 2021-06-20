@@ -254,3 +254,30 @@ btn_shadow.forEach(item => {
     
     })
 })
+
+
+// Click to copy
+const click_to_copy = document.querySelector('#click-to-copy')
+const click_to_copy_text = document.querySelector('#click-to-copy-text')
+const click_to_copy_link = document.querySelector('#click-to-copy-link')
+link = click_to_copy_link.textContent
+
+click_to_copy.addEventListener('click', () => {
+    // Set message that link was copied
+    click_to_copy_text.innerHTML = 'Copied!'
+
+    // Copy to clipboard
+    var tempInput = document.createElement("input");
+    tempInput.value = link;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+
+    // Set text back to Click To Copy
+    setTimeout(function(){
+        click_to_copy_text.innerHTML = 'Click To Copy' 
+    }, 2000);
+
+
+})

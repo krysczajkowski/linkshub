@@ -10,6 +10,9 @@ body {
 
 a{text-decoration: none}
 
+#click-to-copy {
+    cursor: pointer;
+}
 
 /* Font sizes */
 .font-size-08 {
