@@ -1,19 +1,3 @@
-function load_profile (e) {
-
-    fetch("/profile/" /*, options */)
-    .then((response) => response.text())
-    .then((html) => {
-        document.getElementById("profile_preview").innerHTML = html;
-    })
-    .catch((error) => {
-        console.warn(error);
-    });
-}
-
-window.addEventListener('load', (event) => {
-    load_profile()
-});
-
 // CSRF token
 function getCookie(name) {
     let cookieValue = null;
@@ -32,6 +16,46 @@ function getCookie(name) {
 }
 const csrftoken = getCookie('csrftoken');
 
+
+// Get user username 
+
+
+// Profile preview
+function load_profile (e) {
+
+    var username = 'profile/'
+
+    fetch('get_username', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        if(data.error) {
+            alert(data.error)
+        }
+        
+        username = data['username']
+
+        fetch(`/${username}` /*, options */)
+        .then((response) => response.text())
+        .then((html) => {
+            document.getElementById("profile_preview").innerHTML = html;
+        })
+        .catch((error) => {
+            console.warn(error);
+        });
+
+    });
+
+
+}
+
+window.addEventListener('load', (event) => {
+    load_profile()
+});
 
 
 bg_theme = document.querySelectorAll('.bg-theme')

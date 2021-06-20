@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views import View
 from django.contrib import messages
 import re
+from django.contrib.auth.models import User
 
 from .models import Theme, UserTheme, BackgroundTheme, CustomBackgroundTheme, ButtonTheme, CustomButtonTheme
 
@@ -27,10 +28,23 @@ def appearance(request):
         'bg_color_themes': bg_color_themes,
         'bg_gradient_themes': bg_gradient_themes,
         'button_color_themes': button_color_themes,
-        'btn_transparent': btn_transparent
+        'btn_transparent': btn_transparent,
     }
 
     return render(request, 'appearance/background.html', context)
+
+
+class get_user_username(View):
+    def post(self, request):
+
+        try:
+            username = request.user.username
+            return JsonResponse({'username': username})
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        
+
 
 class choose_background(View):
     def post(self, request):

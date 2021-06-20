@@ -11,4 +11,5 @@ urlpatterns = [
     path('button/fill', views.button_fill.as_view(), name='button_fill'),
     path('button/outline', views.choose_outline.as_view(), name='choose_outline'),
     path('button/shadow', views.choose_shadow.as_view(), name='choose_shadow'),
+    path('get_username', views.get_user_username.as_view(), name='get_user_username')
 ]
