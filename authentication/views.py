@@ -176,7 +176,7 @@ class LoginView(View):
         else:
             messages.error(request, 'Please fill all fields.')
 
-        return redirect('profile')
+        return redirect('profile_preview')
 
 class LogoutView(View):
     def post(self, request):

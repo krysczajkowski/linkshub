@@ -1,11 +1,21 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.models import User
 from account.models import UserPlatform, Platform, CustomLink, Profile
+from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
+from .utils import get_ip
 
 def profile(request, username):
     # Get user 
     user = get_object_or_404(User, username=username)
+
+    # Get visitor's ip
+    ip = get_ip(request)
+
+    # Register visitor in database if it doesn't exist
+    if not ProfileView.objects.filter(ip_address=ip, user=user).exists():
+        new_viewer = ProfileView.objects.create(user=user, ip_address=ip)
+        new_viewer.save()
 
     # Get profile
     profile = Profile.objects.get(user=user)
