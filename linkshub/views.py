@@ -77,6 +77,7 @@ def profile(request, username):
     platforms = UserPlatform.objects.filter(user=user, username__gt='',username__isnull=False)
 
     context = {
+        'user_id': user.id,
         'username': username,
         'description': description,
         'profile_picture': profile_picture,

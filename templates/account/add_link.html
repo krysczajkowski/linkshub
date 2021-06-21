@@ -29,16 +29,27 @@
                         <div class="url-feedback invalid-feedback" style='display:none;'>
                         </div>
 
+                        
+                            <p class="pt-2 mb-0 text-muted font-size-08 fw-bold">
+                                {% if delete_existing_image_checkbox %}
+                                    Pick new thumbnail
+                                {% else %}
+                                    Pick a thumbnail
+                                {% endif %}
+                            </p>
+                        
+
                         <div class="input-group">
-                          <input type="file" class="form-control mt-2" name='image' id='imageField' accept=".jpg, .png">
+                          <input type="file" class="form-control mt-0" name='image' id='imageField' accept=".jpg, .png">
                         </div>
                         <small class="text-muted super-small-font mb-3">Only .jpg, .jpeg or .png allowed</small>
                         <div class="image-feedback invalid-feedback" style='display:none;'>
                         </div>
+
                         {% if delete_existing_image_checkbox %}
                             {% if image %}
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="delete_existing_thumbnail" name='delete_existing_thumbnail'>
+                            <div class="form-check">
+                                <input class="form-check-input mt-2" type="checkbox" id="delete_existing_thumbnail" name='delete_existing_thumbnail'>
                                 <label class="form-check-label" for="delete_existing_thumbnail">
                                 Delete existing thumbnail
                                 </label>

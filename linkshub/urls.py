@@ -10,5 +10,6 @@ urlpatterns = [
     path('authentication/', include('authentication.urls')),
     path('profile/', include('account.urls')),
     path('settings/', include('settings.urls')),
+    path('dashboard/', include('dashboard.urls')),
     path('<slug:username>', views.profile)
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
