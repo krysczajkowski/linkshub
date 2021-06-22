@@ -17,8 +17,10 @@ from requests.api import delete
 from .models import UserPlatform, Platform, CustomLink, Profile
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
+from .decorators import check_ban
 
 # Create your views here.
+@check_ban
 @login_required(login_url='/authentication/login/')
 def profile_preview(request):
     # Get profile
@@ -98,6 +100,7 @@ def profile_preview(request):
     return render(request, 'account/profile_preview.html', context)
 
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def platforms(request):
     # Lista platform użytkownika
@@ -189,6 +192,7 @@ def platforms(request):
     return render(request, 'account/platforms.html', context)
 
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def links(request):
     links = CustomLink.objects.filter(user=request.user).order_by('-id')
@@ -202,6 +206,7 @@ def links(request):
 
     return render(request, 'account/links.html', context)
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def add_link(request):
     if request.method == 'POST':
@@ -267,6 +272,7 @@ class delete_link(View):
         return JsonResponse({'success': True})
 
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def edit_link(request, link_id):
     try:
@@ -320,6 +326,7 @@ def edit_link(request, link_id):
     print(context)
     return render(request, 'account/add_link.html', context)
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def themes(request):
     return render(request, 'account/themes.html')

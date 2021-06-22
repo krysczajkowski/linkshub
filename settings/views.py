@@ -18,10 +18,14 @@ from .forms import EditForm, PasswordChangingForm
 from account.utils import validate_image
 from authentication.utils import username_validation
 from account.models import Profile
+from account.decorators import check_ban
+
 # Create your views here.
+@check_ban
 def index(request):
     return redirect('edit')
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def edit(request):
     profile = Profile.objects.get(user=request.user)
@@ -84,6 +88,7 @@ class PasswordChangeView(PasswordChangeView):
     success_url = reverse_lazy('password_reset_done') 
 
 
+@check_ban
 @login_required(login_url='/authentication/login/')
 def password_reset_done(request):
     return render(request, 'settings/password_reset_done.html')

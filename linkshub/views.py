@@ -1,6 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from account.models import UserPlatform, Platform, CustomLink, Profile
+from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import get_ip
@@ -8,6 +8,14 @@ from .utils import get_ip
 def profile(request, username):
     # Get user 
     user = get_object_or_404(User, username=username)
+
+    # Check user ban
+    try:
+        user_ban = BannedUser.objects.get(user=user)
+        return redirect('user_banned')
+            
+    except:
+        pass
 
     # Get visitor's ip
     ip = get_ip(request)
@@ -93,3 +101,10 @@ def profile(request, username):
     }
 
     return render(request, 'linkshub/profile.html', context)
+
+
+def user_banned(request):
+    return render(request, 'linkshub/user_banned.html')
+
+def you_are_banned(request):
+    return render(request, 'linkshub/you_are_banned.html')

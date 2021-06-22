@@ -9,8 +9,10 @@ import re
 from django.contrib.auth.models import User
 
 from .models import Theme, UserTheme, BackgroundTheme, CustomBackgroundTheme, ButtonTheme, CustomButtonTheme
+from account.decorators import check_ban
 
 # Create your views here.
+@check_ban
 @login_required(login_url='/authentication/login/')
 def appearance(request):
     bg_color_themes = BackgroundTheme.objects.filter(type='color')

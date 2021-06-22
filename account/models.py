@@ -7,6 +7,8 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile_pic', null=True, blank=True)
     description = models.CharField(max_length=300, null=True, blank=True)
 
+class BannedUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
 
 class UserPlatform(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

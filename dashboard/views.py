@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 
 from account.models import CustomLink, UserPlatform
 from dashboard.models import LinkClick, PlatformClick
-
+from account.decorators import check_ban
 
 # Create your views here.
 class link_click(View):

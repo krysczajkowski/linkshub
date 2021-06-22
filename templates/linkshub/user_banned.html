@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}User Banned{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card card-body text-center">
+        <h5>Sorry! User you are looking for is banned.
+        <br>
+        <a href="{% url 'profile_preview' %}">Home Page</a></h5>
+    </div>
+</div>
+
+<script src="{% static 'js/edit.js' %}"></script>
+{% endblock %}
