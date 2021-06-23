@@ -3,6 +3,9 @@
 {% block title %}Social Media Platforms{% endblock %}
 
 {% block content %}
+<!-- Link Animations -->
+<link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
+
 <div class="container mt-5">
     <div class="row">
         <div class='col-12 col-lg-10 offset-lg-1 mb-2'>
@@ -30,7 +33,7 @@
                         </div>
 
                         
-                            <p class="pt-2 mb-0 text-muted font-size-08 fw-bold">
+                            <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
                                 {% if delete_existing_image_checkbox %}
                                     Pick new thumbnail
                                 {% else %}
@@ -38,24 +41,40 @@
                                 {% endif %}
                             </p>
                         
+                        <small class="text-muted font-size-08 mb-3">Only .jpg, .jpeg or .png allowed</small>
+
+                        <div class="image-feedback invalid-feedback" style='display:none;'></div>
 
                         <div class="input-group">
                           <input type="file" class="form-control mt-0" name='image' id='imageField' accept=".jpg, .png">
                         </div>
-                        <small class="text-muted super-small-font mb-3">Only .jpg, .jpeg or .png allowed</small>
-                        <div class="image-feedback invalid-feedback" style='display:none;'>
-                        </div>
+
 
                         {% if delete_existing_image_checkbox %}
                             {% if image %}
                             <div class="form-check">
                                 <input class="form-check-input mt-2" type="checkbox" id="delete_existing_thumbnail" name='delete_existing_thumbnail'>
-                                <label class="form-check-label" for="delete_existing_thumbnail">
+                                <label class="form-check-label mt-1" for="delete_existing_thumbnail">
                                 Delete existing thumbnail
                                 </label>
                             </div>
                             {% endif %}
                         {% endif %}
+
+
+                        <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
+                            Choose animation
+                        </p>
+                    
+                        <select class="form-select mt-0" aria-label="Choose animation" name='animation' id='animation-selector'>
+                            {% for animation in animations %}
+                                <option value='{{animation.name}}' id='{{animation.name}}'>{{animation.name}}</option>
+                            {% endfor %}
+                        </select>
+                        <div id='animation-preview'>
+                            <div id="animation-preview-text"></div>
+                            <div id="animation-preview-box"></div>
+                        </div>
 
                         {% include 'partials/_alerts.html' %}
 
@@ -71,5 +90,38 @@
         </div>
     </div>
 </div>
+
 <script src="{% static 'js/add_link.js' %}"></script>
+<script>
+    // Link animation
+    var link_animation = document.getElementById('{{ link_animation }}')
+    if (link_animation) {
+        link_animation.selected = 'selected'
+    }
+
+    // Collect all divs
+    var animation_preview = document.getElementById('animation-preview')
+    var animation_preview_text = document.getElementById('animation-preview-text')
+    var animation_preview_box = document.getElementById('animation-preview-box')
+    var animation_selector = document.getElementById('animation-selector')
+
+
+    animation_selector.addEventListener('change', (e)=>{
+        // Currently selected animation
+        var currently_selected = animation_selector.selectedOptions[0].id
+
+        // Text
+        animation_preview.classList.add('mt-2');
+        animation_preview_text.innerHTML = '<p class="text-center font-size-08 fw-bold  mb-0">ANIMATION PREVIEW</p>';
+
+        // Box
+        animation_preview_box.classList.add('py-3');
+
+        animation_preview_box.innerHTML = `<div class="row">
+    <div class="col-6 offset-3 rounded text-center pt-2 animate__animated animate__${currently_selected} animate__infinite animate__slow" style="min-height: 40px; background: #eeeeee">Link Title</div>
+</div>`;
+    })
+
+
+</script>
 {% endblock %}

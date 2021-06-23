@@ -14,7 +14,7 @@ from imghdr import tests
 from requests.api import delete
 
 
-from .models import UserPlatform, Platform, CustomLink, Profile
+from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 from .decorators import check_ban
@@ -215,17 +215,20 @@ def add_link(request):
         description = request.POST.get('description')
         url = request.POST.get('url')
         image = request.FILES.get('image', False)
+        animation = request.POST.get('animation')
 
-        data = validate_link_form(title, description, url, image)
+        data = validate_link_form(title, description, url, image, animation)
 
         everything_ok = data['everything_ok']
         error_msg = data['error_msg']
 
         if everything_ok:
+            animation = LinkAnimation.objects.get(name=animation)
+
             if image:
-                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, image=image)
+                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, image=image, animation=animation)
             else:
-                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url)
+                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, animation=animation)
 
             messages.success(request, 'Link added successfully.')
             return redirect('links')
@@ -233,8 +236,12 @@ def add_link(request):
         else:
             messages.error(request, error_msg)
 
+    animations = LinkAnimation.objects.all()
+
+
     context = {
-        'page_title': 'Add Link'
+        'page_title': 'Add Link',
+        'animations': animations
     }
 
     return render(request, 'account/add_link.html', context)
@@ -280,13 +287,21 @@ def edit_link(request, link_id):
     except:
         return redirect('profile')
 
+
+    animations = LinkAnimation.objects.all()
+
+    link_animation = link.animation
+    print(link_animation)
+
     context = {
         'page_title': 'Edit Link',
         'delete_existing_image_checkbox': True, 
         'title': link.title,
         'description': link.description,
         'url': link.url,
-        'image': link.image
+        'image': link.image,
+        'animations': animations,
+        'link_animation': link_animation
     }
 
     if request.method == 'POST':
@@ -297,16 +312,20 @@ def edit_link(request, link_id):
         url = request.POST.get('url')
         image = request.FILES.get('image', False)
         delete_existing_thumbnail = request.POST.get('delete_existing_thumbnail', False)
+        animation = request.POST.get('animation')
 
-        data = validate_link_form(title, description, url, image)
+        data = validate_link_form(title, description, url, image, animation)
 
         everything_ok = data['everything_ok']
         error_msg = data['error_msg']
 
         if everything_ok:
+            animation = LinkAnimation.objects.get(name=animation)
+
             link.title = title 
             link.description = description 
             link.url = url 
+            link.animation = animation
 
             if image:
                 link.image = image
@@ -322,8 +341,6 @@ def edit_link(request, link_id):
         else:
             messages.error(request, error_msg)
 
-
-    print(context)
     return render(request, 'account/add_link.html', context)
 
 @check_ban

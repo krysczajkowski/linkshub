@@ -17,6 +17,9 @@
     <!-- Font awesome -->
     <script src="https://kit.fontawesome.com/4568a37a67.js" crossorigin="anonymous"></script>
 
+    <!-- Link Animations -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
+
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{% static 'css/account_main.css' %}">
 
@@ -43,7 +46,7 @@
             <div class="col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3">
                 <div class="row my-2">
                     <div class="d-grid gap-2">
-                        <a href="#" id='{{ link.id }}' class="btn {{btn_outline}} mt-2 mx-0 row d-flex px-2 py-1 {{btn_shadow}} link-click" target="_blank" style='background-color: {{btn_bg_color}}; color: {{btn_font_color}}; border: 2px solid {{btn_border_color}};'>
+                        <a href="#" id='{{ link.id }}' class="btn {{btn_outline}} mt-2 mx-0 row d-flex px-2 py-1 {{btn_shadow}} link-click animate__animated animate__{{link.animation}} animate__infinite animate__slow" target="_blank" style='background-color: {{btn_bg_color}}; color: {{btn_font_color}}; border: 2px solid {{btn_border_color}};'>
                             {% if link.image %}
                             <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
                                 <img src="{{ link.image.url }}" class="{{btn_outline}} link-image-size">

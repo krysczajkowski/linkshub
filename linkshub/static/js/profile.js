@@ -64,4 +64,3 @@ platforms.forEach(platform => {
         });
     })
 })
-

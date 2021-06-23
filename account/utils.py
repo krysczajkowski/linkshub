@@ -3,6 +3,8 @@ from imghdr import tests
 from django.core.validators import URLValidator
 from django.core.exceptions import ValidationError
 
+from .views import LinkAnimation
+
 def validate_image(image, everything_ok, error_msg):
     # imghdr library has a bug (with jpeg files) and this code fixes it
     def test_jpeg1(h, f):
@@ -40,7 +42,7 @@ def validate_image(image, everything_ok, error_msg):
     return {'everything_ok': everything_ok, 'error_msg': error_msg}
 
 
-def validate_link_form(title, description, url, image):
+def validate_link_form(title, description, url, image, animation):
     everything_ok = True 
     error_msg = ''
 
@@ -64,5 +66,16 @@ def validate_link_form(title, description, url, image):
         everything_ok = validated_image['everything_ok']
         error_msg = validated_image['error_msg']
 
+    #animations = ['none', 'pulse', 'jump', 'waggle', 'sheen', 'spin']
+
+    #if animation not in animations:
+    #    everything_ok = False 
+    #    error_msg = 'Please choose correct animation.'
+
+    try:
+        chosen_animation = LinkAnimation.objects.get(name=animation)
+    except LinkAnimation.DoesNotExist:
+        everything_ok = False 
+        error_msg = 'Please choose correct animation.'  
         
     return {'everything_ok': everything_ok, 'error_msg': error_msg}
