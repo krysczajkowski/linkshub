@@ -14,9 +14,10 @@
             <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Link</a></span>
         </div>
     </div>
+    <div class="links">
     {% for link in links %}
         {% if link.image %}
-        <div class="card shadow-sm mb-3">
+        <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
           <div class="row g-0">
             <div class="col-2 col-md-1 p-0 p-2 m-0 m-0">
                 <img src="{{ link.image.url }}" class="img-fluid rounded" style="max-height: 150px!important; width: auto;" alt="...">
@@ -63,7 +64,7 @@
           </div>
         </div>
         {% else %}
-        <div class="card shadow-sm mb-3">
+        <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
           <div class="row g-0">
             <div class="col-10 col-md-11">
               <div class="card-body py-1">
@@ -108,7 +109,67 @@
         </div>
         {% endif %}
     {% endfor %}
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script>
+  // CSRF token
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+
+  $(document).ready(function () {
+    $('.links').sortable({
+      update: function (event, ui) {
+        $(this).children().each(function (index) {
+          if ($(this).attr('data-position') != (index+1)) {
+            $(this).attr('data-position', (index+1)).addClass('updated')
+          }
+        })
+        saveNewPositions()
+      }
+    });
+  })
+
+  function saveNewPositions() {
+    var positions = []
+    $('.updated').each(function() {
+      positions.push([$(this).attr('data-index'), $(this).attr('data-position')])
+      $(this).removeClass('updated')
+    })
+
+
+    fetch('change_positions', {
+      body: JSON.stringify({'positions': positions, }),
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-CSRFToken': csrftoken
+      },
+    }).then(res=>res.json()).then(data=>{
+      console.log('data', data)
+      if(data.error) {
+        alert(data.error)
+      }
+    }); 
+  }
+</script>
 <script src="{% static 'js/links.js' %}"></script>
 {% endblock %}

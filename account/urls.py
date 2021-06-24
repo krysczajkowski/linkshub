@@ -11,5 +11,6 @@ urlpatterns = [
     path('links/add', views.add_link, name='add_link'),
     path('links/activate', views.activate_link.as_view(), name='activate_link'),
     path('links/delete', views.delete_link.as_view(), name='delete_link'),
+    path('links/change_positions', views.change_positions.as_view(), name='change_positions'),
     path('links/edit/<int:link_id>', views.edit_link, name='edit_link'),
 ]

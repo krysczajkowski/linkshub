@@ -34,7 +34,7 @@ def profile(request, username):
     profile_picture = profile.image
 
     # Get all links
-    links = CustomLink.objects.filter(user=user, is_active=1)
+    links = CustomLink.objects.filter(user=user, is_active=1).order_by('position')
 
 
     # Get background theme

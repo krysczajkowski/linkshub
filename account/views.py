@@ -32,7 +32,7 @@ def profile_preview(request):
     profile_picture = profile.image
 
     # Get all links
-    links = CustomLink.objects.filter(user=request.user, is_active=1)
+    links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
 
 
     # Get background theme
@@ -195,7 +195,7 @@ def platforms(request):
 @check_ban
 @login_required(login_url='/authentication/login/')
 def links(request):
-    links = CustomLink.objects.filter(user=request.user).order_by('-id')
+    links = CustomLink.objects.filter(user=request.user).order_by('position')
 
     links_count = links.count()
 
@@ -347,3 +347,21 @@ def edit_link(request, link_id):
 @login_required(login_url='/authentication/login/')
 def themes(request):
     return render(request, 'account/themes.html')
+
+
+class change_positions(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        positions = data['positions']
+        
+        try:
+            for id, position in positions:
+                link = CustomLink.objects.get(id=id)
+                link.position = position 
+                link.save()
+        except (ValueError, CustomLink.DoesNotExist) as e:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+            
+
+
+        return JsonResponse({'success': True})
