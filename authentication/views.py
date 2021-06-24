@@ -168,6 +168,8 @@ class LoginView(View):
                     if not request.POST.get('remember_me', False):
                         request.session.set_expiry(0)
                         request.session.modified = True
+                    
+                    return redirect('profile_preview')
 
                 else:
                     messages.error(request, 'Account is not active, please check your email.')
@@ -176,7 +178,7 @@ class LoginView(View):
         else:
             messages.error(request, 'Please fill all fields.')
 
-        return redirect('profile_preview')
+        return redirect('login')
 
 class LogoutView(View):
     def post(self, request):
