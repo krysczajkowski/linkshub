@@ -68,7 +68,7 @@
                     
                         <select class="form-select mt-0" aria-label="Choose animation" name='animation' id='animation-selector'>
                             {% for animation in animations %}
-                                <option value='{{animation.name}}' id='{{animation.name}}'>{{animation.name}}</option>
+                                <option value='{{animation.id}}' id='{{animation.name}}'>{{animation.name}}</option>
                             {% endfor %}
                         </select>
                         <div id='animation-preview'>

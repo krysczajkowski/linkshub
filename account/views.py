@@ -18,6 +18,7 @@ from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 from .decorators import check_ban
+from .forms import CustomLinkForm
 
 # Create your views here.
 @check_ban
@@ -214,31 +215,18 @@ def links(request):
 @login_required(login_url='/authentication/login/')
 def add_link(request):
     if request.method == 'POST':
+        form = CustomLinkForm(request.POST, request.FILES)
 
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        url = request.POST.get('url')
-        image = request.FILES.get('image', False)
-        animation = request.POST.get('animation')
-
-        data = validate_link_form(title, description, url, image, animation)
-
-        everything_ok = data['everything_ok']
-        error_msg = data['error_msg']
-
-        if everything_ok:
-            animation = LinkAnimation.objects.get(name=animation)
-
-            if image:
-                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, image=image, animation=animation)
-            else:
-                link = CustomLink.objects.create(user=request.user, title=title, description=description, url=url, animation=animation)
+        if form.is_valid():
+            newLink = form.save(commit=False)
+            newLink.user = request.user
+            newLink.save()
 
             messages.success(request, 'Link added successfully.')
             return redirect('links')
 
         else:
-            messages.error(request, error_msg)
+            messages.error(request, 'Something went wrong. Please try again.')
 
     animations = LinkAnimation.objects.all()
 
