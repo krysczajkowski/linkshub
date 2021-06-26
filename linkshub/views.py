@@ -29,7 +29,11 @@ def profile(request, username):
     profile = Profile.objects.get(user=user)
 
     # Get basic data
-    username = request.user.username
+    if profile.name:
+        username = profile.name
+    else:
+        username = user.username
+
     description = profile.description
     profile_picture = profile.image
 

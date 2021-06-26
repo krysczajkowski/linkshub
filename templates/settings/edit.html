@@ -24,7 +24,7 @@
             <div class="card card-body">
                 <form method='POST' enctype="multipart/form-data" id='edit-form'>
                     {% csrf_token %}
-                    <input type="file" class='d-none' id='imageField' name='imageField' accept='.jpg, .png'>
+                    <input type="file" class='d-none' id='imageField' name='image' accept='.jpg, .png'>
                     <div class="row">
                         <div class="col-3 d-flex justify-content-end">
                             {% if image %}
@@ -34,7 +34,7 @@
                             {% endif %}
                         </div>
                         <div class="col-9 col-md-6">
-                            <p class='fw-bold mb-0'>_kczajkowski</p>
+                            <p class='fw-bold mb-0'>{{ username }}</p>
                             <a href="#" class='fw-bold' onclick="document.getElementById('imageField').click(); return false" id='profile_img_change'>Change Profile Picture</a>
                             <div class="image-feedback invalid-feedback" style='display:none;'>
                             </div>
@@ -42,21 +42,22 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col-12 col-md-3 d-md-flex justify-content-end mt-1">
-                            <span class='fw-bold'>Username</span>
+                            <span class='fw-bold'>Name</span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <input type="text" name='username' placeholder='Username' id='usernameField' class='form-control' value='{{username}}'>
-                            <div class="username-feedback invalid-feedback" style='display:none;'>
+                            <input type="text" name='name' placeholder='Name' id='nameField' class='form-control' value='{{form.name.value}}'>
+                            <div class="name-feedback invalid-feedback" style='display:none;'>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row mt-4">
                         <div class="col-12 col-md-3 d-md-flex justify-content-end mt-1">
                             <span class='fw-bold'>Description</span>
                         </div>
                         <div class="col-12 col-md-6">
-                            <textarea class='form-control' name='description' id='descriptionField'>{{description}}</textarea>
-                            <div class="description-feedback invalid-feedback" style='display:none;'>
+                            <textarea class='form-control' name='description' id='descriptionField'>{{ form.description.value }}</textarea>
+                            <div class="description-feedback invalid-feedback" style='display:none;'>{{ form.description.errors }}
                             </div>
                         </div>
                     </div>

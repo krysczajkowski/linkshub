@@ -27,7 +27,11 @@ def profile_preview(request):
     profile = Profile.objects.get(user=request.user)
 
     # Get basic data
-    username = request.user.username
+    if profile.name:
+        username = profile.name
+    else:
+        username = request.user.username
+        
     description = profile.description
     profile_picture = profile.image
 

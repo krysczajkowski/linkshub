@@ -30,53 +30,26 @@ def index(request):
 def edit(request):
     profile = Profile.objects.get(user=request.user)
     user = profile.user 
-
     username = user.username
-    description = profile.description
+
     profile_pic = profile.image
 
     if request.method == 'POST':
-        everything_ok = True
-        error_msg = ''
-
-        image = request.FILES.get('imageField', False)
-        username = request.POST['username']
-        description = request.POST['description']
-    
-        # Username validation
-        validated_username = username_validation(request, username, everything_ok, error_msg)
-        everything_ok = validated_username['everything_ok']
-        error_msg = validated_username['error_msg']
-
-        # Description validation
-        if len(description) > 300:
-            everything_ok = False
-            error_msg = 'Description must be less than 300 characters.'
-
-        # Image validation
-        if image:
-            validated_image = validate_image(image, everything_ok, error_msg)
-            everything_ok = validated_image['everything_ok']
-            error_msg = validated_image['error_msg']
-
-        if everything_ok:
-            user.username = username 
-            user.save()
-
-            if image:
-                profile.image = image 
-                profile_pic = profile.image
-            
-            profile.description = description
-            profile.save()
-
-            messages.success(request, 'Profile updated.')  
+        form = EditForm(request.POST, request.FILES, instance=profile)
+        
+        if form.is_valid():
+            editedForm = form.save()
+            messages.success(request, 'Profile updated.')
         else:
-            messages.error(request, error_msg)  
+            messages.error(request, 'Profile not updated. Please try again.')
+        
+        return redirect('/settings/edit')
+    else:
+        form = EditForm(instance=profile)
 
     context = {
-        'username': username, 
-        'description': description,
+        'form': form,
+        'username': username,
         'image': profile_pic
     }
 

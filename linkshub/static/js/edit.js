@@ -67,6 +67,7 @@ function validateFile(){
 }
 
 // Username validation
+/*
 const usernameField = document.querySelector('#usernameField')
 const usernameFeedback = document.querySelector('.username-feedback')
 
@@ -110,6 +111,36 @@ usernameField.addEventListener('keyup', (e) => {
         usernameFeedback.innerHTML = `<p>Username must be between 2 and 80 characters.</p>`
     }
 })
+*/
+
+// Name validation
+const nameField = document.querySelector('#nameField')
+const nameFeedback = document.querySelector('.name-feedback')
+
+nameField.addEventListener('keyup', (e) => {
+    const nameValue = e.target.value;
+
+    nameField.classList.remove('is-invalid')
+    nameField.classList.remove('is-valid')
+    nameFeedback.style.display = 'none'
+
+    if (nameValue.length < 40) {
+        submitBtn.removeAttribute('disabled')
+
+        nameField.classList.remove('is-invalid')
+        nameField.classList.add('is-valid')
+    } else {
+        // Dispable submit button
+        submitBtn.setAttribute('disabled', 'disabled')
+        submitBtn.disabled = true
+
+        nameField.classList.add('is-invalid')
+
+        nameFeedback.style.display = 'block'
+        nameFeedback.innerHTML = `<p>Name must be less than 40 characters.</p>`
+    }
+})
+
 
 // Description validation
 const descriptionField = document.querySelector('#descriptionField')
