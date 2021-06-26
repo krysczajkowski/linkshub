@@ -43,7 +43,7 @@ class CustomLink(models.Model):
     description = models.CharField(max_length=220, blank=True)
     url = models.URLField(max_length=300)
     image = models.ImageField(upload_to='link_img', blank=True, null=True)
-    animation = models.ForeignKey(LinkAnimation, on_delete=models.SET_NULL, blank=True, null=True)
+    animation = models.ForeignKey(LinkAnimation, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
     position = models.IntegerField(default=0, blank=True)
 

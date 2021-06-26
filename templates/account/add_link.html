@@ -20,15 +20,15 @@
 
                     <form method='POST' class='mt-4' enctype="multipart/form-data" id='add-link-form'>
                         {% csrf_token %}
-                        <input type="text" name='title' class='form-control' placeholder='Title' id='titleField' value='{{ title }}'>
+                        <input type="text" name='title' class='form-control' placeholder='Title' id='titleField' value='{{ form.title.value }}'>
                         <div class="title-feedback invalid-feedback" style='display:none;'>
                         </div>
 
-                        <input type="text" name='description' class='form-control mt-2' placeholder='Description (optional)' id='descriptionField'  value='{{ description }}'>
+                        <input type="text" name='description' class='form-control mt-2' placeholder='Description (optional)' id='descriptionField'  value='{{ form.description.value }}'>
                         <div class="description-feedback invalid-feedback" style='display:none;'>
                         </div>
 
-                        <input type="url" name='url' class='form-control mt-2' placeholder='https://url.com' id='urlField'  value='{{ url }}'>
+                        <input type="url" name='url' class='form-control mt-2' placeholder='https://url.com' id='urlField'  value='{{ form.url.value }}'>
                         <div class="url-feedback invalid-feedback" style='display:none;'>
                         </div>
 
@@ -51,14 +51,12 @@
 
 
                         {% if delete_existing_image_checkbox %}
-                            {% if image %}
                             <div class="form-check">
-                                <input class="form-check-input mt-2" type="checkbox" id="delete_existing_thumbnail" name='delete_existing_thumbnail'>
+                                <input class="form-check-input mt-2" type="checkbox" id="delete_existing_thumbnail" name='image-clear'>
                                 <label class="form-check-label mt-1" for="delete_existing_thumbnail">
                                 Delete existing thumbnail
                                 </label>
                             </div>
-                            {% endif %}
                         {% endif %}
 
 
@@ -67,8 +65,8 @@
                         </p>
                     
                         <select class="form-select mt-0" aria-label="Choose animation" name='animation' id='animation-selector'>
-                            {% for animation in animations %}
-                                <option value='{{animation.id}}' id='{{animation.name}}'>{{animation.name}}</option>
+                            {% for animation in form.animation %}
+                                {{ animation }}
                             {% endfor %}
                         </select>
                         <div id='animation-preview'>
@@ -108,7 +106,7 @@
 
     animation_selector.addEventListener('change', (e)=>{
         // Currently selected animation
-        var currently_selected = animation_selector.selectedOptions[0].id
+        var currently_selected = animation_selector.selectedOptions[0].text
 
         // Text
         animation_preview.classList.add('mt-2');

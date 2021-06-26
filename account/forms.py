@@ -8,3 +8,7 @@ class CustomLinkForm(forms.ModelForm):
     class Meta:
         model = CustomLink 
         fields = ('title', 'description', 'url', 'image', 'animation')
+
+    def __init__(self, *args, **kwargs):
+        super(CustomLinkForm, self).__init__(*args, **kwargs)
+        self.fields['animation'].empty_label = None

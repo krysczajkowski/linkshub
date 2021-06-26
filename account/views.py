@@ -279,59 +279,31 @@ def edit_link(request, link_id):
     except:
         return redirect('profile')
 
+    form = CustomLinkForm(instance=link)
 
     animations = LinkAnimation.objects.all()
 
     link_animation = link.animation
-    print(link_animation)
 
     context = {
         'page_title': 'Edit Link',
-        'delete_existing_image_checkbox': True, 
-        'title': link.title,
-        'description': link.description,
-        'url': link.url,
-        'image': link.image,
+        'delete_existing_image_checkbox': link.image, 
         'animations': animations,
-        'link_animation': link_animation
+        'link_animation': link_animation,
+        'form': form
     }
 
     if request.method == 'POST':
-        everything_ok = True
+        form = CustomLinkForm(request.POST, request.FILES, instance=link)
 
-        title = request.POST.get('title')
-        description = request.POST.get('description')
-        url = request.POST.get('url')
-        image = request.FILES.get('image', False)
-        delete_existing_thumbnail = request.POST.get('delete_existing_thumbnail', False)
-        animation = request.POST.get('animation')
+        if form.is_valid():
+            form.save()
 
-        data = validate_link_form(title, description, url, image, animation)
-
-        everything_ok = data['everything_ok']
-        error_msg = data['error_msg']
-
-        if everything_ok:
-            animation = LinkAnimation.objects.get(name=animation)
-
-            link.title = title 
-            link.description = description 
-            link.url = url 
-            link.animation = animation
-
-            if image:
-                link.image = image
-                
-            else:
-                if delete_existing_thumbnail:
-                    link.image = None 
-
-            link.save()
-            messages.success(request, 'Link updated successfully.')
+            messages.success(request, 'Link edited successfully.')
             return redirect('links')
 
         else:
-            messages.error(request, error_msg)
+            messages.error(request, 'Something went wrong. Please try again.')
 
     return render(request, 'account/add_link.html', context)
 
