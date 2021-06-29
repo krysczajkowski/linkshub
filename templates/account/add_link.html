@@ -46,7 +46,7 @@
                         <div class="image-feedback invalid-feedback" style='display:none;'></div>
 
                         <div class="input-group">
-                          <input type="file" class="form-control mt-0" name='image' id='imageField' accept=".jpg, .png">
+                          <input type="file" class="form-control mt-0" name='image' id='imageField' accept=".jpg, .png" data-bs-toggle="modal" data-bs-target="#cropModal">
                         </div>
 
 
@@ -89,6 +89,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop your picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="image-box"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary w-100" id="crop-btn" type="button" data-bs-dismiss="modal">Crop</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
 <script src="{% static 'js/add_link.js' %}"></script>
 <script>
     // Collect all divs
