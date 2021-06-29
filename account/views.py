@@ -214,6 +214,8 @@ def links(request):
 @check_ban
 @login_required(login_url='/authentication/login/')
 def add_link(request):
+    form = CustomLinkForm(initial={'title': '', 'description': '', 'url': ''}) 
+
     if request.method == 'POST':
         form = CustomLinkForm(request.POST, request.FILES)
 
@@ -233,7 +235,7 @@ def add_link(request):
 
     context = {
         'page_title': 'Add Link',
-        'animations': animations
+        'form': form,
     }
 
     return render(request, 'account/add_link.html', context)
@@ -288,8 +290,6 @@ def edit_link(request, link_id):
     context = {
         'page_title': 'Edit Link',
         'delete_existing_image_checkbox': link.image, 
-        'animations': animations,
-        'link_animation': link_animation,
         'form': form
     }
 
