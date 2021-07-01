@@ -7,6 +7,7 @@ from account.models import CustomLink, UserPlatform
 class ProfileView(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     ip_address = models.GenericIPAddressField()
+    date = models.DateTimeField(auto_now_add=True, blank=True)
 
 
 class LinkClick(models.Model):

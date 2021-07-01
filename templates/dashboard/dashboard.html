@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Social Media Platforms{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% include 'partials/_alerts.html' %}
+    <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+
+
+<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
+<script>
+// Tworzymy funkcje tworzącą wykres
+const renderChart = (data, labels) => {
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Last 3 months profile views',
+                fill: false,
+                data: data,
+                borderColor: [
+                    '#dd2476',
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Profile views by date'
+            }
+        }
+    });
+}
+
+const getChartData = () => {
+    fetch('profile_views_summary')
+    .then((res)=>res.json())
+    .then((results)=>{
+        console.log('results', results.chart_data)
+        const chart_data = results.chart_data
+        const [labels, data] = [Object.keys(chart_data), Object.values(chart_data)]
+
+        console.log(data, labels)
+        renderChart(data, labels)
+    })
+}
+
+document.onload = getChartData()
+</script>
+{% endblock %}
