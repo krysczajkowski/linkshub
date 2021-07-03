@@ -3,15 +3,35 @@
 {% block title %}Social Media Platforms{% endblock %}
 
 {% block content %}
-<div class="container">
-    {% include 'partials/_alerts.html' %}
-    <canvas id="myChart" width="400" height="400"></canvas>
+
+<div class="row mx-0 px-3 mt-4">
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card">
+        <div class="row text-center p-4">
+            <div class="col">
+                <span class='fw-bold font-size-15'>{{ views }}</span><br>
+                <span class='fw-bold font-size-08 text-muted'>VIEWS</span>
+            </div>
+            <div class="col">
+                <span class='fw-bold font-size-15'>{{ clicks }}</span><br>
+                <span class='fw-bold font-size-08 text-muted'>CLICKS</span>
+            </div>
+            <div class="col">
+                <span class='fw-bold font-size-15'>{{ cpr|floatformat:1 }}%</span><br>
+                <span class='fw-bold font-size-08 text-muted'>CPR</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card">
+        <canvas id="myChart" style="position: relative; height: 40vh; width:80vw"></canvas>
+    </div>
 </div>
+
+
 
 
 <script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
 <script>
-// Tworzymy funkcje tworzącą wykres
 const renderChart = (data, labels) => {
     var ctx = document.getElementById('myChart').getContext('2d');
     var myChart = new Chart(ctx, {
@@ -19,12 +39,11 @@ const renderChart = (data, labels) => {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Last 3 months profile views',
+                label: 'Unique Profile Views',
                 fill: false,
                 data: data,
-                borderColor: [
-                    '#dd2476',
-                ],
+                backgroundColor: 'rgba(221, 36, 118, 0.6)',
+                borderColor: '#dd2476',
                 borderWidth: 2
             }]
         },
@@ -32,7 +51,14 @@ const renderChart = (data, labels) => {
             responsive: true,
             title: {
                 display: true,
-                text: 'Profile views by date'
+                text: 'Unique Profile Views by Date'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
             }
         }
     });
@@ -46,7 +72,6 @@ const getChartData = () => {
         const chart_data = results.chart_data
         const [labels, data] = [Object.keys(chart_data), Object.values(chart_data)]
 
-        console.log(data, labels)
         renderChart(data, labels)
     })
 }
