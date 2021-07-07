@@ -18,3 +18,4 @@ class LinkClick(models.Model):
 class PlatformClick(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     platform = models.ForeignKey(UserPlatform, on_delete=models.CASCADE, blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)

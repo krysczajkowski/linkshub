@@ -1,3 +1,4 @@
+from django import views
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views import View
@@ -7,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 import datetime
 import collections
 
-from account.models import CustomLink, UserPlatform
+from account.models import CustomLink, Platform, UserPlatform
 from dashboard.models import LinkClick, PlatformClick, ProfileView
 from account.decorators import check_ban
 from .utils import get_view_date
@@ -17,54 +18,83 @@ from .utils import get_view_date
 @login_required(login_url='/authentication/login/')
 def dashboard(request):
     views_count = ProfileView.objects.filter(user=request.user).count()
-    clicks_count = LinkClick.objects.filter(user=request.user).count()
+    link_clicks = LinkClick.objects.filter(user=request.user).count()
+    platform_clicks = PlatformClick.objects.filter(user=request.user).count()
 
     try:
-        cpr_percent =  clicks_count / views_count * 100
+        lcpr_percent =  link_clicks / views_count * 100
     except ZeroDivisionError:
-        cpr_percent = 0
-
-    print(ProfileView.objects.filter(user=request.user))
+        lcpr_percent = 0
 
     context = {
         'views': views_count,
-        'clicks': clicks_count,
-        'cpr': cpr_percent
+        'link_clicks': link_clicks,
+        'platform_clicks': platform_clicks,
+        'lcpr': lcpr_percent
     }
     return render(request, 'dashboard/dashboard.html', context)
 
-# Load profile views data for chart
-def profile_views_summary(request):
-    # Get profile views from 3 months ago to today
-    today = datetime.date.today()
-    three_months_age = today - datetime.timedelta(days=30*3)
-    profile_views = ProfileView.objects.filter(user=request.user, date__gte=three_months_age)
+# Load dashboard summary chart 
+def dashboard_summary_chart(request):  
+    # Time period for the chart
+    data = json.loads(request.body)
 
-    chart_data = {}
+    try:
+        # Time period as a string
+        str_sdate = data['sdate'][:10]
+        str_edate = data['edate'][:10]
 
-    # Get all views in a specific time
-    def get_date_views(date):
-        # Set time slots
-        date_start = date.replace(microsecond=0, second=0, minute=0)
-        date_end = date.replace(microsecond=59, second=59, minute=59)
+        # Time period as a date 
+        sdate = datetime.datetime.strptime(str_sdate, '%Y-%m-%d')
+        edate = datetime.datetime.strptime(str_edate, '%Y-%m-%d')
 
-        # Get all views from the time slot
-        views_by_date = profile_views.filter(date__gte=date_start, date__lte=date_end).count()
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-        return views_by_date
+    # Time delta
+    delta = edate - sdate
 
-    # Get list of dates
-    date_list = list(set(map(get_view_date, profile_views)))
+    try:
+        # Data for chart
+        profile_views = ProfileView.objects.filter(user=request.user)
+        link_clicks = LinkClick.objects.filter(user=request.user)
+        platform_clicks = PlatformClick.objects.filter(user=request.user)
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-    # Create a dictionary with dates and visitations
-    for date in date_list:
-        date_as_string = date.strftime('%Y-%m-%d %H')
-        chart_data[date_as_string] = get_date_views(date)
+    # Create list for final chart data
+    datelist = []
+    views_data = [] 
+    link_data = []
+    platform_data = []
 
-    # Order char_data by date (ascending)
-    order_chart_data = collections.OrderedDict(sorted(chart_data.items()))
+    try:
+        # Final dates in the chart
+        for i in range(delta.days + 1):
+            date = sdate + datetime.timedelta(days=i)
+            pretty_date = datetime.datetime.strptime(str(date)[:10],'%Y-%m-%d').date()
+            datelist.append(pretty_date)
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+    
 
-    return JsonResponse({'chart_data': order_chart_data}, safe=False)    
+    # Final views, link and platform data in the chart
+    for date in datelist:
+        # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
+        date_str = date.strftime('%Y-%m-%d')
+        date_end = date_str + ' 23:59:59'
+
+        # Final views, link and platform data in the chart
+        views_by_date = profile_views.filter(date__gte=date, date__lte=date_end).count()
+        links_by_date = link_clicks.filter(date__gte=date, date__lte=date_end).count()
+        platforms_by_date = platform_clicks.filter(date__gte=date, date__lte=date_end).count()
+
+        views_data.append(views_by_date)
+        link_data.append(links_by_date)
+        platform_data.append(platforms_by_date)
+
+    # Send chart data back to javascript
+    return JsonResponse({'datelist': datelist, 'views_data': views_data, 'link_data': link_data, 'platform_data': platform_data}, safe=False)
 
 
 # Add link click  
