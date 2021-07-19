@@ -7,6 +7,8 @@ from account.models import CustomLink, UserPlatform
 class ProfileView(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     ip_address = models.GenericIPAddressField()
+    country = models.CharField(max_length=70, blank=True, null=True)
+    city = models.CharField(max_length=100, blank=True, null=True) 
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
 

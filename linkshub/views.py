@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
+from django.contrib.gis.geoip2 import GeoIP2
+
 from .utils import get_ip
 
 def profile(request, username):
@@ -20,10 +22,29 @@ def profile(request, username):
     # Get visitor's ip
     ip = get_ip(request)
 
+    # Get visitors location
+    try:    
+        g = GeoIP2()
+        country = g.country('5.172.234.51')['country_name'] # 128.101.101.101 -> ip
+        city = g.city('5.172.234.51')['city']
+
+        if country is None:
+            country = 'Unknown'
+        elif city is None:
+            city = 'Unknown'
+
+        print('Country: ', country)
+        print('City: ', city)
+
+    except: # gaierror, AddressNotFoundError, TypeError, 
+        country = 'Unknown'
+        city = 'Unknown'
+
+
     # Register visitor in database if it doesn't exist
     if not ProfileView.objects.filter(ip_address=ip, user=user).exists():
-        new_viewer = ProfileView.objects.create(user=user, ip_address=ip)
-        new_viewer.save()
+        new_visitor = ProfileView.objects.create(user=user, ip_address=ip, country=country, city=city)
+        new_visitor.save()
 
     # Get profile
     profile = Profile.objects.get(user=user)
