@@ -3,53 +3,71 @@
 {% block title %}Social Media Platforms{% endblock %}
 
 {% block content %}
-<div class="row mx-0 mt-4">
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2">
-        <div id="reportrange" class='rounded py-2' style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-            <i class="fa fa-calendar"></i>&nbsp;
-            <span></span> <i class="fa fa-caret-down"></i>
-        </div>
-    </div>
-</div>
-<div class="row mx-0 px-3 mt-4">
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-4">
-        <div class="row text-center p-4">
+<div class="row mx-0 px-3 mt-5">
+    <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Summary</p>
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2">
+        <div class="row text-center py-2">
             <div class="col">
-                <span class='fw-bold font-size-15'>{{ views }}</span><br>
-                <span class='fw-bold font-size-08 text-muted'>VIEWS</span>
+                <span class='fw-bold font-size-12' id='summary_visitors'></span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='views-dot me-1'></div> VIEWS
+                </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-15'>{{ link_clicks }}</span><br>
-                <span class='fw-bold font-size-08 text-muted'>LINK CLICKS</span>
+                <span class='fw-bold font-size-12' id='summary_links_clicks'></span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='link-dot me-1'></div> LINK CLICKS
+                </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-15'>{{ platform_clicks }}</span><br>
-                <span class='fw-bold font-size-08 text-muted'>PLATFORM CLICKS</span>
+                <span class='fw-bold font-size-12' id='summary_platforms_clicks'></span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='platform-dot me-1'></div> PLATFORM CLICKS
+                </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-15'>69</span><br>
-                <span class='fw-bold font-size-08 text-muted'>PRIVATE LINKS CLICKS</span>
+                <span class='fw-bold font-size-12'>69</span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='private-link-dot me-1'></div> PRIVATE LINKS CLICKS
+                </span>
             </div>
         </div>
     </div>
 
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card">
-        <div class="row text-center p-4">
+        <div class="row text-center py-2">
             <div class="col">
-                <span class='fw-bold font-size-15'>{{ lcpr|floatformat:1 }}%</span><br>
-                <span class='fw-bold font-size-08 text-muted'>LCPR <i class="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link Click Through Rate - number of link clicks devided through the number of unique profile views."></i></span>
+                <span class='fw-bold font-size-12' id='summary_lcpr_percent'></span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='link-dot me-1'></div> LCPR 
+                    <i class="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link Click Through Rate - number of link clicks devided through the number of unique profile views."></i></span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-15'>69.0%</span><br>
-                <span class='fw-bold font-size-08 text-muted'>PCRP</span>
+                <span class='fw-bold font-size-12'>69.0%</span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='platform-dot me-1'></div> PCRP
+                </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-15'>69.0%</span><br>
-                <span class='fw-bold font-size-08 text-muted'>PLCRP</span>
+                <span class='fw-bold font-size-12'>69.0%</span><br>
+                <span class='fw-bold font-size-08 text-muted'>
+                    <div class='private-link-dot me-1'></div> PLCRP
+                </span>
             </div>
         </div>
     </div>
     
+    
+    <div class="row mx-0 px-0 mt-4">
+        <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Search By Date</p>
+        <div class="col-12 col-md-10 offset-md-1 px-0">
+            <div id="reportrange" class='rounded py-2' style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+                <i class="fa fa-calendar"></i>&nbsp;
+                <span></span> <i class="fa fa-caret-down"></i>
+            </div>
+        </div>
+    </div>
+
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4">
         <div id='graphContainer' >
             <canvas id="profileViewsChart" style="position: relative; height: 40vh; width:80vw"></canvas>

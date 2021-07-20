@@ -17,25 +17,47 @@ from .utils import get_view_date, get_ip, get_location
 @check_ban
 @login_required(login_url='/authentication/login/')
 def dashboard(request):
-    views_count = ProfileView.objects.filter(user=request.user).count()
-    link_clicks = LinkClick.objects.filter(user=request.user).count()
-    platform_clicks = PlatformClick.objects.filter(user=request.user).count()
+    return render(request, 'dashboard/dashboard.html')
+
+
+# Dashboard summary tiles
+@check_ban
+@login_required(login_url='/authentication/login/')
+def dashboard_summary(request):
+    # Time period for the table
+    data = json.loads(request.body)
 
     try:
-        lcpr_percent =  link_clicks / views_count * 100
+        # Time period as a string
+        sdate = data['sdate'][:10] + ' 00:00:00'
+        edate = data['edate'][:10] + ' 23:59:59'
+
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+    
+    # Get data
+    visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
+    links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
+    platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
+
+    try:
+        lcpr_percent =  round(links_clicks / visitors * 100, 1)
     except ZeroDivisionError:
         lcpr_percent = 0
 
-    context = {
-        'views': views_count,
-        'link_clicks': link_clicks,
-        'platform_clicks': platform_clicks,
-        'lcpr': lcpr_percent
+    data = {
+        'visitors': visitors,
+        'links_clicks': links_clicks,
+        'platforms_clicks': platforms_clicks,
+        'lcpr_percent': lcpr_percent
     }
-    return render(request, 'dashboard/dashboard.html', context)
 
-# Dashboard summary chart 
-def dashboard_summary_chart(request):  
+    return JsonResponse({'data': data}, safe=False)
+
+# Dashboard main chart 
+@check_ban
+@login_required(login_url='/authentication/login/')
+def dashboard_main_chart(request):  
     # Time period for the chart
     data = json.loads(request.body)
 
@@ -98,6 +120,8 @@ def dashboard_summary_chart(request):
 
 
 # Location table
+@check_ban
+@login_required(login_url='/authentication/login/')
 def location_table(request): 
     # Time period for the table
     data = json.loads(request.body)
@@ -119,7 +143,7 @@ def location_table(request):
  
     countries = list(set(ProfileView.objects.filter(user=request.user).exclude(country__isnull=True).values_list('country', flat=True)))
 
-    data = []
+    location_data = []
 
     for country in countries:
         visitors = profile_views.filter(country=country).count()
@@ -128,9 +152,9 @@ def location_table(request):
 
         temp_dict = {'country': country, 'visitors': visitors, 'links_clicks': country_links_clicks, 'platforms_clicks': country_platforms_clicks}
 
-        data.append(temp_dict)
+        location_data.append(temp_dict)
 
-    return JsonResponse({'data': data}, safe=False)
+    return JsonResponse({'data': location_data}, safe=False)
 
 
 # Add link click  

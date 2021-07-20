@@ -75,7 +75,7 @@
 
     // Get data for the main dashboard chart
     const getSummaryChart = (sdate, edate) => {
-        fetch('dashboard_summary_chart', {
+        fetch('dashboard_main_chart', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
             headers: {
@@ -97,6 +97,30 @@
         
                 resetCanvas()
                 renderChart(profile_views, link_data, platform_data, dates)
+            }
+        })
+    }
+
+    const getSummary = (sdate, edate) => {
+        fetch('dashboard_summary', {
+            body: JSON.stringify({'sdate': sdate, 'edate': edate}),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+              },
+        })
+        .then((res)=>res.json())
+        .then((results)=>{
+            if (results.error) {
+                alert(results.error)
+            } else {
+                const data = results['data']
+                $('#summary_visitors').html(data['visitors'])
+                $('#summary_links_clicks').html(data['links_clicks'])
+                $('#summary_platforms_clicks').html(data['platforms_clicks'])
+                $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
             }
         })
     }
@@ -172,6 +196,7 @@ $(function() {
 
     // Create default summary chart and location table
     getSummaryChart(start, end)
+    getSummary(start, end)
     getLocationTable(start, end, 'asc', 'visitors')
 
     function cb(start, end) {
@@ -200,6 +225,7 @@ $(function() {
         const end = picker.endDate.format('YYYY-MM-DD');
 
         getSummaryChart(start, end)
+        getSummary(start, end)
         getLocationTable(start, end, 'asc', 'visitors')
 
         $('#location-table-sort-emoji').remove()

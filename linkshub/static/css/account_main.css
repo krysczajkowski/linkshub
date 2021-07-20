@@ -19,6 +19,41 @@ a{text-decoration: none}
     animation: jump 1s 2s forwards cubic-bezier(.84,-0.54,.31,1.19);
 }
 
+/* Dashboard dots */
+.views-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: rgba(255, 99, 132, 1);
+    display: inline-block;
+}
+
+.link-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: #36a2eb;
+    display: inline-block;
+}
+
+.platform-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: rgba(204, 101, 254, 1);
+    display: inline-block;
+}
+
+
+.private-link-dot {
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: #ffa600;
+    display: inline-block;
+}
+
+
 
 /* Font sizes */
 .font-size-08 {
