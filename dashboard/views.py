@@ -11,7 +11,7 @@ import collections
 from account.models import CustomLink, Platform, UserPlatform
 from dashboard.models import LinkClick, PlatformClick, ProfileView
 from account.decorators import check_ban
-from .utils import get_view_date
+from .utils import get_view_date, get_ip, get_location
 
 # Dashboard view
 @check_ban
@@ -34,7 +34,7 @@ def dashboard(request):
     }
     return render(request, 'dashboard/dashboard.html', context)
 
-# Load dashboard summary chart 
+# Dashboard summary chart 
 def dashboard_summary_chart(request):  
     # Time period for the chart
     data = json.loads(request.body)
@@ -97,6 +97,42 @@ def dashboard_summary_chart(request):
     return JsonResponse({'datelist': datelist, 'views_data': views_data, 'link_data': link_data, 'platform_data': platform_data}, safe=False)
 
 
+# Location table
+def location_table(request): 
+    # Time period for the table
+    data = json.loads(request.body)
+
+    try:
+        # Time period as a string
+        sdate = data['sdate'][:10] + ' 00:00:00'
+        edate = data['edate'][:10] + ' 23:59:59'
+
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+    try:
+        profile_views = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+ 
+    countries = list(set(ProfileView.objects.filter(user=request.user).exclude(country__isnull=True).values_list('country', flat=True)))
+
+    data = []
+
+    for country in countries:
+        visitors = profile_views.filter(country=country).count()
+        country_links_clicks = links_clicks.filter(country=country).count()
+        country_platforms_clicks = platforms_clicks.filter(country=country).count()
+
+        temp_dict = {'country': country, 'visitors': visitors, 'links_clicks': country_links_clicks, 'platforms_clicks': country_platforms_clicks}
+
+        data.append(temp_dict)
+
+    return JsonResponse({'data': data}, safe=False)
+
+
 # Add link click  
 class link_click(View):
     def post(self, request):
@@ -104,11 +140,17 @@ class link_click(View):
         link_id = data['link_id']
         user_id = data['user_id']
 
+        # Get visitors location
+        location_info = get_location(request)
+        country = location_info['country']
+        city = location_info['city']
+
+
         try:
             user = User.objects.get(id=user_id)
 
             link = CustomLink.objects.get(id=link_id, user=user)
-            link_click = LinkClick.objects.create(user=request.user, link=link)
+            link_click = LinkClick.objects.create(user=request.user, link=link, country=country, city=city)
 
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -123,11 +165,16 @@ class platform_click(View):
         platform_id = data['platform_id']
         user_id = data['user_id']
 
+        # Get visitors location
+        location_info = get_location(request)
+        country = location_info['country']
+        city = location_info['city']
+
         try:
             user = User.objects.get(id=user_id)
 
             platform = UserPlatform.objects.get(id=platform_id, user=user)
-            platform_click = PlatformClick.objects.create(user=request.user, platform=platform)
+            platform_click = PlatformClick.objects.create(user=request.user, platform=platform, country=country, city=city)
 
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)

@@ -3,9 +3,8 @@ from django.contrib.auth.models import User
 from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
-from django.contrib.gis.geoip2 import GeoIP2
 
-from .utils import get_ip
+from dashboard.utils import get_ip, get_location
 
 def profile(request, username):
     # Get user 
@@ -19,26 +18,12 @@ def profile(request, username):
     except:
         pass
 
-    # Get visitor's ip
     ip = get_ip(request)
-
+    
     # Get visitors location
-    try:    
-        g = GeoIP2()
-        country = g.country('5.172.234.51')['country_name'] # 128.101.101.101 -> ip
-        city = g.city('5.172.234.51')['city']
-
-        if country is None:
-            country = 'Unknown'
-        elif city is None:
-            city = 'Unknown'
-
-        print('Country: ', country)
-        print('City: ', city)
-
-    except: # gaierror, AddressNotFoundError, TypeError, 
-        country = 'Unknown'
-        city = 'Unknown'
+    location_info = get_location(request)
+    country = location_info['country']
+    city = location_info['city']
 
 
     # Register visitor in database if it doesn't exist
