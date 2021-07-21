@@ -9,6 +9,7 @@ class ProfileView(models.Model):
     ip_address = models.GenericIPAddressField()
     country = models.CharField(max_length=70, blank=True, null=True)
     city = models.CharField(max_length=100, blank=True, null=True) 
+    device = models.CharField(max_length=50, blank=True, null=True) 
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
 

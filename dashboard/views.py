@@ -196,6 +196,28 @@ def city_table(request):
     return JsonResponse({'data': data}, safe=False)
 
 
+def device_chart(request):
+    # Time period for the table
+    data = json.loads(request.body)
+
+    try:
+        # Time period as a string
+        sdate = data['sdate'][:10] + ' 00:00:00'
+        edate = data['edate'][:10] + ' 23:59:59'
+
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+    # Get data
+    try:
+        mobile_devices = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate, device='Mobile').count()
+        desktop_devices = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate, device='Desktop').count()
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+ 
+    return JsonResponse({'mobile': mobile_devices, 'desktop': desktop_devices}, safe=False)
+
+
 # Add link click  
 class link_click(View):
     def post(self, request):

@@ -9,5 +9,6 @@ urlpatterns = [
     path('dashboard_main_chart', views.dashboard_main_chart, name='dashboard_main_chart'),
     path('country_table', views.country_table, name='country_table'),
     path('dashboard_summary', views.dashboard_summary, name='dashboard_summary'),
-    path('city_table', views.city_table, name='city_table')
+    path('city_table', views.city_table, name='city_table'),
+    path('device_chart', views.device_chart, name='device_chart')
 ]

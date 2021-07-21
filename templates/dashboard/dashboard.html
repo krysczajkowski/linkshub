@@ -5,6 +5,7 @@
 {% block content %}
 <div class="row mx-0 px-3 mt-5">
     <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Summary</p>
+
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2">
         <div class="row text-center py-2">
             <div class="col">
@@ -58,18 +59,16 @@
     </div>
     
     
-    <div class="row mx-0 px-0 mt-4">
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 px-0">
         <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Search By Date</p>
-        <div class="col-12 col-md-10 offset-md-1 px-0">
-            <div id="reportrange" class='rounded py-2' style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
-                <i class="fa fa-calendar"></i>&nbsp;
-                <span></span> <i class="fa fa-caret-down"></i>
-            </div>
+        <div id="reportrange" class='rounded' style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
+            <i class="fa fa-calendar"></i>&nbsp;
+            <span></span> <i class="fa fa-caret-down"></i>
         </div>
     </div>
 
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4">
-        <div id='graphContainer' >
+        <div id='SummaryGraphContainer'>
             <canvas id="profileViewsChart" style="position: relative; height: 40vh; width:80vw"></canvas>
         </div>
         
@@ -138,6 +137,12 @@
             <!-- <br>
             *Czasami info moze sie nie zgadzac, bo nie mozna znalezc lokalizacji ip, wiec pojawia sie na wykresie, a w tabeli nie -->
           </span>
+    </div>
+
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4 px-3 pb-3">
+        <div id='DeviceGraphContainer'>
+            <canvas id="deviceChart" style="position: relative; height: 40vh; width:80vw"></canvas>
+        </div>
     </div>
 
 </div>

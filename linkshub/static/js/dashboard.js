@@ -18,13 +18,18 @@
 
 
     // Delete chart before creating a new one 
-    var resetCanvas = function(){
-        $('#profileViewsChart').remove(); // this is my <canvas> element
-        $('#graphContainer').append('<canvas id="profileViewsChart" style="position: relative; height: 40vh; width:80vw"><canvas>');
+    var resetCanvas = function(chart_name){
+        if(chart_name == 'summary') {
+            $('#profileViewsChart').remove(); // this is my <canvas> element
+            $('#SummaryGraphContainer').append('<canvas id="profileViewsChart" style="position: relative; height: 40vh; width:80vw"><canvas>');
+        } else if(chart_name=='device'){
+            $('#deviceChart').remove();
+            $('#DeviceGraphContainer').append('<canvas id="deviceChart" style="position: relative; height: 40vh; width:80vw" data="dupa"><canvas>');
+        }
     };
 
     // Create a chart function
-    const renderChart = (profile_views, link_data, platform_data, dates) => {
+    const createSummaryChart = (profile_views, link_data, platform_data, dates) => {
         var ctx = document.getElementById('profileViewsChart').getContext('2d');
 
             window.myCharts = new Chart(ctx, {
@@ -69,12 +74,11 @@
                         }]
                     }
                 }
-            });
-            
+            });     
     }
 
     // Get data for the main dashboard chart
-    const getSummaryChart = (sdate, edate) => {
+    const renderSummaryChart = (sdate, edate) => {
         fetch('dashboard_main_chart', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
@@ -95,8 +99,8 @@
                 const platform_data = results.platform_data
                 const dates = results.datelist
         
-                resetCanvas()
-                renderChart(profile_views, link_data, platform_data, dates)
+                resetCanvas('summary')
+                createSummaryChart(profile_views, link_data, platform_data, dates)
             }
         })
     }
@@ -121,6 +125,58 @@
                 $('#summary_links_clicks').html(data['links_clicks'])
                 $('#summary_platforms_clicks').html(data['platforms_clicks'])
                 $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+            }
+        })
+    }
+
+    // Create a chart function
+    const createDeviceChart = (data) => {
+        var ctx = document.getElementById('deviceChart').getContext('2d');
+
+            window.myCharts = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['Desktop', 'Mobile'],
+                    datasets: [{
+                        label: 'Link Clicks',
+                        fill: false,
+                        data: data,
+                        backgroundColor: ['#239AFF', '#ff4268'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    aspectRatio: 1, 
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Device Analytics'
+                    },
+                }
+            });     
+    }
+
+    const renderDevicesChart = (sdate, edate) => {
+        fetch('device_chart', {
+            body: JSON.stringify({'sdate': sdate, 'edate': edate}),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+              },
+        })
+        .then((res)=>res.json())
+        .then((results)=>{
+            if (results.error) {
+                alert(results.error)
+            } else {
+                const data = results
+                var desktop = results['desktop']
+                var mobile = results['mobile']
+
+                resetCanvas('device')
+                createDeviceChart([desktop, mobile])
             }
         })
     }
@@ -258,10 +314,11 @@ $(function() {
     var end = moment();
 
     // Create default summary chart and location table
-    getSummaryChart(start, end)
+    renderSummaryChart(start, end)
     getSummary(start, end)
     getCountryTable(start, end, 'asc', 'visitors')
     getCityTable(start, end, 'asc', 'visitors')
+    renderDevicesChart(start, end)
 
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -288,10 +345,11 @@ $(function() {
         start = picker.startDate.format('YYYY-MM-DD');
         end = picker.endDate.format('YYYY-MM-DD');
 
-        getSummaryChart(start, end)
+        renderSummaryChart(start, end)
         getSummary(start, end)
         getCountryTable(start, end, 'asc', 'visitors')
         getCityTable(start, end, 'asc', 'visitors')
+        renderDevicesChart(start, end)
 
         $('#country-sort-emoji').remove()
         $('#country-visitors-th').append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="country-sort-emoji"></i>')
