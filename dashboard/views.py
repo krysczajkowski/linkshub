@@ -119,10 +119,10 @@ def dashboard_main_chart(request):
     return JsonResponse({'datelist': datelist, 'views_data': views_data, 'link_data': link_data, 'platform_data': platform_data}, safe=False)
 
 
-# Location table
+# Country table
 @check_ban
 @login_required(login_url='/authentication/login/')
-def location_table(request): 
+def country_table(request): 
     # Time period for the table
     data = json.loads(request.body)
 
@@ -135,26 +135,65 @@ def location_table(request):
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
     try:
-        profile_views = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
     except:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
  
-    countries = list(set(ProfileView.objects.filter(user=request.user).exclude(country__isnull=True).values_list('country', flat=True)))
+    countries = list(set(ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).exclude(country__isnull=True).values_list('country', flat=True)))
 
-    location_data = []
-
+    # Whole table data
+    data = []
     for country in countries:
-        visitors = profile_views.filter(country=country).count()
-        country_links_clicks = links_clicks.filter(country=country).count()
-        country_platforms_clicks = platforms_clicks.filter(country=country).count()
+        visitors_num = visitors.filter(country=country).count()
+        links_clicks_num = links_clicks.filter(country=country).count()
+        platforms_clicks_num = platforms_clicks.filter(country=country).count()
 
-        temp_dict = {'country': country, 'visitors': visitors, 'links_clicks': country_links_clicks, 'platforms_clicks': country_platforms_clicks}
+        temp_dict = {'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'platforms_clicks': platforms_clicks_num}
 
-        location_data.append(temp_dict)
+        data.append(temp_dict)
 
-    return JsonResponse({'data': location_data}, safe=False)
+    return JsonResponse({'data': data}, safe=False)
+
+# City table
+@check_ban
+@login_required(login_url='/authentication/login/')
+def city_table(request): 
+    # Time period for the table
+    data = json.loads(request.body)
+
+    try:
+        # Time period as a string
+        sdate = data['sdate'][:10] + ' 00:00:00'
+        edate = data['edate'][:10] + ' 23:59:59'
+
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+    # Get data
+    try:
+        visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+ 
+    # Create list of the cities
+    cities = list(set(ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).exclude(country__isnull=True).values_list('city', 'country')))
+
+    # Whole table data
+    data = []
+    for city, country in cities:
+        visitors_num = visitors.filter(city=city).count()
+        links_clicks_num = links_clicks.filter(city=city).count()
+        platforms_clicks_num = platforms_clicks.filter(city=city).count()
+
+        temp_dict = {'city': city, 'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'platforms_clicks': platforms_clicks_num}
+
+        data.append(temp_dict)
+
+    return JsonResponse({'data': data}, safe=False)
 
 
 # Add link click  

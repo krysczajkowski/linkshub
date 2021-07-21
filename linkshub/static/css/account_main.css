@@ -14,6 +14,9 @@ a{text-decoration: none}
     cursor: pointer;
 }
 
+.cursor-pointer:hover {
+    cursor: pointer;
+}
 
 .Pulse {
     animation: jump 1s 2s forwards cubic-bezier(.84,-0.54,.31,1.19);
@@ -52,7 +55,6 @@ a{text-decoration: none}
     background-color: #ffa600;
     display: inline-block;
 }
-
 
 
 /* Font sizes */
@@ -164,6 +166,9 @@ a{text-decoration: none}
 
 /* END OF THEME BUTTONS */
 
+th {
+    width: 20%;
+}
 
 
 /* Extra small devices (phones, 600px and down) */
@@ -175,6 +180,11 @@ a{text-decoration: none}
     .link-description {
         padding-left: 10px;
         padding-right: 10px;
+    }
+
+    #location-card {
+        overflow: scroll;
+        height: 55vh;
     }
 }
 
@@ -247,6 +257,11 @@ a{text-decoration: none}
     .appearance-right-panel {
         overflow: scroll; max-height: 90vh; 
     }
+
+    #location-card {
+        overflow: scroll;
+        height: 45vh;
+    }
 }
 
 /* Extra large devices (large laptops and desktops, 1600px and up) */
@@ -255,4 +270,8 @@ a{text-decoration: none}
         width: 20%;
     }
 
+    #location-card {
+        overflow: scroll;
+        height: 40vh;
+    }
 }

@@ -125,10 +125,10 @@
         })
     }
 
-    // Get data for location table
-    const getLocationTableData = (sdate, edate) => {
+    // Get data for country table
+    const getCountryData = (sdate, edate) => {
 
-        return fetch('location_table', {
+        return fetch('country_table', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
             headers: {
@@ -144,31 +144,50 @@
         })
     }
 
-    // Create a location table
-    const getLocationTable = (sdate, edate, order, column, sort_obj) => {
+    // Get data for city table
+    const getCityData = (sdate, edate) => {
 
-        // Get data for location table from getLocationTableData func
-        getLocationTableData(sdate, edate).then(data => {
+        return fetch('city_table', {
+            body: JSON.stringify({'sdate': sdate, 'edate': edate}),
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=UTF-8',
+                'X-CSRFToken': csrftoken
+              },
+        })
+        .then(response => {
+            return response.json() //Convert response to JSON
+        }).then(function(json) {
+            return json
+        })
+    }
+
+    // Create a country table
+    const getCountryTable = (sdate, edate, order, column, sort_obj) => {
+
+        // Get data for location table from getCountryData func
+        getCountryData(sdate, edate).then(data => {
             var fetch_data = Object.values(data)[0]
 
             // Empty previous table
-            location_tbody = $('.location-tbody')
-            location_tbody.empty()
+            var country_tbody = $('.country-tbody')
+            country_tbody.empty()
 
             // Set ordering and arrow emoji
             if (order == 'desc') {
                 if (sort_obj) {
                     sort_obj.data('order', 'asc')
-                    $('#location-table-sort-emoji').remove()
-                    sort_obj.append('<i class="fas fa-sort-amount-down-alt text-muted font-size-09" id="location-table-sort-emoji"></i>')
+                    $('#country-sort-emoji').remove()
+                    sort_obj.append('<i class="fas fa-sort-amount-down-alt text-muted font-size-09" id="country-sort-emoji"></i>')
                 }
             
                 fetch_data = fetch_data.sort((a, b) => a[column] > b[column] ? 1 : -1)
             } else {
                 if (sort_obj) {
                     sort_obj.data('order', 'desc')
-                    $('#location-table-sort-emoji').remove()
-                    sort_obj.append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="location-table-sort-emoji"></i>')
+                    $('#country-sort-emoji').remove()
+                    sort_obj.append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="country-sort-emoji"></i>')
                 }
 
                 fetch_data = fetch_data.sort((a, b) => a[column] < b[column] ? 1 : -1)
@@ -176,7 +195,7 @@
 
             // Create HTML table
             for(let i = 0; i < fetch_data.length; i++) {
-                location_tbody.append(`<tr>
+                country_tbody.append(`<tr>
                     <td><img src="/media/flags/${fetch_data[i]['country']}.svg" style='width: 20px; height: auto;' class='me-2' alt="">${fetch_data[i]['country']}</td>
                     <td>${fetch_data[i]['visitors']}</td>
                     <td>${fetch_data[i]['links_clicks']}</td>
@@ -187,9 +206,53 @@
         })
 
     }
-    
+
+    // Create city table
+    const getCityTable = (sdate, edate, order, column, sort_obj) => {
+        // Get data for location table from getCityData func
+        getCityData(sdate, edate).then(data => {
+            var fetch_data = Object.values(data)[0]
+
+            // Empty previous table
+            var city_tbody = $('.city-tbody')
+            city_tbody.empty()
+
+            // Set ordering and arrow emoji
+            if (order == 'desc') {
+                if (sort_obj) {
+                    sort_obj.data('order', 'asc')
+                    $('#city-sort-emoji').remove()
+                    sort_obj.append('<i class="fas fa-sort-amount-down-alt text-muted font-size-09" id="city-sort-emoji"></i>')
+                }
+            
+                fetch_data = fetch_data.sort((a, b) => a[column] > b[column] ? 1 : -1)
+            } else {
+                if (sort_obj) {
+                    sort_obj.data('order', 'desc')
+                    $('#city-sort-emoji').remove()
+                    sort_obj.append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="city-sort-emoji"></i>')
+                }
+
+                fetch_data = fetch_data.sort((a, b) => a[column] < b[column] ? 1 : -1)
+            }
+
+            // Create HTML table
+            for(let i = 0; i < fetch_data.length; i++) {
+                city_tbody.append(`<tr>
+                    <td><img src="/media/flags/${fetch_data[i]['country']}.svg" style='width: 20px; height: auto;' class='me-2' alt="">${fetch_data[i]['city']}</td>
+                    <td>${fetch_data[i]['visitors']}</td>
+                    <td>${fetch_data[i]['links_clicks']}</td>
+                    <td>${fetch_data[i]['platforms_clicks']}</td>
+                </tr>`)
+            }
+
+        })
+    }
+
 
 $(function() {
+    var location_table = 'country'
+
     // Initial time period for the summary chart
     var start = moment().subtract(7, 'days');
     var end = moment();
@@ -197,7 +260,8 @@ $(function() {
     // Create default summary chart and location table
     getSummaryChart(start, end)
     getSummary(start, end)
-    getLocationTable(start, end, 'asc', 'visitors')
+    getCountryTable(start, end, 'asc', 'visitors')
+    getCityTable(start, end, 'asc', 'visitors')
 
     function cb(start, end) {
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
@@ -221,27 +285,76 @@ $(function() {
 
     // The event listener for date input
     $('#reportrange').on('apply.daterangepicker', (e, picker) => {
-        const start = picker.startDate.format('YYYY-MM-DD');
-        const end = picker.endDate.format('YYYY-MM-DD');
+        start = picker.startDate.format('YYYY-MM-DD');
+        end = picker.endDate.format('YYYY-MM-DD');
 
         getSummaryChart(start, end)
         getSummary(start, end)
-        getLocationTable(start, end, 'asc', 'visitors')
+        getCountryTable(start, end, 'asc', 'visitors')
+        getCityTable(start, end, 'asc', 'visitors')
 
-        $('#location-table-sort-emoji').remove()
-        $('#visitors-th').append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="location-table-sort-emoji"></i>')
+        $('#country-sort-emoji').remove()
+        $('#country-visitors-th').append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="country-sort-emoji"></i>')
+
+        $('#city-sort-emoji').remove()
+        $('#city-visitors-th').append('<i class="fas fa-sort-amount-down text-muted font-size-09" id="city-sort-emoji"></i>')
     });
 
     // Event listener for sorting location table
-    $('#location-table th').on('click', function() {
+    $('#country-table th').on('click', function() {
         var column = $(this).data('column')
         var order = $(this).data('order')
 
         if (order == 'desc') {
-            getLocationTable(start, end, 'desc', column, $(this))
+            getCountryTable(start, end, 'desc', column, $(this))
         } else {
-            getLocationTable(start, end, 'asc', column, $(this))
+            getCountryTable(start, end, 'asc', column, $(this))
         }
+    })
+
+    $('#city-table th').on('click', function() {
+        var column = $(this).data('column')
+        var order = $(this).data('order')
+
+        if (order == 'desc') {
+            getCityTable(start, end, 'desc', column, $(this))
+        } else {
+            getCityTable(start, end, 'asc', column, $(this))
+        }
+    })
+
+
+    // Pick table - city or country
+    var city_table = $('#city-table')
+    var country_table = $('#country-table')
+
+    var pick_country = $('#pick-country')
+    var pick_city = $('#pick-city')
+
+    pick_country.on('click', function() {
+        location_table = 'country'
+
+        country_table.removeClass('d-none')
+        city_table.addClass('d-none')
+
+        pick_country.addClass('fw-bold')
+        pick_country.removeClass('text-muted')
+
+        pick_city.removeClass('fw-bold')
+        pick_city.addClass('text-muted')
+    })
+
+    pick_city.on('click', function() {
+        location_table = 'city'
+
+        city_table.removeClass('d-none')
+        country_table.addClass('d-none')
+
+        pick_city.addClass('fw-bold')
+        pick_city.removeClass('text-muted')
+
+        pick_country.removeClass('fw-bold')
+        pick_country.addClass('text-muted')
     })
 });
 

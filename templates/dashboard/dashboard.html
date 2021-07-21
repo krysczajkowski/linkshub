@@ -81,28 +81,64 @@
         </div>
     </div>
 
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4 p-3" id='location-table-container' style='overflow: scroll; max-height: 40vh;'>
-        <table class="table table-hover" id='location-table'>
-            <thead>
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4 px-3 pb-3" id='location-card'>
+
+        <p class='text-end pt-3'>
+            <span id='pick-country' class='cursor-pointer border-end border-secondary pe-2 fw-bold'>Country</span> 
+            <span id='pick-city' class='cursor-pointer ps-2 text-muted'>City</span>
+        </p>
+        
+        <div class="table-responsive">
+            <table class="table table-hover" id='country-table' style='min-width: 500px;'>
+                <thead class='sticky-top bg-white'>
+                  <tr>
+                    <th data-column='country' data-order='desc' class='cursor-pointer' style='width: 40%;'>
+                        Country
+                    </th>
+                    <th data-column='visitors' data-order='desc' id='country-visitors-th' class='cursor-pointer'>
+                        Visits <i class="fas fa-sort-amount-down text-muted font-size-09" id='country-sort-emoji'></i>
+                    </th>
+                    <th data-column='links_clicks' data-order='asc' class='cursor-pointer'> 
+                        Links Clicks
+                    </th>
+                    <th data-column='platforms_clicks' data-order='asc' class='cursor-pointer'>
+                        Platforms Clicks
+                    </th>
+                  </tr>
+                </thead>
+                <tbody class='country-tbody'>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-hover d-none" id='city-table' style='min-width: 500px;'>
+            <thead class='sticky-top bg-white'>
               <tr>
-                <th data-column='country' data-order='desc' style='width: 40%;'>Country</th>
-                <th data-column='visitors' data-order='desc' id='visitors-th' style='width: 20%;'>Visits <i class="fas fa-sort-amount-down text-muted font-size-09" id='location-table-sort-emoji' style='width: 17.5%;'></i></th>
-                <th data-column='links_clicks' data-order='asc' style='width: 20%;'>Links Clicks</th>
-                <th data-column='platforms_clicks' data-order='asc' style='width: 20%;'>Platforms Clicks</th>
+                <th data-column='city' data-order='desc' style='width: 40%;' class='cursor-pointer'>City</th>
+                <th data-column='visitors' data-order='desc' id='city-visitors-th' class='cursor-pointer'>
+                    Visits <i class="fas fa-sort-amount-down text-muted font-size-09" id='city-sort-emoji'></i>
+                </th>
+                <th data-column='links_clicks' data-order='asc' class='cursor-pointer'>
+                    Links Clicks
+                </th>
+                <th data-column='platforms_clicks' data-order='asc' class='cursor-pointer'>
+                    Platforms Clicks
+                </th>
               </tr>
             </thead>
-            <tbody class='location-tbody'>
+            <tbody class='city-tbody'>
             </tbody>
           </table>
+        </div>
+
           <span class='text-muted font-size-08'>
             This product includes GeoLite2 data created by MaxMind, available from
             <a href="https://www.maxmind.com">https://www.maxmind.com</a>.
-            <br>
-            *Czasami info moze sie nie zgadzac, bo nie mozna znalezc lokalizacji ip, wiec pojawia sie na wykresie, a w tabeli nie
+            <!-- <br>
+            *Czasami info moze sie nie zgadzac, bo nie mozna znalezc lokalizacji ip, wiec pojawia sie na wykresie, a w tabeli nie -->
           </span>
     </div>
-
-
 
 </div>
 
