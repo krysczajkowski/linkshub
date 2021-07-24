@@ -64,7 +64,9 @@
                     responsive: true,
                     title: {
                         display: true,
-                        text: 'Profile views and link clicks'
+                        text: 'Profile views and link clicks',
+                        fontSize: 14,
+                        fontColor: '#6c757d'
                     },
                     scales: {
                         yAxes: [{

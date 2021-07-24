@@ -59,7 +59,7 @@
     </div>
     
     
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 px-0">
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 px-0 mt-4">
         <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Search By Date</p>
         <div id="reportrange" class='rounded' style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc; width: 100%">
             <i class="fa fa-calendar"></i>&nbsp;
@@ -74,8 +74,7 @@
         
 
         <div class="container">
-            <a href=""><p class='text-end mb-0'>Advanced Unique Profile Views</p></a>
-            <a href=""><p class='text-end mb-0'>Advanced Link Clicks</p></a>
+            <a href="{% url 'links_advanced' %}"><p class='text-end mb-0'>Advanced Link Clicks</p></a>
             <a href=""><p class='text-end'>Advanced Platforms Clicks</p></a>
         </div>
     </div>
@@ -139,9 +138,31 @@
           </span>
     </div>
 
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4 px-3 pb-3">
+    <!-- <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-2 mb-4 px-0 pb-3">
+        <div class="row m-0">
+            <div class="col-12 col-xl-6 p-0 ps-xl-0 pe-xl-2 mb-3">
+                <div class="card pt-2 pb-4 m-0">
+                    <div id='DeviceGraphContainer'>
+                        <canvas id="deviceChart" style="position: relative; height: 40vh; width: 40vw;"></canvas>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-12 col-xl-6 p-0 pe-xl-0 ps-xl-2 mb-3">
+                <div class="card pt-2 pb-4 m-0">
+                    <div id='DeviceGraphContainer'>
+                        <canvas id="deviceChart" style="position: relative; height: 40vh; width: 40vw;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+
+
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mt-4 card mb-4">
         <div id='DeviceGraphContainer'>
-            <canvas id="deviceChart" style="position: relative; height: 40vh; width:80vw"></canvas>
+            <canvas id="deviceChart" style="position: relative; height: 40vh; width: 40vw;"></canvas>
         </div>
     </div>
 
