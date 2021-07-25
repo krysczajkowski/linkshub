@@ -14,7 +14,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-const csrftoken = getCookie('csrftoken');
+const csrftoken = document.getElementById('csrf-token').dataset.token
 
 // User data
 var user_data = document.querySelector('#user-id')

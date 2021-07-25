@@ -42,6 +42,7 @@ def platforms_advanced_charts(request):
         # Time period as a date 
         sdate = datetime.datetime.strptime(str_sdate, '%Y-%m-%d')
         edate = datetime.datetime.strptime(str_edate, '%Y-%m-%d')
+        tomorrow = edate + datetime.timedelta(days=1)
 
     except (ValueError, NameError) as e:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -62,15 +63,6 @@ def platforms_advanced_charts(request):
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
 
-    # Final views
-    for date in datelist:
-        # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
-        date_str = date.strftime('%Y-%m-%d')
-        date_end = date_str + ' 23:59:59'
-
-        views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
-
-        visitors.append(views_by_date)
 
     dates_n_views = {'datelist': datelist, 'visitors': visitors}
     all_platforms = UserPlatform.objects.filter(user=request.user)
@@ -79,7 +71,7 @@ def platforms_advanced_charts(request):
 
     # Final platform clicks
     for platform in all_platforms:
-        clicks_sum = PlatformClick.objects.filter(platform=platform, date__gte=sdate, date__lte=edate).count()
+        clicks_sum = PlatformClick.objects.filter(platform=platform, date__gte=sdate, date__lte=tomorrow).count()
         clicks_list = []
 
         for date in datelist:
@@ -87,9 +79,13 @@ def platforms_advanced_charts(request):
             date_str = date.strftime('%Y-%m-%d')
             date_end = date_str + ' 23:59:59'
 
+            # Final clicks
             clicks = PlatformClick.objects.filter(platform=platform, date__gte=date_str, date__lte=date_end).count()
-
             clicks_list.append(clicks)
+
+            # Final views
+            views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
+            visitors.append(views_by_date)
 
 
         temp_dict = {'title': platform.platform, 'clicks_sum': clicks_sum, 'clicks': clicks_list}
@@ -113,6 +109,7 @@ def links_advanced_charts(request):
         # Time period as a date 
         sdate = datetime.datetime.strptime(str_sdate, '%Y-%m-%d')
         edate = datetime.datetime.strptime(str_edate, '%Y-%m-%d')
+        tomorrow = edate + datetime.timedelta(days=1)
 
     except (ValueError, NameError) as e:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -133,16 +130,6 @@ def links_advanced_charts(request):
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
 
-    # Final views
-    for date in datelist:
-        # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
-        date_str = date.strftime('%Y-%m-%d')
-        date_end = date_str + ' 23:59:59'
-
-        views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
-
-        visitors.append(views_by_date)
-
     dates_n_views = {'datelist': datelist, 'visitors': visitors}
     all_links = CustomLink.objects.filter(user=request.user)
 
@@ -150,7 +137,7 @@ def links_advanced_charts(request):
 
     # Final links clicks
     for link in all_links:
-        clicks_sum = LinkClick.objects.filter(link=link, date__gte=sdate, date__lte=edate).count()
+        clicks_sum = LinkClick.objects.filter(link=link, date__gte=sdate, date__lte=tomorrow).count()
         clicks_list = []
 
         for date in datelist:
@@ -158,10 +145,15 @@ def links_advanced_charts(request):
             date_str = date.strftime('%Y-%m-%d')
             date_end = date_str + ' 23:59:59'
 
-            # Final views, link and platform data in the chart
+            # Final clicks
             clicks = LinkClick.objects.filter(link=link, date__gte=date_str, date__lte=date_end).count()
 
             clicks_list.append(clicks)
+
+            # Final views
+            views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
+
+            visitors.append(views_by_date)
 
 
         temp_dict = {'title': link.title, 'clicks_sum': clicks_sum, 'clicks': clicks_list}
@@ -387,7 +379,7 @@ class link_click(View):
             user = User.objects.get(id=user_id)
 
             link = CustomLink.objects.get(id=link_id, user=user)
-            link_click = LinkClick.objects.create(user=request.user, link=link, country=country, city=city)
+            link_click = LinkClick.objects.create(user=user, link=link, country=country, city=city)
 
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -411,7 +403,7 @@ class platform_click(View):
             user = User.objects.get(id=user_id)
 
             platform = UserPlatform.objects.get(id=platform_id, user=user)
-            platform_click = PlatformClick.objects.create(user=request.user, platform=platform, country=country, city=city)
+            platform_click = PlatformClick.objects.create(user=user, platform=platform, country=country, city=city)
 
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
