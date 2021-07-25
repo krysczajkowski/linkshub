@@ -127,6 +127,7 @@
                 $('#summary_links_clicks').html(data['links_clicks'])
                 $('#summary_platforms_clicks').html(data['platforms_clicks'])
                 $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+                $('#summary_pcpr_percent').html(data['pcpr_percent']+ '%')
             }
         })
     }

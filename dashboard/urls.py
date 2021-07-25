@@ -12,5 +12,7 @@ urlpatterns = [
     path('city_table', views.city_table, name='city_table'),
     path('device_chart', views.device_chart, name='device_chart'),
     path('links', views.links_advanced, name='links_advanced'),
-    path('links_advanced_charts', views.links_advanced_charts, name='links_advanced_charts')
+    path('links_advanced_charts', views.links_advanced_charts, name='links_advanced_charts'),
+    path('platforms', views.platforms_advanced, name='platforms_advanced'),
+    path('platforms_advanced_charts', views.platforms_advanced_charts, name='platforms_advanced_charts')
 ]

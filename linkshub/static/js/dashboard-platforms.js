@@ -60,9 +60,9 @@
             });     
     }
 
-    // Render links charts
+    // Render platforms charts
     const renderChart = (sdate, edate) => {
-        fetch('links_advanced_charts', {
+        fetch('platforms_advanced_charts', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
             headers: {
@@ -126,9 +126,8 @@
             } else {
                 const data = results['data']
                 $('#summary_visitors').html(data['visitors'])
-                $('#summary_links_clicks').html(data['links_clicks'])
                 $('#summary_platforms_clicks').html(data['platforms_clicks'])
-                $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+                $('#summary_pcpr_percent').html(data['pcpr_percent']+ '%')
             }
         })
     }

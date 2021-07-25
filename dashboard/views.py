@@ -23,8 +23,82 @@ def dashboard(request):
 def links_advanced(request):
     return render(request, 'dashboard/links.html')
 
+def platforms_advanced(request):
+    return render(request, 'dashboard/platforms.html')
 
-# Dashboard main chart 
+
+# Platforms advanced charts
+@check_ban
+@login_required(login_url='/authentication/login/')
+def platforms_advanced_charts(request):  
+    # Time period for the table
+    data = json.loads(request.body)
+
+    try:
+        # Time period as a string
+        str_sdate = data['sdate'][:10]
+        str_edate = data['edate'][:10]
+
+        # Time period as a date 
+        sdate = datetime.datetime.strptime(str_sdate, '%Y-%m-%d')
+        edate = datetime.datetime.strptime(str_edate, '%Y-%m-%d')
+
+    except (ValueError, NameError) as e:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+    # Time delta
+    delta = edate - sdate
+
+    datelist = []
+    visitors = []
+
+    try:
+        # Final dates in the chart
+        for i in range(delta.days + 1):
+            date = sdate + datetime.timedelta(days=i)
+            pretty_date = datetime.datetime.strptime(str(date)[:10],'%Y-%m-%d').date()
+            datelist.append(pretty_date)
+    except:
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+
+    # Final views
+    for date in datelist:
+        # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
+        date_str = date.strftime('%Y-%m-%d')
+        date_end = date_str + ' 23:59:59'
+
+        views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
+
+        visitors.append(views_by_date)
+
+    dates_n_views = {'datelist': datelist, 'visitors': visitors}
+    all_platforms = UserPlatform.objects.filter(user=request.user)
+
+    clicks_data = []
+
+    # Final platform clicks
+    for platform in all_platforms:
+        clicks_sum = PlatformClick.objects.filter(platform=platform, date__gte=sdate, date__lte=edate).count()
+        clicks_list = []
+
+        for date in datelist:
+            # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
+            date_str = date.strftime('%Y-%m-%d')
+            date_end = date_str + ' 23:59:59'
+
+            clicks = PlatformClick.objects.filter(platform=platform, date__gte=date_str, date__lte=date_end).count()
+
+            clicks_list.append(clicks)
+
+
+        temp_dict = {'title': platform.platform, 'clicks_sum': clicks_sum, 'clicks': clicks_list}
+        clicks_data.append(temp_dict)
+
+    return JsonResponse({'dates_n_views': dates_n_views, 'clicks_data': clicks_data}, safe=False)
+
+
+# Advanced links charts
 @check_ban
 @login_required(login_url='/authentication/login/')
 def links_advanced_charts(request):  
@@ -59,13 +133,12 @@ def links_advanced_charts(request):
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
 
-    # Final views, link and platform data in the chart
+    # Final views
     for date in datelist:
         # Get time slots for one date: 21.07.06 00:00:00 - 21.07.06 23:59:59
         date_str = date.strftime('%Y-%m-%d')
         date_end = date_str + ' 23:59:59'
 
-        # Final views, link and platform data in the chart
         views_by_date = ProfileView.objects.filter(user=request.user, date__gte=date, date__lte=date_end).count()
 
         visitors.append(views_by_date)
@@ -75,6 +148,7 @@ def links_advanced_charts(request):
 
     clicks_data = []
 
+    # Final links clicks
     for link in all_links:
         clicks_sum = LinkClick.objects.filter(link=link, date__gte=sdate, date__lte=edate).count()
         clicks_list = []
@@ -117,14 +191,17 @@ def dashboard_summary(request):
 
     try:
         lcpr_percent =  round(links_clicks / visitors * 100, 1)
+        pcpr_percent =  round(platforms_clicks / visitors * 100, 1)
     except ZeroDivisionError:
         lcpr_percent = 0
+        pcpr_percent = 0
 
     data = {
         'visitors': visitors,
         'links_clicks': links_clicks,
         'platforms_clicks': platforms_clicks,
-        'lcpr_percent': lcpr_percent
+        'lcpr_percent': lcpr_percent,
+        'pcpr_percent': pcpr_percent,
     }
 
     return JsonResponse({'data': data}, safe=False)

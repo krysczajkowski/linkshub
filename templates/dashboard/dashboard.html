@@ -44,7 +44,7 @@
                     <i class="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link Click Through Rate - number of link clicks devided through the number of unique profile views."></i></span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-12'>69.0%</span><br>
+                <span class='fw-bold font-size-12' id='summary_pcpr_percent'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
                     <div class='platform-dot me-1'></div> PCRP
                 </span>
@@ -75,7 +75,7 @@
 
         <div class="container">
             <a href="{% url 'links_advanced' %}"><p class='text-end mb-0'>Advanced Link Clicks</p></a>
-            <a href=""><p class='text-end'>Advanced Platforms Clicks</p></a>
+            <a href="{% url 'platforms_advanced' %}"><p class='text-end'>Advanced Platforms Clicks</p></a>
         </div>
     </div>
 
