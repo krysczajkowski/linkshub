@@ -31,7 +31,7 @@
                         borderColor: '#36a2eb',
                         borderWidth: 2
                     }, {
-                        label: 'Unique Profile Views',
+                        label: 'Profile Views',
                         type: 'bar',
                         fill: false,
                         data: profile_views,

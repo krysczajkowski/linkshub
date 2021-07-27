@@ -26,19 +26,19 @@ def profile(request, username):
     city = location_info['city']
 
     # Register visitor in database if it doesn't exist
-    if not ProfileView.objects.filter(ip_address=ip, user=user).exists():
+    # if not ProfileView.objects.filter(ip_address=ip, user=user).exists():
 
-        user_agent = request.META['HTTP_USER_AGENT']
+    user_agent = request.META['HTTP_USER_AGENT']
 
-        keywords = ['Mobile','Opera Mini','Android']
+    keywords = ['Mobile','Opera Mini','Android']
 
-        if any(word in user_agent for word in keywords):
-            device = 'Mobile'
-        else:
-            device = 'Desktop'
+    if any(word in user_agent for word in keywords):
+        device = 'Mobile'
+    else:
+        device = 'Desktop'
 
-        new_visitor = ProfileView.objects.create(user=user, ip_address=ip, country=country, city=city, device=device)
-        new_visitor.save()
+    new_visitor = ProfileView.objects.create(user=user, ip_address=ip, country=country, city=city, device=device)
+    new_visitor.save()
 
     # Get profile
     profile = Profile.objects.get(user=user)

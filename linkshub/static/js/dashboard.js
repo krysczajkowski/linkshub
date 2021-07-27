@@ -50,7 +50,7 @@
                         borderColor: 'rgba(204, 101, 254, 1)',
                         borderWidth: 2
                     }, {
-                        label: 'Unique Profile Views',
+                        label: 'Profile Views',
                         type: 'bar',
                         fill: false,
                         data: profile_views,
