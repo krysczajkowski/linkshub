@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
-from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser
+from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser, PremiumCustomLink
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 
@@ -9,6 +9,7 @@ from dashboard.utils import get_ip, get_location
 def profile(request, username):
     # Get user 
     user = get_object_or_404(User, username=username)
+    profile = get_object_or_404(Profile, user=user)
 
     # Check user ban
     try:
@@ -17,6 +18,12 @@ def profile(request, username):
             
     except:
         pass
+
+    # Get premium links
+    if PremiumCustomLink.objects.filter(user=user, is_active=1).order_by('position') and profile.premium_links_password:
+        display_premium_links_password = True 
+    else: 
+        display_premium_links_password = False
 
     ip = get_ip(request)
     
@@ -109,6 +116,7 @@ def profile(request, username):
         'description': description,
         'profile_picture': profile_picture,
         'links': links,
+        'display_premium_links_password': display_premium_links_password,
         'bg_bg_color': bg_bg_color,
         'bg_font_color': bg_font_color,
         'btn_font_color': btn_font_color,

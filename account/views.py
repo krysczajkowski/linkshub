@@ -10,15 +10,16 @@ from django.core.exceptions import ValidationError
 from django.contrib import messages
 import imghdr
 from imghdr import tests
+from django.contrib.auth.hashers import make_password
+import hashlib
 
 from requests.api import delete
 
-
-from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation
+from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation, PremiumCustomLink
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 from .decorators import check_ban
-from .forms import CustomLinkForm
+from .forms import CustomLinkForm, PremiumLinksChangePassword
 
 # Create your views here.
 @check_ban
@@ -26,6 +27,8 @@ from .forms import CustomLinkForm
 def profile_preview(request):
     # Get profile
     profile = Profile.objects.get(user=request.user)
+
+    user_id = request.user.id
 
     # Get basic data
     if profile.name:
@@ -39,6 +42,11 @@ def profile_preview(request):
     # Get all links
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
 
+    # Get premium links
+    if PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position') and profile.premium_links_password:
+        display_premium_links_password = True 
+    else: 
+        display_premium_links_password = False
 
     # Get background theme
     bg_theme_name = UserTheme.objects.get(user=request.user).background_theme
@@ -88,10 +96,12 @@ def profile_preview(request):
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
     context = {
+        'user_id': user_id, 
         'username': username,
         'description': description,
         'profile_picture': profile_picture,
         'links': links,
+        'display_premium_links_password': display_premium_links_password,
         'bg_bg_color': bg_bg_color,
         'bg_font_color': bg_font_color,
         'btn_font_color': btn_font_color,
@@ -103,6 +113,45 @@ def profile_preview(request):
     }
 
     return render(request, 'account/profile_preview.html', context)
+
+# Premium links check password
+class premium_links_check_password(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        premium_links_code = data['premium_links_code']
+
+        try:
+            correct_code = Profile.objects.get(user=request.user).premium_links_password
+
+            # Check password
+            if premium_links_code == correct_code:
+                premium_links = PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
+
+                premium_links_list = []
+
+                for premium_link in premium_links:
+                    temp_dict = {}
+                    temp_dict['id'] = premium_link.id
+                    temp_dict['title'] = premium_link.title
+                    temp_dict['url'] = premium_link.url
+                    temp_dict['description'] = premium_link.description
+                    temp_dict['animation'] = premium_link.animation.name
+
+                    if premium_link.image:
+                        temp_dict['image'] = premium_link.image.url
+                    else:
+                        temp_dict['image'] = ''
+
+
+                    premium_links_list.append(temp_dict)
+
+                return JsonResponse({'premium_links': premium_links_list}, safe=False)
+
+            else:
+                return JsonResponse({'error_msg': 'PASSWORD IS INVALID'})
+
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
 
 @check_ban
@@ -239,6 +288,111 @@ def add_link(request):
     }
 
     return render(request, 'account/add_link.html', context)
+
+
+def premium_links(request):
+    links = PremiumCustomLink.objects.filter(user=request.user).order_by('position')
+    links_count = links.count()
+
+    context = {
+        'links': links,
+        'links_count': links_count
+    }
+
+
+    profile = Profile.objects.get(user=request.user)
+
+    if not profile.premium_links_password:
+        change_pass_form = PremiumLinksChangePassword()
+
+        context['change_pass_form'] = change_pass_form
+        context['set_password'] = True 
+
+        if request.method == 'POST':
+            change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
+            password = request.POST['premium_links_password']
+
+            if change_pass_form.is_valid():
+                new_password = change_pass_form.save(commit=False)
+                # assert password
+                # new_password.premium_links_password = make_password(password)
+                new_password.save()
+
+                messages.success(request, 'Premium Links code updated.')
+                return redirect('premium_links')
+
+    else:
+        context['set_password'] = False
+
+    return render(request, 'account/premium_links.html', context)
+
+
+class get_user_theme(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        user_id = data['user_id']
+
+        # Get user
+        try: 
+            user = User.objects.get(id=user_id)
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        # Get background theme
+        bg_theme_name = UserTheme.objects.get(user=user).background_theme
+
+        if bg_theme_name:
+            # Normal background theme
+            bg_data = BackgroundTheme.objects.get(name=bg_theme_name)
+
+            bg_bg_color = bg_data.background_color
+            bg_font_color = bg_data.font_color
+        else:
+            # Custom background theme
+            bg_data = UserTheme.objects.get(user=user).custom_background_theme
+
+            bg_bg_color = bg_data.background_color
+            bg_font_color = bg_data.font_color
+
+        # Get button theme
+        btn_theme_name = UserTheme.objects.get(user=user).button_theme
+
+        if btn_theme_name:
+            # Normal button theme
+            btn_data = ButtonTheme.objects.get(name=btn_theme_name)
+
+            btn_bg_color = btn_data.background_color
+            btn_font_color = btn_data.font_color
+        else:
+            # Custom background theme
+            btn_data = UserTheme.objects.get(user=user).custom_button_theme
+
+            btn_bg_color = btn_data.background_color
+            btn_font_color = btn_data.font_color
+
+        btn_border_color = btn_bg_color
+
+        # Get advanced button theme
+        theme_data = UserTheme.objects.get(user=user)
+        if theme_data.button_fill == 'transparent':
+            btn_font_color = btn_bg_color
+            btn_border_color = btn_bg_color
+            btn_bg_color = 'transparent'
+
+        btn_outline = theme_data.button_outline
+        btn_shadow = theme_data.button_shadow
+
+        data = {
+            'bg_bg_color': bg_bg_color,
+            'bg_font_color': bg_font_color,
+            'btn_font_color': btn_font_color,
+            'btn_bg_color': btn_bg_color,
+            'btn_border_color': btn_border_color,
+            'btn_outline': btn_outline,
+            'btn_shadow': btn_shadow
+        }
+
+        return JsonResponse({'data': data})
 
 
 class activate_link(View):

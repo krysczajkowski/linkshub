@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Social Media Platforms{% endblock %}
+
+{% block content %}
+<div class="mx-3">
+  <div class="row mx-0">
+    <div class="col-12 col-md-10 offset-md-1 p-0">
+      {% include 'partials/_alerts.html' %}
+
+      {% if set_password %}
+      <div class='mt-4'>
+        <p class='text-center font-size-12 mb-1'>
+          Set password for your Premium Links 
+          <i class="fas fa-question-circle font-size-08" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Premium Links are ..." aria-label="Premium Links are ..."></i>
+        </p>
+        <p class='text-center mt-0 font-size-08 text-muted'>*Ustaw haslo albo linki sie nie wyswietla</p>
+
+      
+        <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
+            <form method='POST'>
+              {% csrf_token %}
+              <div class="input-group mt-1">
+                <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
+                <div class="input-group-append">
+                  <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
+                </div>
+              </div>
+              <div class='d-flex'>
+                <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
+              </div>
+            </form>
+        </div>
+      {% endif %}
+
+      <div class="row mt-5 mb-3">
+          <div class="col-6">
+              <h4 class='mb-3 mt-2'>Premium Links: {{ links_count }}</h4>
+          </div>
+          <div class="col-6 d-flex">
+              <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Link</a></span>
+          </div>
+      </div>
+      <div class="links">
+      {% for link in links %}
+          {% if link.image %}
+          <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
+            <div class="row g-0">
+              <div class="col-2 col-md-1 p-0 p-2 m-0 m-0">
+                  <img src="{{ link.image.url }}" class="img-fluid rounded" style="max-height: 150px!important; width: auto;" alt="...">
+              </div>
+              <div class="col-8 col-md-10">
+                <div class="card-body py-1 pl-0">
+                  <h5 class="mt-2">{{ link.title }}</h5>
+                  <p class="mb-1">{{ link.description }}</p>
+                  <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+                </div>
+              </div>
+              <div class="col-2 col-md-1">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-check form-switch mt-2">
+                      <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <a href="{% url 'edit_link' link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
+                      <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="collapse" id="delete-{{ link.id }}">
+              <div>
+                <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
+                <div class="row">
+                  <div class="col-10 offset-1 col-md-8 offset-md-2">
+                    <div class="d-grid gap-2 mb-3">
+                      <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
+                        <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
+            <div class="row g-0">
+              <div class="col-10 col-md-11">
+                <div class="card-body py-1">
+                  <h5 class="mt-2">{{ link.title }}</h5>
+                  <p class="mb-1">{{ link.description }}</p>
+                  <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+                </div>
+              </div>
+              <div class="col-2 col-md-1">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="form-check form-switch mt-2">
+                      <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
+                    </div>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <a href="{% url 'edit_link' link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                  </div>
+                  <div class="col-12 mt-2">
+                    <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
+                      <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="collapse" id="delete-{{ link.id }}">
+              <div>
+                <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
+                <div class="row">
+                  <div class="col-10 offset-1 col-md-8 offset-md-2">
+                    <div class="d-grid gap-2 mb-3">
+                      <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
+                        <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+<script>
+  // CSRF token
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              // Does this cookie string begin with the name we want?
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+  const csrftoken = getCookie('csrftoken');
+
+
+  $(document).ready(function () {
+    $('.links').sortable({
+      update: function (event, ui) {
+        $(this).children().each(function (index) {
+          if ($(this).attr('data-position') != (index+1)) {
+            $(this).attr('data-position', (index+1)).addClass('updated')
+          }
+        })
+        saveNewPositions()
+      }
+    });
+  })
+
+  function saveNewPositions() {
+    var positions = []
+    $('.updated').each(function() {
+      positions.push([$(this).attr('data-index'), $(this).attr('data-position')])
+      $(this).removeClass('updated')
+    })
+
+
+    fetch('change_positions', {
+      body: JSON.stringify({'positions': positions, }),
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-CSRFToken': csrftoken
+      },
+    }).then(res=>res.json()).then(data=>{
+      console.log('data', data)
+      if(data.error) {
+        alert(data.error)
+      }
+    }); 
+  }
+
+
+  // Show password toggle
+const showPasswordToggle = document.querySelector('.showPasswordToggle')
+
+function handleToggleInput(e) {
+    if (showPasswordToggle.innerHTML == '<i class="far fa-eye" aria-hidden="true"></i>') {
+        showPasswordToggle.innerHTML = '<i class="far fa-eye-slash"></i>'
+
+        passwordField.setAttribute('type', 'text')
+    } else {
+        showPasswordToggle.innerHTML = '<i class="far fa-eye"></i>'
+
+        passwordField.setAttribute('type', 'password')
+    }
+}
+if (showPasswordToggle) {
+  showPasswordToggle.addEventListener('click', handleToggleInput)
+}
+
+</script>
+<script src="{% static 'js/links.js' %}"></script>
+{% endblock %}

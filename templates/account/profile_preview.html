@@ -26,7 +26,7 @@
     <title>{{ username }} | Linkshub.io</title>
   </head>
   <body>
-    <div class="profile-container" style='{{bg_bg_color}}; color: {{bg_font_color}}'>
+    <div class="profile-container">
         {% include 'partials/_navbar.html' %}
 
         <div class="row mt-4 mx-0">
@@ -47,7 +47,7 @@
             <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
                 <div class="row my-2">
                     <div class="d-grid gap-2">
-                        <a href="#" class="btn {{btn_outline}} mt-2 mx-0 row d-flex px-2 py-1 {{btn_shadow}} animate__animated animate__{{link.animation}} animate__infinite animate__slow" target="_blank" style='background-color: {{btn_bg_color}}; color: {{btn_font_color}}; border: 2px solid {{btn_border_color}};'>
+                        <a href="{{link.url}}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__{{link.animation}} animate__infinite animate__slow styled-link" target="_blank">
                             {% if link.image %}
                             <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
                                 <img src="{{ link.image.url }}" class="{{btn_outline}} link-image-size">
@@ -84,7 +84,25 @@
                 </div>
             </div>
         </div>
+
+        {% if display_premium_links_password %}
+        <div class="row pb-3 mx-0 mt-4" id='premium-links-container'>
+            <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                <p class='text-center font-size-11'>Premium Links</p>
+                <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control border-0" id='premium_links_code' placeholder='Code for Premium Links'>
+                        <div class="btn btn-light" id='premium-links-submit'>Submit</div>
+                    </div>
+                </div>
+            </div>
+            <div id="premium-links-error-msg"></div>
+        </div>
+        {% endif %}
     </div>
+    <input type="hidden" id='user-id' data-id='{{ user_id }}'>
+    <input type="hidden" id='csrf-token' data-token='{{ csrf_token }}'>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="{% static 'js/profile_premium_links.js' %}"></script>
   </body>
 </html>
