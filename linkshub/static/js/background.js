@@ -43,6 +43,42 @@ function load_profile (e) {
         .then((response) => response.text())
         .then((html) => {
             document.getElementById("profile_preview").innerHTML = html;
+
+            // Get user theme
+            var user_id = document.getElementById('user-id').dataset.id
+            var profile_container = document.querySelector('.profile-container')
+
+            fetch('/profile/get_user_theme', {
+                body: JSON.stringify({'user_id': user_id}),
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-CSRFToken': csrftoken
+                },
+            }).then(res=>res.json()).then(data=>{
+                if(data.error) {
+                    alert(data.error)
+                } else {
+                    // Style links
+                    document.querySelectorAll(".styled-link").forEach((link) => {
+                        link.style.backgroundColor = data.data.btn_bg_color;
+                        link.style.color = data.data.btn_font_color;
+                        link.style.border = `2px solid ${data.data.btn_border_color}`;
+                        link.classList.add(data.data.btn_shadow)
+                        link.classList.add(data.data.btn_outline)
+                    });
+
+                    document.querySelectorAll('.platform-link').forEach((platform) => {
+                        platform.style.color = data.data.bg_font_color
+                    })
+
+                    // Style background
+                    profile_container.style = data.data.bg_bg_color
+                    profile_container.style.color = data.data.bg_font_color
+                }
+            });
+
         })
         .catch((error) => {
             console.warn(error);
