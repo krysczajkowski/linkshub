@@ -29,7 +29,7 @@
     };
 
     // Create a chart function
-    const createSummaryChart = (profile_views, link_data, platform_data, dates) => {
+    const createSummaryChart = (profile_views, link_data, premium_link_data, platform_data, dates) => {
         var ctx = document.getElementById('profileViewsChart').getContext('2d');
 
             window.myCharts = new Chart(ctx, {
@@ -43,6 +43,12 @@
                         borderColor: '#36a2eb',
                         borderWidth: 2
                     }, {
+                        label: 'Premium Link Clicks',
+                        fill: false,
+                        data: premium_link_data,
+                        borderColor: '#ffa600',
+                        borderWidth: 2
+                    },{
                         label: 'Platform Clicks',
                         type: 'line',
                         fill: false,
@@ -98,11 +104,12 @@
                 // Save data from django
                 const profile_views = results.views_data
                 const link_data = results.link_data
+                const premium_link_data = results.premium_link_data
                 const platform_data = results.platform_data
                 const dates = results.datelist
         
                 resetCanvas('summary')
-                createSummaryChart(profile_views, link_data, platform_data, dates)
+                createSummaryChart(profile_views, link_data, premium_link_data, platform_data, dates)
             }
         })
     }
@@ -125,8 +132,10 @@
                 const data = results['data']
                 $('#summary_visitors').html(data['visitors'])
                 $('#summary_links_clicks').html(data['links_clicks'])
+                $('#summary_premium_links_clicks').html(data['premium_links_clicks'])
                 $('#summary_platforms_clicks').html(data['platforms_clicks'])
                 $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+                $('#summary_plcpr_percent').html(data['plcpr_percent']+ '%')
                 $('#summary_pcpr_percent').html(data['pcpr_percent']+ '%')
             }
         })
@@ -186,7 +195,6 @@
 
     // Get data for country table
     const getCountryData = (sdate, edate) => {
-
         return fetch('country_table', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
@@ -205,7 +213,6 @@
 
     // Get data for city table
     const getCityData = (sdate, edate) => {
-
         return fetch('city_table', {
             body: JSON.stringify({'sdate': sdate, 'edate': edate}),
             method: 'POST',
@@ -258,6 +265,7 @@
                     <td><img src="/media/flags/${fetch_data[i]['country']}.svg" style='width: 20px; height: auto;' class='me-2' alt="">${fetch_data[i]['country']}</td>
                     <td>${fetch_data[i]['visitors']}</td>
                     <td>${fetch_data[i]['links_clicks']}</td>
+                    <td>${fetch_data[i]['premium_links_clicks']}</td>
                     <td>${fetch_data[i]['platforms_clicks']}</td>
                 </tr>`)
             }
@@ -301,6 +309,7 @@
                     <td><img src="/media/flags/${fetch_data[i]['country']}.svg" style='width: 20px; height: auto;' class='me-2' alt="">${fetch_data[i]['city']}</td>
                     <td>${fetch_data[i]['visitors']}</td>
                     <td>${fetch_data[i]['links_clicks']}</td>
+                    <td>${fetch_data[i]['premium_links_clicks']}</td>
                     <td>${fetch_data[i]['platforms_clicks']}</td>
                 </tr>`)
             }

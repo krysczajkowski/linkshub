@@ -16,6 +16,15 @@
     }
     const csrftoken = getCookie('csrftoken');
 
+    // Get links type
+    var links_type = document.querySelector('#links-type').dataset.type
+
+    if (links_type == 'premium') {
+        document.querySelector('#type-of-link').innerHTML = 'PREMIUM LINKS CLICKS'
+    } else {
+        document.querySelector('#type-of-link').innerHTML = 'LINKS CLICKS'
+    }
+
     // Create a chart function
     const createChart = (ctx_id, link_title, profile_views, link_data, clicks_sum, dates) => {
         var ctx = document.getElementById(ctx_id).getContext('2d');
@@ -63,7 +72,7 @@
     // Render links charts
     const renderChart = (sdate, edate) => {
         fetch('links_advanced_charts', {
-            body: JSON.stringify({'sdate': sdate, 'edate': edate}),
+            body: JSON.stringify({'sdate': sdate, 'edate': edate, 'links_type': links_type}),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -126,9 +135,14 @@
             } else {
                 const data = results['data']
                 $('#summary_visitors').html(data['visitors'])
-                $('#summary_links_clicks').html(data['links_clicks'])
-                $('#summary_platforms_clicks').html(data['platforms_clicks'])
-                $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+                if (links_type == 'premium') {
+                    $('#summary_links_clicks').html(data['premium_links_clicks'])
+                    $('#summary_lcpr_percent').html(data['plcpr_percent']+ '%')
+                } else {
+                    $('#summary_links_clicks').html(data['links_clicks'])
+                    $('#summary_lcpr_percent').html(data['lcpr_percent']+ '%')
+                }
+
             }
         })
     }

@@ -21,7 +21,10 @@ def dashboard(request):
 
 
 def links_advanced(request):
-    return render(request, 'dashboard/links.html')
+    return render(request, 'dashboard/links.html', {'links_type': 'public'})
+
+def premium_links_advanced(request):
+    return render(request, 'dashboard/links.html', {'links_type': 'premium'})
 
 def platforms_advanced(request):
     return render(request, 'dashboard/platforms.html')
@@ -100,6 +103,11 @@ def platforms_advanced_charts(request):
 def links_advanced_charts(request):  
     # Time period for the table
     data = json.loads(request.body)
+    links_type = data['links_type']
+    print(links_type)
+
+    if links_type != 'premium' and links_type != 'public':
+        return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
     try:
         # Time period as a string
@@ -131,13 +139,22 @@ def links_advanced_charts(request):
 
 
     dates_n_views = {'datelist': datelist, 'visitors': visitors}
-    all_links = CustomLink.objects.filter(user=request.user)
+
+
+    if links_type == 'premium':
+        all_links = PremiumCustomLink.objects.filter(user=request.user) 
+    else:
+        all_links = CustomLink.objects.filter(user=request.user)
 
     clicks_data = []
 
     # Final links clicks
-    for link in all_links:
-        clicks_sum = LinkClick.objects.filter(link=link, date__gte=sdate, date__lte=tomorrow).count()
+    for link in all_links:  
+        if links_type == 'premium':
+            clicks_sum = PremiumLinkClick.objects.filter(link=link, date__gte=sdate, date__lte=tomorrow).count()
+        else:
+            clicks_sum = LinkClick.objects.filter(link=link, date__gte=sdate, date__lte=tomorrow).count()
+        
         clicks_list = []
 
         for date in datelist:
@@ -146,7 +163,10 @@ def links_advanced_charts(request):
             date_end = date_str + ' 23:59:59'
 
             # Final clicks
-            clicks = LinkClick.objects.filter(link=link, date__gte=date_str, date__lte=date_end).count()
+            if links_type == 'premium':
+                clicks = PremiumLinkClick.objects.filter(link=link, date__gte=date_str, date__lte=date_end).count()
+            else:
+                clicks = LinkClick.objects.filter(link=link, date__gte=date_str, date__lte=date_end).count()
 
             clicks_list.append(clicks)
 
@@ -179,20 +199,25 @@ def dashboard_summary(request):
     # Get data
     visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
     links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
+    premium_links_clicks = PremiumLinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
     platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate).count()
 
     try:
-        lcpr_percent =  round(links_clicks / visitors * 100, 1)
-        pcpr_percent =  round(platforms_clicks / visitors * 100, 1)
+        lcpr_percent =  round(links_clicks / visitors * 100, 1) # Links 
+        plcpr_percent = round(premium_links_clicks / visitors * 100, 1) #Premium Links 
+        pcpr_percent =  round(platforms_clicks / visitors * 100, 1) # Platforms
     except ZeroDivisionError:
         lcpr_percent = 0
+        plcpr_percent = 0
         pcpr_percent = 0
 
     data = {
         'visitors': visitors,
         'links_clicks': links_clicks,
+        'premium_links_clicks': premium_links_clicks,
         'platforms_clicks': platforms_clicks,
         'lcpr_percent': lcpr_percent,
+        'plcpr_percent': plcpr_percent,
         'pcpr_percent': pcpr_percent,
     }
 
@@ -224,6 +249,7 @@ def dashboard_main_chart(request):
         # Data for chart
         profile_views = ProfileView.objects.filter(user=request.user)
         link_clicks = LinkClick.objects.filter(user=request.user)
+        premium_link_clicks = PremiumLinkClick.objects.filter(user=request.user)
         platform_clicks = PlatformClick.objects.filter(user=request.user)
     except:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -232,6 +258,7 @@ def dashboard_main_chart(request):
     datelist = []
     views_data = [] 
     link_data = []
+    premium_link_data = []
     platform_data = []
 
     try:
@@ -253,14 +280,16 @@ def dashboard_main_chart(request):
         # Final views, link and platform data in the chart
         views_by_date = profile_views.filter(date__gte=date, date__lte=date_end).count()
         links_by_date = link_clicks.filter(date__gte=date, date__lte=date_end).count()
+        premium_links_by_date = premium_link_clicks.filter(date__gte=date, date__lte=date_end).count()
         platforms_by_date = platform_clicks.filter(date__gte=date, date__lte=date_end).count()
 
         views_data.append(views_by_date)
         link_data.append(links_by_date)
+        premium_link_data.append(premium_links_by_date)
         platform_data.append(platforms_by_date)
 
     # Send chart data back to javascript
-    return JsonResponse({'datelist': datelist, 'views_data': views_data, 'link_data': link_data, 'platform_data': platform_data}, safe=False)
+    return JsonResponse({'datelist': datelist, 'views_data': views_data, 'link_data': link_data, 'premium_link_data': premium_link_data, 'platform_data': platform_data}, safe=False)
 
 
 # Country table
@@ -281,6 +310,7 @@ def country_table(request):
     try:
         visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        premium_links_clicks = PremiumLinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
     except:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -292,9 +322,10 @@ def country_table(request):
     for country in countries:
         visitors_num = visitors.filter(country=country).count()
         links_clicks_num = links_clicks.filter(country=country).count()
+        premium_links_clicks_num = premium_links_clicks.filter(country=country).count()
         platforms_clicks_num = platforms_clicks.filter(country=country).count()
 
-        temp_dict = {'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'platforms_clicks': platforms_clicks_num}
+        temp_dict = {'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'premium_links_clicks': premium_links_clicks_num, 'platforms_clicks': platforms_clicks_num}
 
         data.append(temp_dict)
 
@@ -319,6 +350,7 @@ def city_table(request):
     try:
         visitors = ProfileView.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         links_clicks = LinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
+        premium_links_clicks = PremiumLinkClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
         platforms_clicks = PlatformClick.objects.filter(user=request.user, date__gte=sdate, date__lte=edate)
     except:
         return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -331,9 +363,10 @@ def city_table(request):
     for city, country in cities:
         visitors_num = visitors.filter(city=city).count()
         links_clicks_num = links_clicks.filter(city=city).count()
+        premium_links_clicks_num = premium_links_clicks.filter(country=country).count()
         platforms_clicks_num = platforms_clicks.filter(city=city).count()
 
-        temp_dict = {'city': city, 'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'platforms_clicks': platforms_clicks_num}
+        temp_dict = {'city': city, 'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'premium_links_clicks': premium_links_clicks_num, 'platforms_clicks': platforms_clicks_num}
 
         data.append(temp_dict)
 

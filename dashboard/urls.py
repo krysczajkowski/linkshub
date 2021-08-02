@@ -15,5 +15,6 @@ urlpatterns = [
     path('links', views.links_advanced, name='links_advanced'),
     path('links_advanced_charts', views.links_advanced_charts, name='links_advanced_charts'),
     path('platforms', views.platforms_advanced, name='platforms_advanced'),
-    path('platforms_advanced_charts', views.platforms_advanced_charts, name='platforms_advanced_charts')
+    path('platforms_advanced_charts', views.platforms_advanced_charts, name='platforms_advanced_charts'),
+    path('premium_links', views.premium_links_advanced, name='premium_links_advanced')
 ]

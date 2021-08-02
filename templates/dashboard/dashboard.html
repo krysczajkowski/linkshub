@@ -21,15 +21,15 @@
                 </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-12' id='summary_platforms_clicks'></span><br>
+                <span class='fw-bold font-size-12' id='summary_premium_links_clicks'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
-                    <div class='platform-dot me-1'></div> PLATFORM CLICKS
+                    <div class='premium-link-dot me-1'></div> PREMIUM LINKS CLICKS
                 </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-12'>69</span><br>
+                <span class='fw-bold font-size-12' id='summary_platforms_clicks'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
-                    <div class='private-link-dot me-1'></div> PRIVATE LINKS CLICKS
+                    <div class='platform-dot me-1'></div> PLATFORM CLICKS
                 </span>
             </div>
         </div>
@@ -44,15 +44,15 @@
                     <i class="far fa-question-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Link Click Through Rate - number of link clicks devided through the number of profile views."></i></span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-12' id='summary_pcpr_percent'></span><br>
+                <span class='fw-bold font-size-12' id='summary_plcpr_percent'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
-                    <div class='platform-dot me-1'></div> PCRP
+                    <div class='premium-link-dot me-1'></div> PLCRP
                 </span>
             </div>
             <div class="col">
-                <span class='fw-bold font-size-12'>69.0%</span><br>
+                <span class='fw-bold font-size-12' id='summary_pcpr_percent'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
-                    <div class='private-link-dot me-1'></div> PLCRP
+                    <div class='platform-dot me-1'></div> PCRP
                 </span>
             </div>
         </div>
@@ -75,6 +75,7 @@
 
         <div class="container">
             <a href="{% url 'links_advanced' %}"><p class='text-end mb-0'>Advanced Link Clicks</p></a>
+            <a href="{% url 'premium_links_advanced' %}"><p class='text-end mb-0'>Advanced Premium Link Clicks</p></a>
             <a href="{% url 'platforms_advanced' %}"><p class='text-end'>Advanced Platforms Clicks</p></a>
         </div>
     </div>
@@ -90,7 +91,7 @@
             <table class="table table-hover" id='country-table' style='min-width: 500px;'>
                 <thead class='sticky-top bg-white'>
                   <tr>
-                    <th data-column='country' data-order='desc' class='cursor-pointer' style='width: 40%;'>
+                    <th data-column='country' data-order='desc' class='cursor-pointer' style='width: 20%;'>
                         Country
                     </th>
                     <th data-column='visitors' data-order='desc' id='country-visitors-th' class='cursor-pointer'>
@@ -98,6 +99,9 @@
                     </th>
                     <th data-column='links_clicks' data-order='asc' class='cursor-pointer'> 
                         Links Clicks
+                    </th>
+                    <th data-column='links_clicks' data-order='asc' class='cursor-pointer'> 
+                        Premium Links Clicks
                     </th>
                     <th data-column='platforms_clicks' data-order='asc' class='cursor-pointer'>
                         Platforms Clicks
@@ -113,12 +117,15 @@
           <table class="table table-hover d-none" id='city-table' style='min-width: 500px;'>
             <thead class='sticky-top bg-white'>
               <tr>
-                <th data-column='city' data-order='desc' style='width: 40%;' class='cursor-pointer'>City</th>
+                <th data-column='city' data-order='desc' style='width: 20%;' class='cursor-pointer'>City</th>
                 <th data-column='visitors' data-order='desc' id='city-visitors-th' class='cursor-pointer'>
                     Visits <i class="fas fa-sort-amount-down text-muted font-size-09" id='city-sort-emoji'></i>
                 </th>
                 <th data-column='links_clicks' data-order='asc' class='cursor-pointer'>
                     Links Clicks
+                </th>
+                <th data-column='links_clicks' data-order='asc' class='cursor-pointer'> 
+                    Premium Links Clicks
                 </th>
                 <th data-column='platforms_clicks' data-order='asc' class='cursor-pointer'>
                     Platforms Clicks

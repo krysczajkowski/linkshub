@@ -17,7 +17,7 @@
             <div class="col">
                 <span class='fw-bold font-size-12' id='summary_links_clicks'></span><br>
                 <span class='fw-bold font-size-08 text-muted'>
-                    <div class='link-dot me-1'></div> LINKS CLICKS
+                    <div class='link-dot me-1'></div><span id='type-of-link'></span>
                 </span>
             </div>
             <div class="col">
@@ -45,7 +45,7 @@
 </div>
 
 
-
+<input type="hidden" data-type='{{ links_type }}' id='links-type'>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
