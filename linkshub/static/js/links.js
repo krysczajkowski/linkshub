@@ -7,8 +7,8 @@ activeLinkSlider.forEach(item => {
         const is_active = item.checked
         const link_id = item.id
         
-        fetch('activate', {
-            body: JSON.stringify({'is_active': is_active, 'link_id': link_id}),
+        fetch('/profile/links/activate', {
+            body: JSON.stringify({'is_active': is_active, 'link_id': link_id, 'link_type': link_type}),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
@@ -34,8 +34,8 @@ deleteLink.forEach(item => {
         item.disabled = true
         document.querySelector(`.deleteSpinner-${link_id}`).classList.remove('d-none')
 
-        fetch('delete', {
-            body: JSON.stringify({'link_id': link_id}),
+        fetch('/profile/links/delete', {
+            body: JSON.stringify({'link_id': link_id, 'link_type': link_type}),
             method: 'POST',
             headers: {
                 'Accept': 'application/json',

@@ -8,13 +8,47 @@
     <div class="col-12 col-md-10 offset-md-1 p-0">
       {% include 'partials/_alerts.html' %}
 
+      {% if links_type == 'premium' %}
+        {% if set_password %}
+        <div class='mt-4'>
+          <p class='text-center font-size-12 mb-1'>
+            Set password for your Premium Links 
+            <i class="fas fa-question-circle font-size-08" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Premium Links are ..." aria-label="Premium Links are ..."></i>
+          </p>
+          <p class='text-center mt-0 font-size-08 text-muted'>*Ustaw haslo albo linki sie nie wyswietla</p>
+
+        
+          <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
+              <form method='POST'>
+                {% csrf_token %}
+                <div class="input-group mt-1">
+                  <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
+                  <div class="input-group-append">
+                    <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
+                  </div>
+                </div>
+                <div class='d-flex'>
+                  <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
+                </div>
+              </form>
+          </div>
+        {% endif %}
+      {% endif %}
+
       <div class="row mt-5 mb-3">
           <div class="col-6">
-              <h4 class='mb-3 mt-2'>Links: {{ links_count }}</h4>
+              <h4 class='mb-3 mt-2'>{% if links_type == 'premium' %} Premium {% endif %} Links: {{ links_count }}</h4>
           </div>
+          {% if links_type == 'premium' %}
           <div class="col-6 d-flex">
-              <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Link</a></span>
+              <span class='ms-auto mt-2'><a href="{% url 'add_premium_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Premium Link</a></span>
           </div>
+          {% else %}
+          <div class="col-6 d-flex">
+            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Link</a></span>
+        </div>  
+        {% endif %}
+          
       </div>
       <div class="links">
       {% for link in links %}
@@ -39,7 +73,7 @@
                     </div>
                   </div>
                   <div class="col-12 mt-2">
-                    <a href="{% url 'edit_link' link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                    <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
                   </div>
                   <div class="col-12 mt-2">
                     <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
@@ -83,7 +117,7 @@
                     </div>
                   </div>
                   <div class="col-12 mt-2">
-                    <a href="{% url 'edit_link' link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                    <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
                   </div>
                   <div class="col-12 mt-2">
                     <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
@@ -115,10 +149,12 @@
     </div>
   </div>
 </div>
-
+<input type="hidden" data-type='{{ links_type }}' id='links-type'>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 <script>
+  const link_type = document.querySelector('#links-type').dataset.type
+
   // CSRF token
   function getCookie(name) {
       let cookieValue = null;
@@ -159,8 +195,8 @@
     })
 
 
-    fetch('change_positions', {
-      body: JSON.stringify({'positions': positions, }),
+    fetch('/profile/links/change_positions', {
+      body: JSON.stringify({'positions': positions, 'links_type': link_type}),
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -174,6 +210,24 @@
       }
     }); 
   }
+
+// Show password toggle
+const showPasswordToggle = document.querySelector('.showPasswordToggle')
+
+function handleToggleInput(e) {
+    if (showPasswordToggle.innerHTML == '<i class="far fa-eye" aria-hidden="true"></i>') {
+        showPasswordToggle.innerHTML = '<i class="far fa-eye-slash"></i>'
+
+        passwordField.setAttribute('type', 'text')
+    } else {
+        showPasswordToggle.innerHTML = '<i class="far fa-eye"></i>'
+
+        passwordField.setAttribute('type', 'password')
+    }
+}
+if (showPasswordToggle) {
+  showPasswordToggle.addEventListener('click', handleToggleInput)
+}
 </script>
 <script src="{% static 'js/links.js' %}"></script>
 {% endblock %}

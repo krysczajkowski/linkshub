@@ -19,7 +19,7 @@ from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation, 
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form
 from .decorators import check_ban
-from .forms import CustomLinkForm, PremiumLinksChangePassword
+from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
 
 # Create your views here.
 @check_ban
@@ -255,7 +255,8 @@ def links(request):
 
     context = {
     'links': links,
-    'links_count': links_count
+    'links_count': links_count,
+    'links_type': 'public',
     }
 
     return render(request, 'account/links.html', context)
@@ -279,7 +280,7 @@ def add_link(request):
         else:
             messages.error(request, 'Something went wrong. Please try again.')
 
-    animations = LinkAnimation.objects.all()
+    #animations = LinkAnimation.objects.all()
 
 
     context = {
@@ -290,13 +291,43 @@ def add_link(request):
     return render(request, 'account/add_link.html', context)
 
 
+@check_ban
+@login_required(login_url='/authentication/login/')
+def add_premium_link(request):
+    form = CustomPremiumLinkForm(initial={'title': '', 'description': '', 'url': ''}) 
+
+    if request.method == 'POST':
+        form = CustomPremiumLinkForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            newLink = form.save(commit=False)
+            newLink.user = request.user
+            newLink.save()
+
+            messages.success(request, 'Link added successfully.')
+            return redirect('premium_links')
+
+        else:
+            messages.error(request, 'Something went wrong. Please try again.')
+
+    #animations = LinkAnimation.objects.all()
+
+
+    context = {
+        'page_title': 'Add Premium Link',
+        'form': form,
+    }
+
+    return render(request, 'account/add_link.html', context)
+
 def premium_links(request):
     links = PremiumCustomLink.objects.filter(user=request.user).order_by('position')
     links_count = links.count()
 
     context = {
         'links': links,
-        'links_count': links_count
+        'links_count': links_count,
+        'links_type': 'premium',
     }
 
 
@@ -324,7 +355,7 @@ def premium_links(request):
     else:
         context['set_password'] = False
 
-    return render(request, 'account/premium_links.html', context)
+    return render(request, 'account/links.html', context)
 
 
 class get_user_theme(View):
@@ -400,9 +431,17 @@ class activate_link(View):
         data = json.loads(request.body)
         link_id = data['link_id']
         is_active = data['is_active']
+        link_type = data['link_type']
+
 
         try:
-            link = CustomLink.objects.get(id=link_id, user=request.user)
+            if link_type == 'public':
+                link = CustomLink.objects.get(id=link_id, user=request.user)
+            elif link_type == 'premium':
+                link = PremiumCustomLink.objects.get(id=link_id, user=request.user)
+            else:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
             link.is_active = is_active 
             link.save()
         except:
@@ -415,9 +454,16 @@ class delete_link(View):
     def post(self, request):
         data = json.loads(request.body)
         link_id = data['link_id']
+        link_type = data['link_type']
 
         try:
-            link = CustomLink.objects.get(id=link_id, user=request.user)
+            if link_type == 'public':
+                link = CustomLink.objects.get(id=link_id, user=request.user)
+            elif link_type == 'premium':
+                link = PremiumCustomLink.objects.get(id=link_id, user=request.user)
+            else:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+    
             link.delete()
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -429,13 +475,21 @@ class delete_link(View):
 
 @check_ban
 @login_required(login_url='/authentication/login/')
-def edit_link(request, link_id):
+def edit_link(request, link_type, link_id):
     try:
-        link = CustomLink.objects.get(id=link_id, user=request.user)
+        if link_type == 'public':
+            link = CustomLink.objects.get(id=link_id, user=request.user)
+        elif link_type == 'premium':
+            link = PremiumCustomLink.objects.get(id=link_id, user=request.user)
+        else:
+            messages.error(request, 'Something went wrong. Please try again.')
     except:
-        return redirect('profile')
+        messages.error(request, 'Something went wrong. Please try again.')
 
-    form = CustomLinkForm(instance=link)
+    if link_type == 'public':
+        form = CustomLinkForm(instance=link)
+    elif link_type == 'premium':
+        form = CustomPremiumLinkForm(instance=link)
 
     animations = LinkAnimation.objects.all()
 
@@ -448,13 +502,22 @@ def edit_link(request, link_id):
     }
 
     if request.method == 'POST':
-        form = CustomLinkForm(request.POST, request.FILES, instance=link)
+        if link_type == 'public':
+            form = CustomLinkForm(request.POST, request.FILES, instance=link)
+        elif link_type == 'premium':
+            form = CustomPremiumLinkForm(request.POST, request.FILES, instance=link)
+        else:
+            messages.error(request, 'Something went wrong. Please try again.')
 
         if form.is_valid():
             form.save()
 
             messages.success(request, 'Link edited successfully.')
-            return redirect('links')
+            
+            if link_type == 'public':
+                return redirect('links')
+            elif link_type == 'premium':
+                return redirect('premium_links')
 
         else:
             messages.error(request, 'Something went wrong. Please try again.')
@@ -471,15 +534,24 @@ class change_positions(View):
     def post(self, request):
         data = json.loads(request.body)
         positions = data['positions']
+        links_type = data['links_type']
+        print(links_type)
         
         try:
-            for id, position in positions:
-                link = CustomLink.objects.get(id=id)
-                link.position = position 
-                link.save()
+            if links_type == 'public':
+                for id, position in positions:
+                    link = CustomLink.objects.get(id=id)
+                    link.position = position 
+                    link.save()
+            elif links_type == 'premium':
+                for id, position in positions:
+                    link = PremiumCustomLink.objects.get(id=id)
+                    link.position = position 
+                    link.save()
+            else:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
         except (ValueError, CustomLink.DoesNotExist) as e:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
-            
-
 
         return JsonResponse({'success': True})
