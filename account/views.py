@@ -17,7 +17,7 @@ from requests.api import delete
 
 from .models import UserPlatform, Platform, CustomLink, Profile, LinkAnimation, PremiumCustomLink
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
-from .utils import validate_link_form
+from .utils import validate_link_form, hash_password, check_password
 from .decorators import check_ban
 from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
 
@@ -118,13 +118,13 @@ def profile_preview(request):
 class premium_links_check_password(View):
     def post(self, request):
         data = json.loads(request.body)
-        premium_links_code = data['premium_links_code']
+        typed_pwd = data['premium_links_code']
 
         try:
-            correct_code = Profile.objects.get(user=request.user).premium_links_password
+            correct_hash = Profile.objects.get(user=request.user).premium_links_password
 
             # Check password
-            if premium_links_code == correct_code:
+            if check_password(correct_hash, typed_pwd):
                 premium_links = PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
 
                 premium_links_list = []
@@ -320,7 +320,10 @@ def add_premium_link(request):
 
     return render(request, 'account/add_link.html', context)
 
+@check_ban
+@login_required(login_url='/authentication/login/')
 def premium_links(request):
+    # Get all active premium links
     links = PremiumCustomLink.objects.filter(user=request.user).order_by('position')
     links_count = links.count()
 
@@ -330,9 +333,9 @@ def premium_links(request):
         'links_type': 'premium',
     }
 
-
     profile = Profile.objects.get(user=request.user)
 
+    # Display popup to set up premium links password
     if not profile.premium_links_password:
         change_pass_form = PremiumLinksChangePassword()
 
@@ -345,8 +348,7 @@ def premium_links(request):
 
             if change_pass_form.is_valid():
                 new_password = change_pass_form.save(commit=False)
-                # assert password
-                # new_password.premium_links_password = make_password(password)
+                new_password.premium_links_password = hash_password(password)
                 new_password.save()
 
                 messages.success(request, 'Premium Links code updated.')
