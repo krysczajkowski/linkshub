@@ -71,7 +71,7 @@ if (premium_submit) {
                         <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
                             <div class="row my-2">
                                 <div class="d-grid gap-2">
-                                    <a href="${link.url}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__${link.animation} animate__infinite animate__slow styled-link" target="_blank">`
+                                    <a href="${link.url}" id="${link.id}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__${link.animation} animate__infinite animate__slow styled-link premium-link-click" target="_blank">`
                         
                         if (link.image) {
                             premium_link_html += `
@@ -104,6 +104,8 @@ if (premium_submit) {
             
                     // Styling premium links
                     get_user_theme()
+
+                    count_premium_links_clicks()
                 }
             });
         } else {

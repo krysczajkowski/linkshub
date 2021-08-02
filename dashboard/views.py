@@ -8,8 +8,8 @@ from django.contrib.auth.decorators import login_required
 import datetime
 import collections
 
-from account.models import CustomLink, Platform, UserPlatform
-from dashboard.models import LinkClick, PlatformClick, ProfileView
+from account.models import CustomLink, Platform, PremiumCustomLink, UserPlatform
+from dashboard.models import LinkClick, PlatformClick, ProfileView, PremiumLinkClick
 from account.decorators import check_ban
 from .utils import get_view_date, get_ip, get_location
 
@@ -386,6 +386,29 @@ class link_click(View):
 
         return JsonResponse({'success': True})
 
+
+# Add premium link click  
+class premium_link_click(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        link_id = data['link_id']
+        user_id = data['user_id']
+
+        # Get visitors location
+        location_info = get_location(request)
+        country = location_info['country']
+        city = location_info['city']
+
+
+        try:
+            user = User.objects.get(id=user_id)
+            link = PremiumCustomLink.objects.get(id=link_id, user=user)
+            link_click = PremiumLinkClick.objects.create(user=user, link=link, country=country, city=city)
+
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
 
 # Add platform click
 class platform_click(View):

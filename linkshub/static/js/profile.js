@@ -24,6 +24,29 @@ links.forEach(link => {
     })
 })
 
+// Premium Link click counter
+function count_premium_links_clicks() {
+    var premium_links = document.querySelectorAll('.premium-link-click')
+    premium_links.forEach(link => {
+        link.addEventListener('click', (e) => {
+            const link_id = link.id 
+
+            fetch('dashboard/premium_link_click', {
+                body: JSON.stringify({'user_id': user_id, 'link_id': link_id}),
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'X-CSRFToken': csrftoken
+                },
+            }).then(res=>res.json()).then(data=>{
+                if(data.error) {
+                    alert(data.error)
+                }
+            });
+        })
+    })
+}
 
 // Platform click counter
 var platforms = document.querySelectorAll('.platform-click')
