@@ -20,9 +20,19 @@
     var links_type = document.querySelector('#links-type').dataset.type
 
     if (links_type == 'premium') {
-        document.querySelector('#type-of-link').innerHTML = 'PREMIUM LINKS CLICKS'
+        $('#type-of-link').html('PREMIUM LINKS CLICKS')
+
+        $('.link-dot').addClass('premium-link-dot')
+        $('.link-dot').removeClass('link-dot')
+
+        var chart_link_type = 'Premium Link Clicks'
+        var chart_link_color = '#ffa600'
+
     } else {
         document.querySelector('#type-of-link').innerHTML = 'LINKS CLICKS'
+
+        var chart_link_type = 'Link Clicks'
+        var chart_link_color = '#36a2eb'
     }
 
     // Create a chart function
@@ -34,10 +44,10 @@
                 data: {
                     labels: dates,
                     datasets: [{
-                        label: 'Link Clicks',
+                        label: chart_link_type,
                         fill: false,
                         data: link_data,
-                        borderColor: '#36a2eb',
+                        borderColor: chart_link_color,
                         borderWidth: 2
                     }, {
                         label: 'Profile Views',

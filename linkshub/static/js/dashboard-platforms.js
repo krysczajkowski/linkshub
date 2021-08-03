@@ -25,10 +25,10 @@
                 data: {
                     labels: dates,
                     datasets: [{
-                        label: 'Link Clicks',
+                        label: 'Platform Clicks',
                         fill: false,
                         data: link_data,
-                        borderColor: '#36a2eb',
+                        borderColor: 'rgba(204, 101, 254, 1)',
                         borderWidth: 2
                     }, {
                         label: 'Profile Views',
