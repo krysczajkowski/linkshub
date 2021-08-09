@@ -56,6 +56,31 @@ a{text-decoration: none}
     display: inline-block;
 }
 
+.btn-get-premium {
+    font-size: 18px;
+    color: #55c0eb;
+    letter-spacing: 1px;
+    line-height: 15px;
+    border: 2px solid #fff;
+    background-color: #fff;
+    border-radius: 40px;
+    transition: all 0.3s ease 0s;
+    padding: 0.9rem 1.6rem;
+}
+  
+.btn-get-premium:hover {
+color: #FFF;
+background: transparent;
+border: 2px solid #fff;
+}
+
+.title-icon-premium {
+    height: 30px;
+}
+
+.background-premium { 
+    background-image: linear-gradient(315deg, #84dbff 0%, #55c0eb 74%);
+}
 
 /* Font sizes */
 .font-size-08 {

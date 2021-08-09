@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="mx-3 mt-4">
+    <div class="row">
+        <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
+        
+            <div class="card card-body text-center">
+                {% include 'partials/_settings_sidebar.html' %}
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9 col-xxl-8 mt-5 mt-lg-0">
+            {% include 'partials/_alerts.html' %}
+            <div class="card card-body">
+                {% if cancel_at_period_end %}
+                Your membership will run to the end of your billing cycle.
+                {% elif membership %}
+                <form action="{% url 'membership' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="submit" value="Cancel Membership?">
+                </form>
+                {% else %}
+                <a href="{% url 'join' %}">Get a membership</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/change_password.js' %}"></script>
+{% endblock %}

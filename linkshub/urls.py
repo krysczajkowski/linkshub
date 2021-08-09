@@ -11,6 +11,7 @@ urlpatterns = [
     path('profile/', include('account.urls')),
     path('settings/', include('settings.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('premium/', include('premium.urls')),
     path('<slug:username>', views.profile),
     path('user_banned/', views.user_banned, name='user_banned'),
     path('you_are_banned/', views.you_are_banned, name='you_are_banned'),

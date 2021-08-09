@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://js.stripe.com/v3/"></script>
+<div class='background-premium text-center text-white py-5'>
+  <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
+  <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
+  <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+</div>
+
+<div class="row mx-0">
+    <!-- Summary --->
+    <div class="row container m-0">
+      <div class="col-12 col-md-4 mt-5 text-center">
+        <img src="https://image.flaticon.com/icons/png/512/609/609997.png" style='height: 11vh;' class='img-fluid mb-3'>
+        <h5 class='fw-bold'>Analytics</h5>
+        <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
+      </div>
+
+      <div class="col-12 col-md-4 mt-5 text-center">
+        <img src="https://image.flaticon.com/icons/png/512/610/610005.png" style='height: 11vh;' class='img-fluid mb-3'>
+        <h5 class='fw-bold'>Premium Links</h5>
+        <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
+      </div>
+
+      <div class="col-12 col-md-4 mt-5 text-center">
+        <img src="https://image.flaticon.com/icons/png/512/610/610090.png" style='height: 11vh;' class='img-fluid mb-3'>
+        <h5 class='fw-bold'>Appearance</h5>
+        <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
+      </div>
+    </div>
+
+  <div class="row col-10 offset-1 col-xl-8 offset-xl-2 mt-5">
+    <!-- Analytics -->
+    <div class="col-12 mt-5">
+      <h3 class='text-center fw-bold'>
+        <img src="https://image.flaticon.com/icons/png/512/609/609997.png" class='img-fluid mb-1 me-2 title-icon-premium'>
+        Analytics
+      </h3>
+    </div>
+    <div class="row p-0 m-0 mb-5">
+      <div class="col-12 col-md-6">
+        <img src="https://media.discordapp.net/attachments/423928174552809473/859174929492213790/unknown.png" class='img-fluid rounded p-3'>
+      </div>
+      <div class="col-12 col-md-6 p-3 text-center text-md-start">
+        <p>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin. Fusce sit amet dictum ipsum, sollicitudin</p>
+        
+      </div>
+    </div>
+
+    <!-- Premium Links -->
+      <div class="col-12 mt-5">
+        <h3 class='text-center fw-bold'>
+          <img src="https://image.flaticon.com/icons/png/512/610/610005.png" class='img-fluid mb-1 me-2 title-icon-premium'>
+          Premium Links
+        </h3>
+      </div>
+      <div class="row p-0 m-0 mb-5">
+        <div class="col-12 col-md-6 p-3 text-center text-md-end">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin</p>
+          <span>Lorem ipsum</span>
+        </div>
+        <div class="col-12 col-md-6">
+          <img src="/media/premium/premium-links.png" style='max-height: 40vh;' class='img-fluid rounded p-3'>
+        </div>
+      </div>
+
+    <!-- Appearance -->
+    <div class="col-12 mt-5">
+      <h3 class='text-center fw-bold'>
+        <img src="https://image.flaticon.com/icons/png/512/610/610090.png" class='img-fluid mb-1 me-2 title-icon-premium'>
+        Appearance
+      </h3>
+    </div>
+    <div class="row p-0 m-0">
+      <div class="row p-0 m-0">
+        <div class="col-12 p-3 text-center">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin</p>
+          <span>Lorem ipsum</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Other things -->
+    <div class="col-12 mt-5">
+      <h3 class='text-center fw-bold'>
+        <img src="https://image.flaticon.com/icons/png/512/610/610106.png" class='img-fluid mb-1 me-2 title-icon-premium'>
+        And Others
+      </h3>
+    </div>
+    <div class="row p-0 m-0">
+      <div class="col-12 p-3 text-center">
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin</p>
+        <span>Lorem ipsum</span>
+      </div>
+    </div>
+</div>
+
+
+<div class='background-premium text-center text-white py-5 mt-5'>
+  <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
+  <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
+  <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+</div>
+
+
+<!-- <div class="container mt-5">
+  <div class="row justify-content-center">
+      <div class="col-md-4 order-md-2 mb-4">
+        <h4 class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted">Your cart</span>
+          <span class="badge badge-secondary badge-pill">1</span>
+        </h4>
+        <ul class="list-group mb-3">
+          <li class="list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">Cloud Home Lab Premium</h6>
+              <small class="text-muted">{{ membership | title }}</small>
+            </div>
+          </li>
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Total (EUR)</span>
+            <strong>${{ final_dollar }}</strong>
+          </li>
+        </ul>
+
+        <div class="text-center pt-3">
+
+          <script src="https://js.stripe.com/v3/"></script>
+
+            <button id="checkout-button" data-secret="{{ session_id }}">
+              Checkout
+            </button>
+
+         {% load static %}
+          <script type="text/javascript">
+            var sessionid = "{{session_id}}";
+          </script>
+          <script src="{% static "membership/checkout.js" %}"></script>
+        </div>
+        </div>
+      </div>
+</div> -->
+
+<script type="text/javascript">
+  var sessionid = "{{session_id}}";
+</script>
+<script src="{% static "membership/checkout.js" %}"></script>
+<script>
+    var stripe = Stripe('pk_test_51ImLvDFwBE1S4q2SxumrmQe1yeSHwffBbKjfUfWm7zo2XSGXXNNRXVpO0zlvfFVpG1D3nPWDCeo7Veqx4GXT6Ar400adXZls1b');
+
+    var checkoutButtons = document.querySelectorAll('.checkout-button');
+
+    checkoutButtons.forEach((checkoutButton) => {
+      checkoutButton.addEventListener('click', function() {
+        stripe.redirectToCheckout({
+            // Make the id field from the Checkout Session creation API response
+            // available to this file, so you can provide it as argument here
+            // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+            sessionId: sessionid
+        }).then(function (result) {
+            // If `redirectToCheckout` fails due to a browser or network
+            // error, display the localized error message to your customer
+            // using `result.error.message`.
+        });
+        });
+    })
+
+</script>
+{% endblock %}

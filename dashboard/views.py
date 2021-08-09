@@ -14,8 +14,8 @@ from account.decorators import check_ban
 from .utils import get_view_date, get_ip, get_location
 
 # Dashboard view
-@check_ban
 @login_required(login_url='/authentication/login/')
+@check_ban
 def dashboard(request):
     return render(request, 'dashboard/dashboard.html')
 

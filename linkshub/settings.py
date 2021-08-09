@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'appearance',
     'settings',
     'dashboard',
+    'premium',
 ]
 
 MIDDLEWARE = [
