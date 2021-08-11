@@ -60,6 +60,7 @@
                         {% endif %}
 
 
+                        {% if membership == 1 %}
                         <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
                             Choose animation
                         </p>
@@ -73,6 +74,7 @@
                             <div id="animation-preview-text"></div>
                             <div id="animation-preview-box"></div>
                         </div>
+                        {% endif %}
 
                         {% include 'partials/_alerts.html' %}
 

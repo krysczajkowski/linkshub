@@ -21,6 +21,7 @@ from .utils import validate_link_form, hash_password, check_password
 from .decorators import check_ban
 from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
 from premium.models import Customer
+from dashboard.utils import get_membership
 
 # Create your views here.
 @check_ban
@@ -267,6 +268,8 @@ def links(request):
 def add_link(request):
     form = CustomLinkForm(initial={'title': '', 'description': '', 'url': ''}) 
 
+    membership = get_membership(request)
+
     if request.method == 'POST':
         form = CustomLinkForm(request.POST, request.FILES)
 
@@ -287,6 +290,7 @@ def add_link(request):
     context = {
         'page_title': 'Add Link',
         'form': form,
+        'membership': membership
     }
 
     return render(request, 'account/add_link.html', context)
@@ -507,10 +511,13 @@ def edit_link(request, link_type, link_id):
 
     link_animation = link.animation
 
+    membership = get_membership(request)
+
     context = {
         'page_title': 'Edit Link',
         'delete_existing_image_checkbox': link.image, 
-        'form': form
+        'form': form,
+        'membership': membership
     }
 
     if request.method == 'POST':

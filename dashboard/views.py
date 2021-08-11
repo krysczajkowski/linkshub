@@ -20,7 +20,6 @@ from premium.models import Customer
 @check_ban
 def dashboard(request):
     membership = get_membership(request)
-    print(membership)
     return render(request, 'dashboard/dashboard.html', {'membership': membership})
 
 @login_required(login_url='/authentication/login/')
