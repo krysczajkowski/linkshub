@@ -20,6 +20,7 @@ from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form, hash_password, check_password
 from .decorators import check_ban
 from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
+from premium.models import Customer
 
 # Create your views here.
 @check_ban
@@ -323,6 +324,15 @@ def add_premium_link(request):
 @check_ban
 @login_required(login_url='/authentication/login/')
 def premium_links(request):
+    # Check if user is a premium user 
+    try:
+        customer = Customer.objects.get(user=request.user) 
+
+        if customer.membership != True:
+            return redirect('premium')
+    except Customer.DoesNotExist:
+        return redirect('join')
+
     # Get all active premium links
     links = PremiumCustomLink.objects.filter(user=request.user).order_by('position')
     links_count = links.count()

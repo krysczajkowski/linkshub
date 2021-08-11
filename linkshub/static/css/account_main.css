@@ -82,7 +82,32 @@ border: 2px solid #fff;
     background-image: linear-gradient(315deg, #84dbff 0%, #55c0eb 74%);
 }
 
+.appearance-disable {
+    opacity: 0.4;
+}
+
+.input_color{
+    border-radius: 50%;
+    height: 50px;
+    width: 50px;
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+}
+
+.input_color::-webkit-color-swatch-wrapper {
+    padding: 0; 
+}
+.input_color::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
 /* Font sizes */
+.font-size-07 {
+    font-size: 0.7rem!important;
+}
+
 .font-size-08 {
     font-size: 0.8rem!important;
 }

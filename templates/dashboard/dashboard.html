@@ -35,6 +35,7 @@
         </div>
     </div>
 
+    {% if membership == 1 %}
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card">
         <div class="row text-center py-2">
             <div class="col">
@@ -174,6 +175,10 @@
             <canvas id="deviceChart" style="position: relative; height: 40vh; width: 40vw;"></canvas>
         </div>
     </div>
+    {% else %}
+        Data for last 7 days! <br>
+        Get premium for more data
+    {% endif %}
 
 </div>
 

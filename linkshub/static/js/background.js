@@ -15,10 +15,7 @@ function getCookie(name) {
     return cookieValue;
 }
 const csrftoken = getCookie('csrftoken');
-
-
-// Get user username 
-
+var premium_modal = document.getElementById("premium-modal")
 
 // Profile preview
 function load_profile (e) {
@@ -89,13 +86,14 @@ function load_profile (e) {
 
 }
 
+// Load profile preview
 window.addEventListener('load', (event) => {
     load_profile()
 });
 
 
-bg_theme = document.querySelectorAll('.bg-theme')
 // Choose a background theme
+bg_theme = document.querySelectorAll('.bg-theme')
 bg_theme.forEach(item => {
     item.addEventListener('click', event => {
         const theme_id = item.id
@@ -122,7 +120,6 @@ bg_theme.forEach(item => {
 
 // Set custom background theme
 const bg_custom_submit = document.querySelector('#bg_custom_submit')
-
 bg_custom_submit.addEventListener('click', event => {
     // Add spinnig effect
     bg_custom_submit.disabled = true
@@ -149,7 +146,14 @@ bg_custom_submit.addEventListener('click', event => {
     }).then(res=>res.json()).then(data=>{
         console.log('data', data)
         if(data.error) {
-            alert(data.error)
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
         } else {
             load_profile()
         }
@@ -157,8 +161,8 @@ bg_custom_submit.addEventListener('click', event => {
 })
 
 
-button_theme = document.querySelectorAll('.button-theme')
 // Choose a button theme
+button_theme = document.querySelectorAll('.button-theme')
 button_theme.forEach(item => {
     item.addEventListener('click', event => {
         const theme_id = item.id
@@ -185,7 +189,6 @@ button_theme.forEach(item => {
 
 // Set custom button theme
 const btn_custom_submit = document.querySelector('#btn_custom_submit')
-
 btn_custom_submit.addEventListener('click', event => {
     // Add spinnig effect
     btn_custom_submit.disabled = true
@@ -212,16 +215,22 @@ btn_custom_submit.addEventListener('click', event => {
     }).then(res=>res.json()).then(data=>{
         console.log('data', data)
         if(data.error) {
-            alert(data.error)
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
         } else {
             load_profile()
         }
     });
 })
 
-
+// Set button fill to transparent
 btn_color_area = document.getElementById('btn-color-area')
-
 btn_transparent = document.getElementById('btn-transparent')
 btn_transparent.addEventListener('click', (e) => {
     fetch('button/fill', {
@@ -242,6 +251,7 @@ btn_transparent.addEventListener('click', (e) => {
     });
 })
 
+// Set button fill to filled
 btn_filled = document.getElementById('btn-filled')
 btn_filled.addEventListener('click', (e) => {
     fetch('button/fill', {
@@ -262,7 +272,7 @@ btn_filled.addEventListener('click', (e) => {
     });
 })
 
-
+// Change button outline
 btn_outline = document.querySelectorAll('.choose_outline')
 btn_outline.forEach(item => {
     item.addEventListener('click', (e) => {
@@ -277,9 +287,15 @@ btn_outline.forEach(item => {
                 'X-CSRFToken': csrftoken
             },
         }).then(res=>res.json()).then(data=>{
-            console.log('data', data)
             if(data.error) {
-                alert(data.error)
+                if (data.error == 'no-premium') {
+                    // Show premium modal
+                    var premiumModal = new bootstrap.Modal(premium_modal, {});
+                    premiumModal.show();
+                    
+                } else {
+                    alert(data.error)
+                } 
             } else {
                 load_profile()
             }
@@ -288,7 +304,7 @@ btn_outline.forEach(item => {
     })
 })
 
-
+// Change button shadow
 btn_shadow = document.querySelectorAll('.choose_shadow')
 btn_shadow.forEach(item => {
     item.addEventListener('click', (e) => {
@@ -306,7 +322,14 @@ btn_shadow.forEach(item => {
         }).then(res=>res.json()).then(data=>{
             console.log('data', data)
             if(data.error) {
-                alert(data.error)
+                if (data.error == 'no-premium') {
+                    // Show premium modal
+                    var premiumModal = new bootstrap.Modal(premium_modal, {});
+                    premiumModal.show();
+                    
+                } else {
+                    alert(data.error)
+                } 
             } else {
                 load_profile()
             }

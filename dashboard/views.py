@@ -1,5 +1,5 @@
 from django import views
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 import json
@@ -11,21 +11,34 @@ import collections
 from account.models import CustomLink, Platform, PremiumCustomLink, UserPlatform
 from dashboard.models import LinkClick, PlatformClick, ProfileView, PremiumLinkClick
 from account.decorators import check_ban
-from .utils import get_view_date, get_ip, get_location
+from .decorators import active_membership
+from .utils import get_view_date, get_ip, get_location, get_membership
+from premium.models import Customer
 
 # Dashboard view
 @login_required(login_url='/authentication/login/')
 @check_ban
 def dashboard(request):
-    return render(request, 'dashboard/dashboard.html')
+    membership = get_membership(request)
+    print(membership)
+    return render(request, 'dashboard/dashboard.html', {'membership': membership})
 
-
+@login_required(login_url='/authentication/login/')
+@check_ban
+@active_membership
 def links_advanced(request):
     return render(request, 'dashboard/links.html', {'links_type': 'public'})
 
+@login_required(login_url='/authentication/login/')
+@check_ban
+@active_membership
 def premium_links_advanced(request):
     return render(request, 'dashboard/links.html', {'links_type': 'premium'})
 
+
+@login_required(login_url='/authentication/login/')
+@check_ban
+@active_membership
 def platforms_advanced(request):
     return render(request, 'dashboard/platforms.html')
 
@@ -33,6 +46,7 @@ def platforms_advanced(request):
 # Platforms advanced charts
 @check_ban
 @login_required(login_url='/authentication/login/')
+@active_membership
 def platforms_advanced_charts(request):  
     # Time period for the table
     data = json.loads(request.body)
@@ -100,6 +114,7 @@ def platforms_advanced_charts(request):
 # Advanced links charts
 @check_ban
 @login_required(login_url='/authentication/login/')
+@active_membership
 def links_advanced_charts(request):  
     # Time period for the table
     data = json.loads(request.body)
@@ -226,6 +241,7 @@ def dashboard_summary(request):
 # Dashboard main chart 
 @check_ban
 @login_required(login_url='/authentication/login/')
+@active_membership
 def dashboard_main_chart(request):  
     # Time period for the chart
     data = json.loads(request.body)
@@ -295,6 +311,7 @@ def dashboard_main_chart(request):
 # Country table
 @check_ban
 @login_required(login_url='/authentication/login/')
+@active_membership
 def country_table(request): 
     # Time period for the table
     data = json.loads(request.body)
@@ -334,6 +351,7 @@ def country_table(request):
 # City table
 @check_ban
 @login_required(login_url='/authentication/login/')
+@active_membership
 def city_table(request): 
     # Time period for the table
     data = json.loads(request.body)
@@ -372,7 +390,9 @@ def city_table(request):
 
     return JsonResponse({'data': data}, safe=False)
 
-
+@check_ban
+@login_required(login_url='/authentication/login/')
+@active_membership
 def device_chart(request):
     # Time period for the table
     data = json.loads(request.body)

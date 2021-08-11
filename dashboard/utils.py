@@ -1,5 +1,7 @@
 from django.contrib.gis.geoip2 import GeoIP2
 
+from premium.models import Customer 
+
 # Get visit of your profile date
 def get_view_date(view):
     return view.date
@@ -35,3 +37,12 @@ def get_location(request):
         city = 'Unknown'
 
     return {'country': country, 'city': city}
+
+def get_membership(request):
+    try:
+        customer = Customer.objects.get(user=request.user)
+        membership = Customer.objects.get(user=request.user).membership
+    except Customer.DoesNotExist:
+        membership = 0
+
+    return membership

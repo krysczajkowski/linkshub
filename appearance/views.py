@@ -7,14 +7,20 @@ from django.views import View
 from django.contrib import messages
 import re
 from django.contrib.auth.models import User
+from django.utils.decorators import method_decorator
 
 from .models import Theme, UserTheme, BackgroundTheme, CustomBackgroundTheme, ButtonTheme, CustomButtonTheme
 from account.decorators import check_ban
+from dashboard.utils import get_membership
+from dashboard.decorators import active_membership
+
 
 # Create your views here.
 @check_ban
 @login_required(login_url='/authentication/login/')
 def appearance(request):
+    membership = get_membership(request)
+
     bg_color_themes = BackgroundTheme.objects.filter(type='color')
     bg_gradient_themes = BackgroundTheme.objects.filter(type='gradient')
 
@@ -31,6 +37,7 @@ def appearance(request):
         'bg_gradient_themes': bg_gradient_themes,
         'button_color_themes': button_color_themes,
         'btn_transparent': btn_transparent,
+        'membership': membership
     }
 
     return render(request, 'appearance/background.html', context)
@@ -68,6 +75,11 @@ class choose_background(View):
     
 class choose_custom_background(View):
     def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+            
         data = json.loads(request.body)
         background_color = data['bg_color']
         font_color = data['font_color']
@@ -117,6 +129,11 @@ class choose_button(View):
 
 class choose_custom_button(View):
     def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
         data = json.loads(request.body)
         background_color = data['bg_color']
         font_color = data['font_color']
@@ -168,8 +185,14 @@ class button_fill(View):
         return JsonResponse({'success': True})
 
 
+
 class choose_outline(View):
     def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
         data = json.loads(request.body)
         outline = data['outline']
 
@@ -192,6 +215,11 @@ class choose_outline(View):
 
 class choose_shadow(View):
     def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
         data = json.loads(request.body)
         shadow = data['shadow']
 
