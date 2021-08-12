@@ -22,7 +22,12 @@ def appearance(request):
     membership = get_membership(request)
 
     bg_color_themes = BackgroundTheme.objects.filter(type='color')
+
     bg_gradient_themes = BackgroundTheme.objects.filter(type='gradient')
+
+    # Get free background themes if user has no active membership
+    if not membership:
+        bg_gradient_themes = bg_gradient_themes.filter(is_premium=0)
 
     button_color_themes = ButtonTheme.objects.all()
 

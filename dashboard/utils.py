@@ -39,10 +39,9 @@ def get_location(request):
     return {'country': country, 'city': city}
 
 def get_membership(request):
-    try:
-        customer = Customer.objects.get(user=request.user)
+    try: 
         membership = Customer.objects.get(user=request.user).membership
-    except Customer.DoesNotExist:
+    except:
         membership = 0
 
     return membership

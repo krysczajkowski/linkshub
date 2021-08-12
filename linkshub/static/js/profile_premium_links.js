@@ -28,6 +28,10 @@ function get_user_theme() {
                 link.classList.add(data.data.btn_outline)
             });
 
+            document.querySelectorAll('.link-image-size').forEach((img) => {
+                img.classList.add(data.data.btn_outline)
+            })
+
             document.querySelectorAll('.platform-link').forEach((platform) => {
                 platform.style.color = data.data.bg_font_color
             })
