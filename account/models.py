@@ -6,7 +6,7 @@ class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     name= models.CharField(max_length=40, blank=True)
     image = models.ImageField(upload_to='profile_pic', null=True, blank=True)
-    description = models.CharField(max_length=300, null=True, blank=True)
+    description = models.CharField(max_length=300, blank=True, default='')
     premium_links_password = models.CharField(max_length=100, null=True, blank=True)
 
 class BannedUser(models.Model):

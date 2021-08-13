@@ -13,6 +13,7 @@ class CustomLinkForm(forms.ModelForm):
         super(CustomLinkForm, self).__init__(*args, **kwargs)
         self.fields['animation'].empty_label = None
 
+
 class CustomPremiumLinkForm(forms.ModelForm):
     class Meta:
         model = PremiumCustomLink 

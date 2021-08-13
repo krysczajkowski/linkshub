@@ -19,6 +19,8 @@ import requests
 
 
 from .utils import token_generator, username_validation
+from account.models import Profile
+from appearance.models import UserTheme
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -83,6 +85,9 @@ class RegistrationView(View):
                 user.set_password(password)
                 user.is_active = False
                 user.save()
+
+                profile = Profile.objects.create(user=user)
+                user_theme = UserTheme(user=user, background_theme='white', button_theme='dark', button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
 
                 email_subject = 'Activate your account'
 

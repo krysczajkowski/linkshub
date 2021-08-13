@@ -1,9 +1,9 @@
 //Csrf token
 const csrftoken = document.getElementById('csrf-token').dataset.token
+var user_id = document.getElementById('user-id').dataset.id
 
 // Get user theme
 function get_user_theme() {
-    var user_id = document.getElementById('user-id').dataset.id
     var profile_container = document.querySelector('.profile-container')
 
 
@@ -53,7 +53,7 @@ if (premium_submit) {
     
         if (premium_links_code.length > 0) {
             fetch('/profile/premium_links/check_password', {
-                body: JSON.stringify({'premium_links_code': premium_links_code}),
+                body: JSON.stringify({'premium_links_code': premium_links_code, 'user_id': user_id}),
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

@@ -59,8 +59,6 @@
                             </div>
                         {% endif %}
 
-
-                        {% if membership == 1 %}
                         <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
                             Choose animation
                         </p>
@@ -70,11 +68,18 @@
                                 {{ animation }}
                             {% endfor %}
                         </select>
+                        <div class="alert alert-info my-3 py-2 animation-feedback d-none" style="font-size: 0.9rem;">
+                            <div style="color: #039ec8;;">
+                                <i class="fas fa-info-circle me-2" aria-hidden="true"></i>
+                                Animations are for premium users only. <a href="{% url 'join' %}">Get premium here</a>
+                            </div> 
+                        </div>
+
                         <div id='animation-preview'>
                             <div id="animation-preview-text"></div>
                             <div id="animation-preview-box"></div>
                         </div>
-                        {% endif %}
+                        
 
                         {% include 'partials/_alerts.html' %}
 
@@ -108,6 +113,7 @@
     </div>
 </div>
 
+<input type="hidden" id='membership' value='{{membership}}'>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
 <script src="{% static 'js/add_link.js' %}"></script>
 <script>
@@ -116,24 +122,43 @@
     var animation_preview_text = document.getElementById('animation-preview-text')
     var animation_preview_box = document.getElementById('animation-preview-box')
     var animation_selector = document.getElementById('animation-selector')
+    var animation_error = document.querySelector('.animation-feedback')
 
+    // Get membership 
+    var membership = document.getElementById('membership').value 
 
     animation_selector.addEventListener('change', (e)=>{
         // Currently selected animation
         var currently_selected = animation_selector.selectedOptions[0].text
 
-        // Text
-        animation_preview.classList.add('mt-2');
-        animation_preview_text.innerHTML = '<p class="text-center font-size-08 fw-bold  mb-0">ANIMATION PREVIEW</p>';
+        // Check if not premium user selects a premium animation
+        if (currently_selected != 'None' && membership == 0) {
+            // Not premium user selected a premium animation
+            animation_selector.selectedIndex = 0
 
-        // Box
-        animation_preview_box.classList.add('py-3');
+            animation_error.classList.remove('d-none')
 
-        animation_preview_box.innerHTML = `<div class="row">
-    <div class="col-6 offset-3 rounded text-center pt-2 animate__animated animate__${currently_selected} animate__infinite animate__slow" style="min-height: 40px; background: #eeeeee">Link Title</div>
-</div>`;
+            setTimeout(() => {
+                animation_error.classList.add('d-none')
+            }, 5500)
+        } else {
+            // Premium user selected an animation
+            animation_selector.classList.remove('is-invalid')
+            animation_error.classList.add('d-none')
+
+            // Text
+            animation_preview.classList.add('mt-2');
+            animation_preview_text.innerHTML = '<p class="text-center font-size-08 fw-bold  mb-0">ANIMATION PREVIEW</p>';
+
+            // Box
+            animation_preview_box.classList.add('py-3');
+
+            animation_preview_box.innerHTML = `<div class="row">
+        <div class="col-6 offset-3 rounded text-center pt-2 animate__animated animate__${currently_selected} animate__infinite animate__slow" style="min-height: 40px; background: #eeeeee">Link Title</div>
+    </div>`;
+        }
+
     })
-
 
 </script>
 {% endblock %}

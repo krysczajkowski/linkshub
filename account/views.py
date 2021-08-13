@@ -32,6 +32,8 @@ def profile_preview(request):
 
     user_id = request.user.id
 
+    membership = get_membership(request)
+
     # Get basic data
     if profile.name:
         username = profile.name
@@ -39,7 +41,11 @@ def profile_preview(request):
         username = request.user.username
         
     description = profile.description
-    profile_picture = profile.image
+
+    if profile.image:
+        profile_picture = profile.image.url
+    else:
+        profile_picture = 'https://ocdn.eu/pulscms-transforms/1/PFLk9kpTURBXy81ZWEyNGM0MDg3ODcyYzNhNGVlMjA4OGE5YmFiMjY1Yy5qcGeTlQNYI80Cfc0BZpUCzQMHAMPDkwmmNWI4MzAxBoGhMAE/weronika-wersow-sowa-znow-ma-problemy.jpg'
 
     # Get all links
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
@@ -61,6 +67,7 @@ def profile_preview(request):
         'links': links,
         'display_premium_links_password': display_premium_links_password,
         'platforms': platforms,
+        'membership': membership,
     }
 
     return render(request, 'account/profile_preview.html', context)
@@ -70,13 +77,16 @@ class premium_links_check_password(View):
     def post(self, request):
         data = json.loads(request.body)
         typed_pwd = data['premium_links_code']
+        user_id = data['user_id']
 
         try:
             correct_hash = Profile.objects.get(user=request.user).premium_links_password
 
+            user = User.objects.get(id=user_id)
+
             # Check password
             if check_password(correct_hash, typed_pwd):
-                premium_links = PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
+                premium_links = PremiumCustomLink.objects.filter(user=user, is_active=1).order_by('position')
 
                 premium_links_list = []
 
@@ -217,7 +227,9 @@ def links(request):
 @login_required(login_url='/authentication/login/')
 @check_ban
 def add_link(request):
-    form = CustomLinkForm(initial={'title': '', 'description': '', 'url': ''}) 
+    # Nie wiem czy to tu
+    initial_animation = LinkAnimation.objects.get(name='None')
+    form = CustomLinkForm(initial={'title': '', 'description': '', 'url': '', 'animation': initial_animation}) 
 
     membership = get_membership(request)
 
@@ -225,8 +237,16 @@ def add_link(request):
         form = CustomLinkForm(request.POST, request.FILES)
 
         if form.is_valid():
+            none_animation = LinkAnimation.objects.get(name='None')
+
             newLink = form.save(commit=False)
             newLink.user = request.user
+
+            # Check if a not premium user selected a none-animation
+            if newLink.animation != none_animation and membership == False:
+                messages.error(request, 'Something went wrong. Please try again.')
+                return redirect('links')
+
             newLink.save()
 
             messages.success(request, 'Link added successfully.')
@@ -234,8 +254,6 @@ def add_link(request):
 
         else:
             messages.error(request, 'Something went wrong. Please try again.')
-
-    #animations = LinkAnimation.objects.all()
 
 
     context = {
