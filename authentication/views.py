@@ -20,7 +20,7 @@ import requests
 
 from .utils import token_generator, username_validation
 from account.models import Profile
-from appearance.models import UserTheme
+from appearance.models import BackgroundTheme, ButtonTheme, UserTheme
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -81,13 +81,20 @@ class RegistrationView(View):
                 error_msg = 'Password must be between 6 or 40 characters.'
 
             if everything_ok == True:
+                # Create user
                 user = User.objects.create_user(username=username, email=email)
                 user.set_password(password)
                 user.is_active = False
                 user.save()
 
+                # Create profile
                 profile = Profile.objects.create(user=user)
-                user_theme = UserTheme(user=user, background_theme='white', button_theme='dark', button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
+
+                # Themes 
+                bg_theme = BackgroundTheme.objects.get(name='white')
+                btn_theme = ButtonTheme.objects.get(name='dark')
+
+                user_theme = UserTheme(user=user, background_theme=bg_theme, button_theme=btn_theme, button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
 
                 email_subject = 'Activate your account'
 
