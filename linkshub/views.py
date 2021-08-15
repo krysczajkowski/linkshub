@@ -72,7 +72,7 @@ def profile(request, username):
     if profile.image:
         profile_picture = profile.image.url
     else:
-        profile_picture = 'https://ocdn.eu/pulscms-transforms/1/PFLk9kpTURBXy81ZWEyNGM0MDg3ODcyYzNhNGVlMjA4OGE5YmFiMjY1Yy5qcGeTlQNYI80Cfc0BZpUCzQMHAMPDkwmmNWI4MzAxBoGhMAE/weronika-wersow-sowa-znow-ma-problemy.jpg'
+        profile_picture = '/media/profile_pic/defaultProfilePicture.png'
 
     # Get all links
     links = CustomLink.objects.filter(user=user, is_active=1).order_by('position')

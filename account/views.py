@@ -45,7 +45,7 @@ def profile_preview(request):
     if profile.image:
         profile_picture = profile.image.url
     else:
-        profile_picture = 'https://ocdn.eu/pulscms-transforms/1/PFLk9kpTURBXy81ZWEyNGM0MDg3ODcyYzNhNGVlMjA4OGE5YmFiMjY1Yy5qcGeTlQNYI80Cfc0BZpUCzQMHAMPDkwmmNWI4MzAxBoGhMAE/weronika-wersow-sowa-znow-ma-problemy.jpg'
+        profile_picture = '/media/profile_pic/defaultProfilePicture.png'
 
     # Get all links
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
@@ -80,7 +80,7 @@ class premium_links_check_password(View):
         user_id = data['user_id']
 
         try:
-            correct_hash = Profile.objects.get(user=request.user).premium_links_password
+            correct_hash = Profile.objects.get(user=user_id).premium_links_password
 
             user = User.objects.get(id=user_id)
 

@@ -20,7 +20,7 @@ import requests
 
 from .utils import token_generator, username_validation
 from account.models import Profile
-from appearance.models import UserTheme
+from appearance.models import BackgroundTheme, ButtonTheme, UserTheme
 
 class EmailThread(threading.Thread):
     def __init__(self, email):
@@ -86,8 +86,14 @@ class RegistrationView(View):
                 user.is_active = False
                 user.save()
 
+                # Create profile
                 profile = Profile.objects.create(user=user)
-                user_theme = UserTheme(user=user, background_theme='white', button_theme='dark', button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
+
+                # Themes 
+                bg_theme = BackgroundTheme.objects.get(name='white')
+                btn_theme = ButtonTheme.objects.get(name='dark')
+
+                user_theme = UserTheme.objects.create(user=user, background_theme=bg_theme, button_theme=btn_theme, button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
 
                 email_subject = 'Activate your account'
 
@@ -149,7 +155,7 @@ class VerificationView(View):
             return redirect('login')
 
         except Exception as e:
-            raise
+            messages.info(request, 'Activation link is invalid.')
 
         return redirect('login')
 
@@ -322,11 +328,7 @@ class EmailValidationView(View):
             return JsonResponse({'email_error': 'Email is invalid.'}, status=400)
 
         if User.objects.filter(email=email).exists():
-            if request.user:
-                if request.user.email != email:
-                    return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
-            else:
-                return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
+            return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
 
         return JsonResponse({'email_valid': True})
 

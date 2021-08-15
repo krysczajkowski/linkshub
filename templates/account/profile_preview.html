@@ -43,46 +43,80 @@
         
         
         <div class="row mx-0 pb-4">
-            {% for link in links %}
-            <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
-                <div class="row my-2">
-                    <div class="d-grid gap-2">
-                        <a href="{{link.url}}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__animated {% if membership %} animate__{{link.animation}} {%endif%}  animate__infinite animate__slow styled-link" target="_blank">
-                            {% if link.image %}
-                            <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
-                                <img src="{{ link.image.url }}" class="link-image-size">
-                            </div>
-                            <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
-                                    <span class="font-size-08 link-description">{{ link.description }}</span>
+            {% if links %}
+                {% for link in links %}
+                <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                    <div class="row my-2">
+                        <div class="d-grid gap-2">
+                            <a href="{{link.url}}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__animated {% if membership %} animate__{{link.animation}} {%endif%}  animate__infinite animate__slow styled-link" target="_blank">
+                                {% if link.image %}
+                                <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
+                                    <img src="{{ link.image.url }}" class="link-image-size">
                                 </div>
-                            </div>
-                            {% else %}
-                            <div class="col-12 py-2">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
-                                    <span class='font-size-08'>{{ link.description }}</span>
+                                <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
+                                        <span class="font-size-08 link-description">{{ link.description }}</span>
+                                    </div>
                                 </div>
-                            </div>
-                            {% endif %}
-                        </a>
+                                {% else %}
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
+                                        <span class='font-size-08'>{{ link.description }}</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                    <div class="row my-2">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'links' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 styled-link">
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">Hey @{{username}}, add your first link!</strong></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
         </div>
 
         <div class="row pb-3 mx-0">
+            {% if platforms %}
             <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-4 offset-xl-4">
                 <div class="row">
-                {% for platform in platforms %}
-                    <div class="col pb-3 d-flex align-items-center justify-content-center">
-                        <i class="fab fa-{{ platform.platform }}  platform-link"></i>
-                    </div>
-                {% endfor %}
+                    {% for platform in platforms %}
+                        <div class="col pb-3 d-flex align-items-center justify-content-center">
+                            <i class="fab fa-{{ platform.platform }}  platform-link"></i>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% else %}
+                <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                    <div class="row my-2">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'platforms' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 styled-link">
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">@{{username}}, add your social media links here!</strong></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+                
+            
         </div>
 
         {% if display_premium_links_password and membership %}
