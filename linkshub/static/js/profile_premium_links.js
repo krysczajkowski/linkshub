@@ -5,6 +5,7 @@ var user_id = document.getElementById('user-id').dataset.id
 // Get user theme
 function get_user_theme() {
     var profile_container = document.querySelector('.profile-container')
+    var tutorial_helper_links = document.querySelectorAll('.tutorial-helper-links')
 
 
     fetch('/profile/get_user_theme', {
@@ -39,6 +40,11 @@ function get_user_theme() {
             // Style background
             profile_container.style = data.data.bg_bg_color
             profile_container.style.color = data.data.bg_font_color
+
+            // Style tutorial helper links
+            tutorial_helper_links.forEach((link) => {
+                link.style.color = data.data.bg_font_color;
+            });
         }
     });
 }

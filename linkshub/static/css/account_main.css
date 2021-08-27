@@ -103,6 +103,10 @@ border: 2px solid #fff;
     border-radius: 50%;
 }
 
+.border-dashed {
+    border: 1px dashed #000;
+}
+
 /* Font sizes */
 .font-size-07 {
     font-size: 0.7rem!important;
@@ -114,6 +118,10 @@ border: 2px solid #fff;
 
 .font-size-09 {
     font-size: 0.9rem!important;
+}
+
+.font-size-10 {
+    font-size: 1rem!important;
 }
 
 .font-size-11 {
