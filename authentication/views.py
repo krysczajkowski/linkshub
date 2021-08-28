@@ -125,7 +125,7 @@ class RegistrationView(View):
 
                 #email.send(fail_silently=False) # show errors if there are any
 
-                messages.success(request, 'Account created. Activate your account in gmail.')
+                messages.info(request, 'Account created. Activate your account in gmail.')
             else:
                 messages.error(request, error_msg)
 
