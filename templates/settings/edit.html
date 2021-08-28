@@ -6,14 +6,19 @@
 
 {% block content %}
 <div class="mx-3 mt-4">
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-10 offset-lg-1">
+            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
+        <div class="col-12 col-lg-3 col-xl-3 col-xxl-2 offset-xxl-1 appearance-left-panel order-1 order-lg-0 mt-5 mt-lg-0">
             <div class="card card-body text-center">
                 {% include 'partials/_settings_sidebar.html' %}
             </div>
         </div>
 
-        <div class="col-12 col-lg-9 col-xl-9 col-xxl-8 mt-5 mt-lg-0">
+        <div class="col-12 col-lg-9 col-xl-9 col-xxl-8 mt-2 mt-lg-0">
             {% include 'partials/_alerts.html' %}
             <div class="card card-body">
                 <form method='POST' enctype="multipart/form-data" id='edit-form'>
@@ -32,6 +37,7 @@
                             <a href="#" class='fw-bold' onclick="document.getElementById('imageField').click(); return false" id='profile_img_change'>Change Profile Picture</a>
                             <div class="image-feedback invalid-feedback" style='display:none;'>
                             </div>
+                            <p class='m-0 text-success fw-bold d-none ' id='profile-picture-info-msg'>Save changes to apply your new profile picture.</p>
                         </div>
                     </div>
                     <div class="row mt-4">

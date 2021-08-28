@@ -45,7 +45,7 @@ def profile_preview(request):
     if profile.image:
         profile_picture = profile.image.url
     else:
-        profile_picture = '/media/profile_pic/defaultProfilePicture.png'
+        profile_picture = ''
 
     # Get all links
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
@@ -59,6 +59,7 @@ def profile_preview(request):
     # Get all social media platforms
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
+   
     context = {
         'user_id': user_id, 
         'username': username,
@@ -69,7 +70,7 @@ def profile_preview(request):
         'platforms': platforms,
         'membership': membership,
     }
-
+    
     return render(request, 'account/profile_preview.html', context)
 
 # Premium links check password

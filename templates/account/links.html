@@ -5,7 +5,9 @@
 {% block content %}
 <div class="mx-3">
   <div class="row mx-0">
-    <div class="col-12 col-md-10 offset-md-1 p-0">
+    <div class="col-12 col-md-10 offset-md-1 p-0 mt-3">
+      <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+
       {% include 'partials/_alerts.html' %}
 
       {% if links_type == 'premium' %}
@@ -35,7 +37,7 @@
         {% endif %}
       {% endif %}
 
-      <div class="row mt-5 mb-3">
+      <div class="row mt-3 mb-2">
           <div class="col-6">
               <h4 class='mb-3 mt-2'>{% if links_type == 'premium' %} Premium {% endif %} Links: {{ links_count }}</h4>
           </div>

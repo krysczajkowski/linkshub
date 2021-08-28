@@ -9,6 +9,11 @@
 <link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
 
 <div class="mx-3 mt-4">
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-10 offset-lg-1">
+            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
             {% include 'partials/_alerts.html' %}
@@ -75,7 +80,7 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Buttons
+                      Links
                     </button>
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">

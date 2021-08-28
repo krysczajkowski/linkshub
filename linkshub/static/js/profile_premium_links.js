@@ -6,6 +6,7 @@ var user_id = document.getElementById('user-id').dataset.id
 function get_user_theme() {
     var profile_container = document.querySelector('.profile-container')
     var tutorial_helper_links = document.querySelectorAll('.tutorial-helper-links')
+    var write_your_bio = document.getElementById('write-your-bio')
 
 
     fetch('/profile/get_user_theme', {
@@ -41,9 +42,15 @@ function get_user_theme() {
             profile_container.style = data.data.bg_bg_color
             profile_container.style.color = data.data.bg_font_color
 
+            // Style write your bio helper link
+            if(write_your_bio) {
+                write_your_bio.style.color = data.data.bg_font_color
+            }
+
             // Style tutorial helper links
             tutorial_helper_links.forEach((link) => {
                 link.style.color = data.data.bg_font_color;
+                link.style.border = `2px dashed ${data.data.bg_font_color}`
             });
         }
     });

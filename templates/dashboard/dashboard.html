@@ -3,7 +3,12 @@
 {% block title %}Social Media Platforms{% endblock %}
 
 {% block content %}
-<div class="row mx-0 px-3 mt-5">
+<div class="row mx-0 px-3 mt-2">
+
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mb-2 px-0">
+        <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+    </div>
+
     <p class='text-center font-size-09 text-secondary fw-bold mb-1'>Summary</p>
 
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2">
