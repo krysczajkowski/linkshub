@@ -117,26 +117,14 @@ bg_theme.forEach(item => {
     })
 })
 
-
 // Set custom background theme
-const bg_custom_submit = document.querySelector('#bg_custom_submit')
-bg_custom_submit.addEventListener('click', event => {
-    // Add spinnig effect
-    bg_custom_submit.disabled = true
-    document.querySelector('#bg_submitSpinner').classList.remove('d-none')
- 
-    // Delete spinning effect after .5s 
-    setTimeout((e) => {
-        bg_custom_submit.disabled = false
-        document.querySelector('#bg_submitSpinner').classList.add('d-none')
-    }, 500);
-
+var font_color_input = document.querySelector('#bg_font_color')
+font_color_input.addEventListener('change', event => {
     // Get data
-    bg_color = document.querySelector('#bg_background_color').value 
-    font_color = document.querySelector('#bg_font_color').value 
+    font_color = font_color_input.value 
 
-    fetch('background/custom/choose', {
-        body: JSON.stringify({'bg_color': bg_color, 'font_color': font_color}),
+    fetch('background/font/color', {
+        body: JSON.stringify({'font_color': font_color}),
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -160,6 +148,37 @@ bg_custom_submit.addEventListener('click', event => {
     });
 })
 
+
+// Set custom background theme
+var background_input = document.querySelector('#bg_background_color')
+background_input.addEventListener('change', event => {
+    // Get data
+    bg_color = background_input.value 
+
+    fetch('background/bg/color', {
+        body: JSON.stringify({'bg_color': bg_color}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
+        } else {
+            load_profile()
+        }
+    });
+})
 
 // Choose a button theme
 button_theme = document.querySelectorAll('.button-theme')
@@ -186,26 +205,15 @@ button_theme.forEach(item => {
     })
 })
 
-
-// Set custom button theme
-const btn_custom_submit = document.querySelector('#btn_custom_submit')
-btn_custom_submit.addEventListener('click', event => {
-    // Add spinnig effect
-    btn_custom_submit.disabled = true
-    document.querySelector('#btn_submitSpinner').classList.remove('d-none')
- 
-    // Delete spinning effect after .5s 
-    setTimeout((e) => {
-        btn_custom_submit.disabled = false
-        document.querySelector('#btn_submitSpinner').classList.add('d-none')
-    }, 500);
+// Set button custom background color
+var button_bg_custom_color = document.querySelector('#btn_background_color')
+button_bg_custom_color.addEventListener('change', event => {
 
     // Get data
-    bg_color = document.querySelector('#btn_background_color').value 
-    font_color = document.querySelector('#btn_font_color').value 
+    bg_color = button_bg_custom_color.value 
 
-    fetch('button/custom/choose', {
-        body: JSON.stringify({'bg_color': bg_color, 'font_color': font_color}),
+    fetch('button/bg/color', {
+        body: JSON.stringify({'bg_color': bg_color}),
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -228,6 +236,39 @@ btn_custom_submit.addEventListener('click', event => {
         }
     });
 })
+
+
+// Set button custom font color
+var button_font_custom_color = document.querySelector('#btn_font_color')
+button_font_custom_color.addEventListener('change', event => {
+    // Get data
+    font_color = button_font_custom_color.value 
+
+    fetch('button/font/color', {
+        body: JSON.stringify({'font_color': font_color}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
+        } else {
+            load_profile()
+        }
+    });
+})
+
 
 // Set button fill to transparent
 btn_color_area = document.getElementById('btn-color-area')

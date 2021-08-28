@@ -15,7 +15,7 @@ from dashboard.utils import get_membership
 from dashboard.decorators import active_membership
 
 
-# Create your views here.
+# Appearance page
 @check_ban
 @login_required(login_url='/authentication/login/')
 def appearance(request):
@@ -47,7 +47,7 @@ def appearance(request):
 
     return render(request, 'appearance/background.html', context)
 
-
+# Get logged in user's username
 class get_user_username(View):
     def post(self, request):
 
@@ -56,11 +56,10 @@ class get_user_username(View):
             return JsonResponse({'username': username})
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+ 
 
-        
-
-
-class choose_background(View):
+# Choose background theme
+class choose_background_theme(View):
     def post(self, request):
         data = json.loads(request.body)
         theme_id = data['theme_id']
@@ -77,8 +76,9 @@ class choose_background(View):
 
         return JsonResponse({'success': True})
 
-    
-class choose_custom_background(View):
+
+# Choose custom background color
+class custom_bg_color(View):
     def post(self, request):
         # Check membership
         membership = get_membership(request)
@@ -87,17 +87,45 @@ class choose_custom_background(View):
             
         data = json.loads(request.body)
         background_color = data['bg_color']
-        font_color = data['font_color']
 
         bg_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', background_color)
 
-        font_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', font_color)
-
-        if bg_match and font_match:
+        if bg_match:
             try:
                 custom_background_theme, created = CustomBackgroundTheme.objects.get_or_create(user=request.user)
 
                 custom_background_theme.background_color = f'background-color: {background_color}'
+                custom_background_theme.save()
+
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.custom_background_theme = custom_background_theme
+                user_theme.background_theme = None 
+                user_theme.save()
+                
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+        else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+# Choose custom background font color
+class custom_bg_font_color(View):
+    def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+            
+        data = json.loads(request.body)
+        font_color = data['font_color']
+
+        font_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', font_color)
+
+        if font_match:
+            try:
+                custom_background_theme, created = CustomBackgroundTheme.objects.get_or_create(user=request.user)
+
                 custom_background_theme.font_color = font_color 
                 custom_background_theme.save()
 
@@ -114,7 +142,72 @@ class choose_custom_background(View):
         return JsonResponse({'success': True})
 
 
-class choose_button(View):
+# Custom button background color
+class custom_button_bg_color(View):
+    def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
+        data = json.loads(request.body)
+        background_color = data['bg_color']
+
+        bg_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', background_color)
+
+        if bg_match:
+            try:
+                custom_button_theme, created = CustomButtonTheme.objects.get_or_create(user=request.user)
+
+                custom_button_theme.background_color = background_color
+                custom_button_theme.save()
+
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.custom_button_theme = custom_button_theme
+                user_theme.button_theme = None 
+                user_theme.save()
+                
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+        else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+# Custom button font color
+class custom_button_font_color(View):
+    def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
+        data = json.loads(request.body)
+        font_color = data['font_color']
+
+        font_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', font_color)
+
+        if font_match:
+            try:
+                custom_button_theme, created = CustomButtonTheme.objects.get_or_create(user=request.user)
+
+                custom_button_theme.font_color = font_color 
+                custom_button_theme.save()
+
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.custom_button_theme = custom_button_theme
+                user_theme.button_theme = None 
+                user_theme.save()
+                
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+        else:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+# Choose button theme
+class choose_button_theme(View):
     def post(self, request):
         data = json.loads(request.body)
         theme_id = data['theme_id']
@@ -131,43 +224,7 @@ class choose_button(View):
 
         return JsonResponse({'success': True})
 
-
-class choose_custom_button(View):
-    def post(self, request):
-        # Check membership
-        membership = get_membership(request)
-        if membership != 1:
-            return JsonResponse({'error': 'no-premium'})
-
-        data = json.loads(request.body)
-        background_color = data['bg_color']
-        font_color = data['font_color']
-
-        bg_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', background_color)
-
-        font_match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', font_color)
-
-        if bg_match and font_match:
-            try:
-                custom_button_theme, created = CustomButtonTheme.objects.get_or_create(user=request.user)
-
-                custom_button_theme.background_color = background_color
-                custom_button_theme.font_color = font_color 
-                custom_button_theme.save()
-
-                user_theme = UserTheme.objects.get(user=request.user)
-                user_theme.custom_button_theme = custom_button_theme
-                user_theme.button_theme = None 
-                user_theme.save()
-                
-            except:
-                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
-        else:
-            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
-
-        return JsonResponse({'success': True})
-
-
+# Choose button fill
 class button_fill(View):
     def post(self, request):
         data = json.loads(request.body)
@@ -190,7 +247,7 @@ class button_fill(View):
         return JsonResponse({'success': True})
 
 
-
+# Choose link outline
 class choose_outline(View):
     def post(self, request):
         # Check membership
@@ -218,6 +275,7 @@ class choose_outline(View):
         return JsonResponse({'success': True})
 
 
+# Choose link shadow
 class choose_shadow(View):
     def post(self, request):
         # Check membership
