@@ -382,7 +382,13 @@ class get_user_theme(View):
             if membership:
                 bg_data = UserTheme.objects.get(user=user).custom_background_theme
 
-                bg_bg_color = bg_data.background_color
+                if bg_data.background_color:
+                    bg_bg_color = bg_data.background_color
+                else:
+                    img_url = "/media/" + str(bg_data.background_image) 
+                    bg_bg_color = f'background-image: url({img_url}); background-repeat: no-repeat;background-position: center;background-size: cover;'
+                    
+                
                 bg_font_color = bg_data.font_color
             else:
                 bg_bg_color = '#fff'

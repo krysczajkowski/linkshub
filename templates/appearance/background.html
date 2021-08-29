@@ -63,7 +63,11 @@
                             
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background color:</p>
                             <input type="color" class="input_color border p-0" id="bg_background_color" name='background_color' value="#563d7c" title="Choose background color">
-            
+
+
+                            <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background image:</p>
+                            <img src="/media/profile_pic/fasolka.PNG" class="img-fluid rounded-circle mt-1" style="height: 50px; width: 50px;" id="imgPreview" onclick="document.getElementById('imageField').click(); return false">
+                            <div class="image-feedback invalid-feedback" style='display:none;'></div>
             
                             <p for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</p>
                             <input type="color" class="input_color border p-0" id="bg_font_color" name='font_color' value="#000" title="Choose your color">
@@ -169,6 +173,27 @@
     </div>
 </div>
 
+<!-- Background image input -->
+<input type="file" class='d-none' id='imageField' name='background_image' accept='.jpg, .png' data-bs-toggle="modal" data-bs-target="#cropModal">
+
+<!-- Crop Image Modal -->
+<div class="modal fade" id="cropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop your profile picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="image-box"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary w-100" id="crop-btn" type="button" data-bs-dismiss="modal">Crop</button>
+        </div>
+        </div>
+    </div>
+</div>
+
 <!-- Premium Modal -->
 <div class="modal fade" id='premium-modal' tabindex="-1">
     <div class="modal-dialog">
@@ -187,6 +212,6 @@
     </div>
   </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
 <script src="{% static 'js/background.js' %}"></script>
-<!-- <script src="{% static 'js/profile_premium_links.js' %}"></script> -->
 {% endblock %}

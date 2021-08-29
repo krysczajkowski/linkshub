@@ -31,6 +31,7 @@ class BackgroundTheme(models.Model):
 class CustomBackgroundTheme(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     background_color = models.CharField(max_length=400)
+    background_image = models.ImageField(upload_to='background_image', null=True, blank=True)
     font_color = models.CharField(max_length=100)
 
     def __str__(self):

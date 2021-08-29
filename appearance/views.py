@@ -13,6 +13,8 @@ from .models import Theme, UserTheme, BackgroundTheme, CustomBackgroundTheme, Bu
 from account.decorators import check_ban
 from dashboard.utils import get_membership
 from dashboard.decorators import active_membership
+from .forms import BackgroundImageForm
+from account.utils import validate_image
 
 
 # Appearance page
@@ -108,6 +110,44 @@ class custom_bg_color(View):
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})
+
+
+
+# Choose custom background image
+class custom_bg_image(View):
+    def post(self, request):
+        # Check membership
+        membership = get_membership(request)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+            
+        image = request.FILES.get('background_image')
+
+        # Validate image
+        validate_image_output = validate_image(image, True, '')
+
+        if validate_image_output['everything_ok']:
+            print('wszystko kox')
+            try:
+                custom_background_theme, created = CustomBackgroundTheme.objects.get_or_create(user=request.user)
+
+                custom_background_theme.background_image = image
+                custom_background_theme.background_color = ''
+                custom_background_theme.save()
+
+                user_theme = UserTheme.objects.get(user=request.user)
+                user_theme.custom_background_theme = custom_background_theme
+                user_theme.background_theme = None 
+                user_theme.save()
+                
+            except:
+                return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+            return JsonResponse({'success': True})
+        else:
+            print(validate_image_output['error_msg'])
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
 
 # Choose custom background font color
 class custom_bg_font_color(View):
