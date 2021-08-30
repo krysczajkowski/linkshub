@@ -600,3 +600,13 @@ imageField.addEventListener('change', () => {
     }
 
 })
+
+
+// Show premium modal after clicking on 'Premium' badge
+document.querySelectorAll('.premium-badge').forEach((badge)=>{
+    badge.addEventListener('click', () => {
+        // Show premium modal
+        var premiumModal = new bootstrap.Modal(premium_modal, {});
+        premiumModal.show();
+    })
+})
