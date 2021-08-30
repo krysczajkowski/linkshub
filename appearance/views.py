@@ -21,10 +21,11 @@ from account.utils import validate_image
 @check_ban
 @login_required(login_url='/authentication/login/')
 def appearance(request):
+    # Get membership status
     membership = get_membership(request)
 
+    # Get background themes
     bg_color_themes = BackgroundTheme.objects.filter(type='color')
-
     bg_gradient_themes = BackgroundTheme.objects.filter(type='gradient')
 
     # Get free background themes if user has no active membership
@@ -39,12 +40,56 @@ def appearance(request):
     if theme_data.button_fill == 'transparent':
         btn_transparent = True
 
+
+    # Get background theme
+    bg_theme_name = theme_data.background_theme
+
+    # Set background color input values
+    if not bg_theme_name:
+        bg_data = theme_data.custom_background_theme
+
+        bg_font_color = bg_data.font_color
+
+        if bg_data.background_color:
+            # Cut first 18 elements cuz it's: background-color: 
+            bg_bg_color = bg_data.background_color[18:]
+            bg_img_url = "/media/other/camera.png"
+        else:
+            bg_bg_color = '#ffffff'
+            bg_img_url = "/media/" + str(bg_data.background_image) 
+            
+    else:
+        bg_img_url = "/media/other/camera.png"
+        bg_bg_color = '#ffffff'
+        bg_font_color = '#ffffff'
+
+    # Get button theme
+    btn_theme_name = UserTheme.objects.get(user=request.user).button_theme
+
+    # Set button color input values
+    if btn_theme_name:
+        # Normal button theme
+        btn_bg_color = '#ffffff'
+        btn_font_color = '#ffffff'
+
+    else:
+        # Custom background theme
+        btn_data = UserTheme.objects.get(user=request.user).custom_button_theme
+
+        btn_bg_color = btn_data.background_color
+        btn_font_color = btn_data.font_color
+
     context = {
         'bg_color_themes': bg_color_themes,
         'bg_gradient_themes': bg_gradient_themes,
         'button_color_themes': button_color_themes,
         'btn_transparent': btn_transparent,
-        'membership': membership
+        'membership': membership,
+        'bg_img_url': bg_img_url,
+        'bg_bg_color': bg_bg_color,
+        'bg_font_color': bg_font_color,
+        'btn_bg_color': btn_bg_color,
+        'btn_font_color': btn_font_color
     }
 
     return render(request, 'appearance/background.html', context)
@@ -97,6 +142,7 @@ class custom_bg_color(View):
                 custom_background_theme, created = CustomBackgroundTheme.objects.get_or_create(user=request.user)
 
                 custom_background_theme.background_color = f'background-color: {background_color}'
+                custom_background_theme.background_image = None
                 custom_background_theme.save()
 
                 user_theme = UserTheme.objects.get(user=request.user)

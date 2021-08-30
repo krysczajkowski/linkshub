@@ -62,15 +62,15 @@
                             {% endif %}
                             
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background color:</p>
-                            <input type="color" class="input_color border p-0" id="bg_background_color" name='background_color' value="#563d7c" title="Choose background color">
+                            <input type="color" class="input_color border p-0" id="bg_background_color" name='background_color' value="{{bg_bg_color}}" title="Choose background color">
 
 
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background image:</p>
-                            <img src="/media/profile_pic/fasolka.PNG" class="img-fluid rounded-circle mt-1" style="height: 50px; width: 50px;" id="imgPreview" onclick="document.getElementById('imageField').click(); return false">
+                            <img src="{{ bg_img_url }}" class="img-fluid rounded-circle mt-1 border" style="height: 50px; width: 50px;" id="imgPreview" onclick="document.getElementById('imageField').click(); return false">
                             <div class="image-feedback invalid-feedback" style='display:none;'></div>
             
                             <p for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</p>
-                            <input type="color" class="input_color border p-0" id="bg_font_color" name='font_color' value="#000" title="Choose your color">
+                            <input type="color" class="input_color border p-0" id="bg_font_color" name='font_color' value="{{bg_font_color}}" title="Choose your color">
                         </div>
 
                     </div>
@@ -103,11 +103,11 @@
                                 {% endif %}
 
                                 <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background/Border color:</p>
-                                <input type="color" class="input_color border p-0" id="btn_background_color" name='background_color' value="#563d7c" title="Choose background color">
+                                <input type="color" class="input_color border p-0" id="btn_background_color" name='background_color' value="{{btn_bg_color}}" title="Choose background color">
                 
                 
                                 <p for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</p>
-                                <input type="color" class="input_color border p-0" id="btn_font_color" name='font_color' value="#000" title="Choose your color">
+                                <input type="color" class="input_color border p-0" id="btn_font_color" name='font_color' value="{{btn_font_color}}" title="Choose your color">
                             </div>
                         </div>
 
