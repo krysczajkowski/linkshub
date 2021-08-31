@@ -42,6 +42,6 @@ def get_membership(request):
     try: 
         membership = Customer.objects.get(user=request.user).membership
     except:
-        membership = 0
+        membership = False
 
     return membership

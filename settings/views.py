@@ -13,14 +13,26 @@ from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.forms import PasswordChangeForm
 from django.urls import reverse_lazy
 from django.contrib.auth import logout as django_logout
+from django.contrib.auth.hashers import check_password
+from django.core.mail import EmailMessage
+import threading
 
-from .forms import EditForm, PasswordChangingForm
+from .forms import EditForm, PasswordChangingForm, DeleteAccountForm
 from account.utils import validate_image
 from authentication.utils import username_validation
 from account.models import Profile
 from account.decorators import check_ban
 
 # Create your views here.
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send(fail_silently=False)
+
+
 @check_ban
 def index(request):
     return redirect('edit')
@@ -72,3 +84,47 @@ def logout(request):
     django_logout(request)
     messages.info(request, "Logged out successfully!")
     return redirect("login")
+
+# Delete user's account
+@login_required(login_url='/authentication/login/')
+def delete_account(request):
+    if request.method == 'POST':
+        form = DeleteAccountForm(request.POST)
+
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            # Check if mail is correct
+            if email == request.user.email:
+                # Check password
+                if check_password(password, request.user.password):
+                    # Send email
+                    email_body = f'Hi {request.user.username}. Your account was deleted successfully.'
+
+                    email_subject = 'Your account is deleted successfully.'
+
+                    email = EmailMessage(
+                        email_subject,
+                        email_body,
+                        'czajkowski.biznes@gmail.com',
+                        [email],
+                    )
+                    EmailThread(email).start()
+
+
+                    # Delete user
+                    user = User.objects.get(username=request.user.username)
+                    user.delete()
+
+
+                    messages.info(request, 'Account deleted successfully.')
+                    return redirect('register')
+                else:
+                    messages.error(request, 'Sorry, password is incorrect.')
+            else:
+                messages.error(request, 'Sorry, mail is incorrect.')
+        else:
+            messages.error(request, 'Form is not valid.')
+
+    return render(request, 'settings/delete_account.html')
