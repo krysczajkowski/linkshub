@@ -12,6 +12,7 @@ import imghdr
 from imghdr import tests
 from django.contrib.auth.hashers import make_password
 import hashlib
+import datetime
 
 from requests.api import delete
 
@@ -20,7 +21,7 @@ from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form, hash_password, check_password
 from .decorators import check_ban
 from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
-from premium.models import Customer
+from premium.models import Customer, PremiumFreeTrial
 from dashboard.utils import get_membership
 
 # Create your views here.
@@ -32,7 +33,7 @@ def profile_preview(request):
 
     user_id = request.user.id
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     # Get basic data
     if profile.name:
@@ -232,7 +233,7 @@ def add_link(request):
     initial_animation = LinkAnimation.objects.get(name='None')
     form = CustomLinkForm(initial={'title': '', 'description': '', 'url': '', 'animation': initial_animation}) 
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     if request.method == 'POST':
         form = CustomLinkForm(request.POST, request.FILES)
@@ -300,13 +301,10 @@ def add_premium_link(request):
 @login_required(login_url='/authentication/login/')
 @check_ban
 def premium_links(request):
-    # Check if user is a premium user 
-    try:
-        customer = Customer.objects.get(user=request.user) 
+    # Check if user is a premium user
+    membership = get_membership(request.user)
 
-        if customer.membership != True:
-            return redirect('join')
-    except Customer.DoesNotExist:
+    if not membership:
         return redirect('join')
 
     # Get all active premium links
@@ -357,11 +355,8 @@ class get_user_theme(View):
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-        # Get membership status
-        try: 
-            membership = Customer.objects.get(user=user).membership
-        except:
-            membership = 0
+        # Get membership
+        membership = get_membership(request.user)
 
         # Get background theme
         bg_theme_name = UserTheme.objects.get(user=user).background_theme
@@ -513,7 +508,7 @@ def edit_link(request, link_type, link_id):
 
     link_animation = link.animation
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     context = {
         'page_title': 'Edit Link',

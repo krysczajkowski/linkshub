@@ -1,22 +1,21 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
+import datetime
 
 from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser, PremiumCustomLink
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
-from dashboard.utils import get_ip, get_location
-from premium.models import Customer
+from dashboard.utils import get_ip, get_location, get_membership
+from premium.models import Customer, PremiumFreeTrial
+
 
 def profile(request, username):
     # Get user 
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
 
-    # Get membership status
-    try: 
-        membership = Customer.objects.get(user=user).membership
-    except:
-        membership = 0
+    # Get membership
+    membership = get_membership(request.user)
 
     # Check user ban
     try:

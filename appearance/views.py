@@ -22,7 +22,7 @@ from account.utils import validate_image
 @login_required(login_url='/authentication/login/')
 def appearance(request):
     # Get membership status
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     # Get background themes
     bg_color_themes = BackgroundTheme.objects.filter(type='color')
@@ -128,7 +128,7 @@ class choose_background_theme(View):
 class custom_bg_color(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
             
@@ -163,7 +163,7 @@ class custom_bg_color(View):
 class custom_bg_image(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
             
@@ -199,7 +199,7 @@ class custom_bg_image(View):
 class custom_bg_font_color(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
             
@@ -232,7 +232,7 @@ class custom_bg_font_color(View):
 class custom_button_bg_color(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
 
@@ -264,7 +264,7 @@ class custom_button_bg_color(View):
 class custom_button_font_color(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
 
@@ -337,7 +337,7 @@ class button_fill(View):
 class choose_outline(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
 
@@ -365,7 +365,7 @@ class choose_outline(View):
 class choose_shadow(View):
     def post(self, request):
         # Check membership
-        membership = get_membership(request)
+        membership = get_membership(request.user)
         if membership != 1:
             return JsonResponse({'error': 'no-premium'})
 

@@ -6,7 +6,7 @@ from .utils import get_membership
 def active_membership(function):
     @wraps(function)
     def wrap(request, *args, **kwargs):
-        membership = get_membership(request)
+        membership = get_membership(request.user)
 
         if membership == 1:
             return function(request, *args, **kwargs)
