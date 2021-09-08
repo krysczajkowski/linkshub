@@ -5,6 +5,10 @@
   <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
   <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
   <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+
+  {% if display_free_trial %}
+  <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Get Free Trial</button>
+  {% endif %}
 </div>
 
 <div class="row mx-0">
@@ -100,8 +104,31 @@
   <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
   <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
   <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+
+  {% if display_free_trial %}
+  <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Get Free Trial</button>
+  {% endif %}
 </div>
 
+
+<!-- Free Trial Modal -->
+<div class="modal fade" id="freeTrialModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id='get_trial_btn'>Get Free Trial</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- <div class="container mt-5">
   <div class="row justify-content-center">
@@ -140,11 +167,11 @@
         </div>
       </div>
 </div> -->
-
+<input type="hidden" id='csrftoken' value='{{ csrf_token }}'>
 <script type="text/javascript">
   var sessionid = "{{session_id}}";
 </script>
-<script src="{% static "membership/checkout.js" %}"></script>
+<!-- <script src="{% static 'membership/checkout.js' %}"></script> -->
 <script>
     var stripe = Stripe('pk_test_51ImLvDFwBE1S4q2SxumrmQe1yeSHwffBbKjfUfWm7zo2XSGXXNNRXVpO0zlvfFVpG1D3nPWDCeo7Veqx4GXT6Ar400adXZls1b');
 
@@ -165,5 +192,27 @@
         });
     })
 
+    // Free Trial
+    var csrftoken = document.getElementById('csrftoken').value
+    var get_trial_btn = document.getElementById('get_trial_btn')
+
+    get_trial_btn.addEventListener('click', (e) => {
+      // Start free trial
+      fetch('/premium/start_free_trial', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'X-CSRFToken': csrftoken,
+              'X-Requested-With':'XMLHttpRequest'
+          },
+      }).then(res=>res.json()).then(data=>{
+          console.log('data', data)
+          if(data.error) {
+              alert(data.error)
+          } else {
+              location.replace('http://127.0.0.1:8000/premium/success')
+          }
+      });
+    })
 </script>
 {% endblock %}

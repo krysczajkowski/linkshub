@@ -1,14 +1,16 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.contrib.auth import authenticate, login
 import stripe
+import json
+import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
-from .models import Customer
+from .models import Customer, PremiumFreeTrial
 
 
 stripe.api_key = "sk_test_51ImLvDFwBE1S4q2SI1GTEplWzXlrPpHkOAbZHjIZ5fon8deh1DuBCQXd7v46ZduiqrTNv0LuNhOyTUD0SXkUBc8L00pZQCKvFb"
@@ -40,6 +42,14 @@ def join(request):
     except Customer.DoesNotExist:
         pass
 
+    # Get free trial status
+    try:
+        free_trial = PremiumFreeTrial.objects.get(user=request.user)
+
+        display_free_trial = False
+    except PremiumFreeTrial.DoesNotExist:
+        display_free_trial = True
+
     if request.method == 'POST':
         pass
     else:
@@ -66,7 +76,13 @@ def join(request):
             cancel_url='http://127.0.0.1:8000/premium/cancel',
         )
 
-        return render(request, 'premium/join.html', {'final_dollar': final_dollar, 'session_id': session.id})
+        context = {
+            'final_dollar': final_dollar,
+            'session_id': session.id,
+            'display_free_trial': display_free_trial
+        }
+
+        return render(request, 'premium/join.html', context)
 
 @login_required
 def membership(request):
@@ -103,3 +119,17 @@ def updateaccounts(request):
         customer.cancel_at_period_end = subscription.cancel_at_period_end
         customer.save()
     return HttpResponse('completed')
+
+# Add premium link click  
+class start_free_trial(View):
+    def post(self, request):
+        try:
+            get_trial = PremiumFreeTrial.objects.get(user=request.user)
+
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409) 
+        except PremiumFreeTrial.DoesNotExist:
+            date = datetime.datetime.now() + datetime.timedelta(days=45)
+            PremiumFreeTrial.objects.create(user=request.user, end_date=date)
+
+
+        return JsonResponse({'success': True})
