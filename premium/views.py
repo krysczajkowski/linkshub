@@ -15,9 +15,17 @@ from .models import Customer, PremiumFreeTrial
 
 stripe.api_key = "sk_test_51ImLvDFwBE1S4q2SI1GTEplWzXlrPpHkOAbZHjIZ5fon8deh1DuBCQXd7v46ZduiqrTNv0LuNhOyTUD0SXkUBc8L00pZQCKvFb"
 
-
+@login_required
 def success(request):
     if request.method == 'GET' and 'session_id' in request.GET:
+
+        # If user rebuy premium delete the previous customer
+        try:
+            customer = Customer.objects.get(user=request.user)
+            customer.delete()
+        except Customer.DoesNotExist:
+            pass   
+
         session = stripe.checkout.Session.retrieve(request.GET['session_id'],)
         customer = Customer()
         customer.user = request.user
@@ -42,13 +50,29 @@ def join(request):
     except Customer.DoesNotExist:
         pass
 
-    # Get free trial status
+
+    # Check if user had free trial activated before
     try:
         free_trial = PremiumFreeTrial.objects.get(user=request.user)
 
-        display_free_trial = False
+        free_trial_exist = True
     except PremiumFreeTrial.DoesNotExist:
+        free_trial_exist = False
+
+    # Check if user bought premium before or uses it now
+    try:
+        customer = Customer.objects.get(user=request.user)
+
+        customer_exist = True
+    except Customer.DoesNotExist:
+        customer_exist = False 
+
+    # Check if display free trial button
+    if free_trial_exist or customer_exist:
+        display_free_trial = False 
+    else:
         display_free_trial = True
+
 
     if request.method == 'POST':
         pass
@@ -56,11 +80,6 @@ def join(request):
         membership = 'monthly'
         final_dollar = 3.5
         membership_id = 'price_1JKldqFwBE1S4q2S8DJ3HxDI'
-        # if request.method == 'GET' and 'membership' in request.GET:
-        #     if request.GET['membership'] == 'one-time':
-        #         membership = 'one-time'
-        #         membership_id = 'price_1JKPBnFwBE1S4q2Se3fBAYDN'
-        #         final_dollar = 4.5
 
         # Create Strip Checkout
         session = stripe.checkout.Session.create(
