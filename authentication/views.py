@@ -34,6 +34,10 @@ class EmailThread(threading.Thread):
 # Create your views here.
 class RegistrationView(View):
     def get(self, request):
+        # Check if user is authenticated
+        if request.user.is_authenticated:
+            return redirect('/profile/')
+
         return render(request, 'authentication/register.html', {'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
     def post(self, request):
@@ -162,6 +166,10 @@ class VerificationView(View):
 
 class LoginView(View):
     def get(self, request):
+        # Check if user is authenticated
+        if request.user.is_authenticated:
+            return redirect('/profile/')
+            
         return render(request, 'authentication/login.html')
 
     def post(self, request):

@@ -8,6 +8,12 @@ from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from dashboard.utils import get_ip, get_location, get_membership
 from premium.models import Customer, PremiumFreeTrial
 
+def index(request):
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        return redirect('/profile/')
+    
+    return render(request, 'linkshub/index.html')
 
 def profile(request, username):
     # Get user 
