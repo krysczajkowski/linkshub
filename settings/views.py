@@ -99,24 +99,22 @@ def delete_account(request):
             if email == request.user.email:
                 # Check password
                 if check_password(password, request.user.password):
+
                     # Send email
                     email_body = f'Hi {request.user.username}. Your account was deleted successfully.'
-
                     email_subject = 'Your account is deleted successfully.'
 
                     email = EmailMessage(
                         email_subject,
                         email_body,
                         'czajkowski.biznes@gmail.com',
-                        [email],
+                        [request.user.email],
                     )
                     EmailThread(email).start()
-
 
                     # Delete user
                     user = User.objects.get(username=request.user.username)
                     user.delete()
-
 
                     messages.info(request, 'Account deleted successfully.')
                     return redirect('register')

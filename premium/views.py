@@ -9,11 +9,23 @@ import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
+import threading
+from django.core.mail import EmailMessage
 
 from .models import Customer, PremiumFreeTrial
 
 
 stripe.api_key = "sk_test_51ImLvDFwBE1S4q2SI1GTEplWzXlrPpHkOAbZHjIZ5fon8deh1DuBCQXd7v46ZduiqrTNv0LuNhOyTUD0SXkUBc8L00pZQCKvFb"
+
+
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
+
+    def run(self):
+        self.email.send(fail_silently=False)
+
 
 @login_required
 def success(request):
@@ -34,6 +46,19 @@ def success(request):
         customer.cancel_at_period_end = False
         customer.stripe_subscription_id = session.subscription
         customer.save()
+
+        # Send success email
+        email_subject = 'Thank you for purchasing LinksHub Premium.'
+        email_body = f'Hi {request.user.username}. Thank you for purchasing LinksHub Premium. Info dodatkowe jakies.'
+
+        email = EmailMessage(
+            email_subject,
+            email_body,
+            'czajkowski.biznes@gmail.com',
+            [request.user.email],
+        )
+        EmailThread(email).start()
+
     return render(request, 'premium/success.html')
 
 
@@ -133,6 +158,18 @@ def updateaccounts(request):
         subscription = stripe.Subscription.retrieve(customer.stripe_subscription_id)
         if subscription.status != 'active':
             customer.membership = False
+
+            # Send email to user about expired premium
+            email_subject = 'Your LinksHub Premium expired.'
+            email_body = f'Hi {request.user.username}. Your LinksHub Premium expired. Info dodatkowe jakies.'
+
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                'czajkowski.biznes@gmail.com',
+                [customer.user.email],
+            )
+            EmailThread(email).start()
         else:
             customer.membership = True
         customer.cancel_at_period_end = subscription.cancel_at_period_end
