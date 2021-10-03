@@ -180,9 +180,20 @@
             <canvas id="deviceChart" style="position: relative; height: 40vh; width: 40vw;"></canvas>
         </div>
     </div>
+
+    <!-- User has no premium -->
     {% else %}
-        Data for last 7 days! <br>
-        Get premium for more data
+    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2 mt-4">
+        <div class="card-body text-center">
+            <h4 class='fw-bold'>Get premium or active a free trial to get full analytics!</h4>
+
+            <span class='text-muted'>Purchase premium for $3.5/mo to get summary for any date range, analytics for each link, location analytics and much more!</span>
+
+            <div class="d-grid gap-2 mt-4"> 
+                <a href="{% url 'join' %}" class='btn btn-success fw-bold font-size-12'>Get Premium or Active Free Trial</a>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
 </div>
