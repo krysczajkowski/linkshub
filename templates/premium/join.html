@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <script src="https://js.stripe.com/v3/"></script>
-<div class='background-premium text-center text-white py-5'>
+<div class='text-center text-white py-5 background-premium'>
   <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
   <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
-  <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+  <button class='btn btn-get-premium fw-bold checkout-button me-3' data-secret="{{ session_id }}">Get Premium</button>
 
   {% if display_free_trial %}
   <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Get Free Trial</button>
@@ -13,28 +13,40 @@
 
 <div class="row mx-0">
     <!-- Summary --->
-    <div class="row container m-0">
-      <div class="col-12 col-md-4 mt-5 text-center">
-        <img src="https://image.flaticon.com/icons/png/512/609/609997.png" style='height: 11vh;' class='img-fluid mb-3'>
+    <div class="row container m-0 mb-5">
+      <div class="col-12 col-md-3 mt-5 text-center">
+        <div class="d-inline-block p-3 mb-4 border rounded-circle" style="background-color: #e7e7e7;">
+            <i class="fas fa-chart-line" aria-hidden="true" style="font-size: 2.5rem;color: #383838;"></i>
+        </div>
         <h5 class='fw-bold'>Analytics</h5>
         <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
       </div>
 
-      <div class="col-12 col-md-4 mt-5 text-center">
-        <img src="https://image.flaticon.com/icons/png/512/610/610005.png" style='height: 11vh;' class='img-fluid mb-3'>
+      <div class="col-12 col-md-3 mt-5 text-center">
+        <div class="d-inline-block p-3 mb-4 border rounded-circle" style="background-color: #e7e7e7;">
+          <i class="fas fa-key" aria-hidden="true" style="font-size: 2.5rem;color: #383838;"></i>
+        </div>
         <h5 class='fw-bold'>Premium Links</h5>
         <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
       </div>
 
-      <div class="col-12 col-md-4 mt-5 text-center">
-        <img src="https://image.flaticon.com/icons/png/512/610/610090.png" style='height: 11vh;' class='img-fluid mb-3'>
+      <div class="col-12 col-md-3 mt-5 text-center">
+        <div class="d-inline-block p-3 mb-4 border rounded-circle" style="background-color: #e7e7e7;">
+          <i class="fas fa-palette" aria-hidden="true" style="font-size: 2.5rem;color: #383838;"></i>
+        </div>
         <h5 class='fw-bold'>Appearance</h5>
+        <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
+      </div>
+      <div class="col-12 col-md-3 mt-5 text-center">
+        <div class="d-inline-block p-3 mb-4 border rounded-circle" style="background-color: #e7e7e7;">
+          <i class="fas fa-ellipsis-h" aria-hidden="true" style="font-size: 2.5rem;color: #383838;"></i>
+        </div>
+        <h5 class='fw-bold'>Other</h5>
         <span>Loem irpsum dolor sit amet, consectetur adipiscing.</span>
       </div>
     </div>
 
-  <div class="row col-10 offset-1 col-xl-8 offset-xl-2 mt-5">
-    <!-- Analytics -->
+  <!-- <div class="row col-10 offset-1 col-xl-8 offset-xl-2 mt-5">
     <div class="col-12 mt-5">
       <h3 class='text-center fw-bold'>
         <img src="https://image.flaticon.com/icons/png/512/609/609997.png" class='img-fluid mb-1 me-2 title-icon-premium'>
@@ -51,7 +63,6 @@
       </div>
     </div>
 
-    <!-- Premium Links -->
       <div class="col-12 mt-5">
         <h3 class='text-center fw-bold'>
           <img src="https://image.flaticon.com/icons/png/512/610/610005.png" class='img-fluid mb-1 me-2 title-icon-premium'>
@@ -68,47 +79,281 @@
         </div>
       </div>
 
-    <!-- Appearance -->
     <div class="col-12 mt-5">
       <h3 class='text-center fw-bold'>
         <img src="https://image.flaticon.com/icons/png/512/610/610090.png" class='img-fluid mb-1 me-2 title-icon-premium'>
         Appearance
       </h3>
     </div>
-    <div class="row p-0 m-0">
-      <div class="row p-0 m-0">
-        <div class="col-12 p-3 text-center">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin</p>
-          <span>Lorem ipsum</span>
+    <div class="row p-0 m-0 mb-5">
+      <div class="col-12 col-md-6">
+        <img src="https://media.discordapp.net/attachments/423928174552809473/859174929492213790/unknown.png" class='img-fluid rounded p-3'>
+      </div>
+      <div class="col-12 col-md-6 p-3 text-center text-md-start">
+        <p>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin. Fusce sit amet dictum ipsum, sollicitudin</p>
+        
+      </div>
+    </div>
+
+  </div>
+</div> -->
+
+
+<!-- Compare Two Plans -->
+<div class="container mt-5">
+  <h5 class="text-center fw-bold pb-2 text-gradient-mint-blue">Pick Your Plan
+  </h5>
+  <div class="row">
+
+    <!-- PREMIUM PLAN -->
+    <div class="col-12 col-md-6 col-lg-4 offset-lg-2">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title font-size-13 fw-bold">PRO $3.5</h5>
+          <small class='text-muted'>With supporting text below as a natural lead-in.</small>
+
+          <ul class="list-group list-group-flush mt-3">
+
+            <span class='fw-bold mt-3'>Analytics: </span>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Summary for last 7 days
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Summary for any date range
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Analytics for each link
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Analytics for each private link
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Analytics for each social media platform
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Basic device analytics
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Basic location analytics
+            </li>    
+
+            <span class='fw-bold mt-4'>Appearance: </span>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Background premium colors
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Background custom color
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Background image
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Background custom font
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Custom button theme
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Button outline
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Button fill
+            </li>
+
+            <span class='fw-bold mt-4'>Other: </span>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Premium Links
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Links animations
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Hide linkshub logo from your profile page
+            </li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- Other things -->
-    <div class="col-12 mt-5">
-      <h3 class='text-center fw-bold'>
-        <img src="https://image.flaticon.com/icons/png/512/610/610106.png" class='img-fluid mb-1 me-2 title-icon-premium'>
-        And Others
-      </h3>
+
+
+    <!-- FREE PLAN -->
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title font-size-13 fw-bold">FREE</h5>
+          <small class='text-muted'>With supporting text below as a natural lead-in.</small>
+
+          <ul class="list-group list-group-flush mt-3">
+
+            <span class='fw-bold mt-3'>Analytics: </span>
+            <li class="list-group-item">
+              <i class="fas fa-check text-success pe-2"></i>
+              Summary for last 7 days
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Summary for any date range
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Analytics for each link
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Analytics for each private link
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Analytics for each social media platform
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Basic device analytics
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Basic location analytics
+            </li>    
+
+            <span class='fw-bold mt-4'>Appearance: </span>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Background premium colors
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Background custom color
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Background image
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Background custom font
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Custom button theme
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Button outline
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Button fill
+            </li>
+
+            <span class='fw-bold mt-4'>Other: </span>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Premium Links
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Links animations
+            </li>
+            <li class="list-group-item">
+              <i class="fas fa-times text-danger pe-2"></i>
+              Hide linkshub logo from your profile page
+            </li>
+          </ul>
+        </div>
+      </div>
+
     </div>
-    <div class="row p-0 m-0">
-      <div class="col-12 p-3 text-center">
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum, sollicitudin</p>
-        <span>Lorem ipsum</span>
+  </div>
+
+  <div class="row">
+    <div class="col-12 col-lg-8 offset-lg-2">
+      <!-- Get Premium Button -->
+      <div class="d-grid gap-2 my-4">
+        <button class="btn btn-success fw-bold py-2  font-size-11" style='letter-spacing: 1px;' type="button">GET PREMIUM</button>
       </div>
     </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="row mt-4 mb-5">
+    <div class="col-10 offset-1 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+      <p class='mt-3 mb-2 fw-bold font-size-15'>FAQ</p>
+      <div class="accordion accordion-flush" id="accordionExample">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Co dostaje w analytics
+            </button>
+          </h2>
+          <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+            <div class="accordion-body">  
+              grupa „basic” przeznaczona jest dla osób zupełnie początkujących, które dopiero rozpoczynają treningi. W przypadku sportów stójkowych  jest to wprowadzenie do kickboxingu, muay thai, boksu oraz mma.
+    
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Jakie mozliwosci dostaje jesli chodzi o appearance
+            </button>
+          </h2>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+              grupa „basic” przeznaczona jest dla osób zupełnie początkujących, które dopiero rozpoczynają treningi. W przypadku sportów stójkowych  jest to wprowadzenie do kickboxingu, muay thai, boksu oraz mma.
+    
+            </div>
+          </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                How can I cancel my LinksHub premium?
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                grupa „basic” przeznaczona jest dla osób zupełnie początkujących, które dopiero rozpoczynają treningi. W przypadku sportów stójkowych  jest to wprowadzenie do kickboxingu, muay thai, boksu oraz mma.
+      
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+
+</div>
 </div>
 
 
-<div class='background-premium text-center text-white py-5 mt-5'>
+<!-- <div class='text-center text-white py-5 px-0 mt-5 background-premium' >
   <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
   <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
-  <button class='btn btn-get-premium fw-bold checkout-button' data-secret="{{ session_id }}">Get Premium</button>
+  <button class='btn btn-get-premium fw-bold checkout-button me-3' data-secret="{{ session_id }}">Get Premium</button>
 
   {% if display_free_trial %}
   <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Get Free Trial</button>
   {% endif %}
-</div>
+</div> -->
 
 
 <!-- Free Trial Modal -->
