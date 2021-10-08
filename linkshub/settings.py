@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'settings',
     'dashboard',
     'premium',
+    'sitepolicy',
 ]
 
 MIDDLEWARE = [

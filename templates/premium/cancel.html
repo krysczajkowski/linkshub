@@ -1,11 +1,23 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
-<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-  <h1 class="display-4">LinksHub Premium</h1>
-</div>
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+      <div class="card" style='z-index: 1000000000;'>
+        <div class="card-body text-center">
+          <img src="/media/premium/cancel.png" class="text-center w-25 mb-4" alt="...">
 
-<div class="container">
-    Ohhh... Something happened
+          <h5 class="card-title fw-bold font-size-15">Sorry, something went wrong!</h5>
+          <p class="card-text">Something went wrong, please try again. </p>
+
+          <div class="d-grid gap-2 mt-4"> 
+              <a href="{% url 'join' %}" class="btn btn-success fw-bold font-size-12">Get Premium</a>
+              <a href="{% url 'profile_preview' %}" class="btn btn-light fw-bold font-size-09">Go to your profile</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

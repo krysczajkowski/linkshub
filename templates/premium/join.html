@@ -1,14 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <script src="https://js.stripe.com/v3/"></script>
-<div class='text-center text-white py-5 background-premium'>
-  <h2 class='fw-bold'>Lorem Ipsum bla bla bla</h2>
-  <p class='font-size-11'>Loem irpsum dolor sit amet, consectetur adipiscing elit. Fusce sit amet dictum ipsum.</p>
+<div class='text-center text-white pt-5 pb-4 background-premium'>
+  <h1 class='fw-bold'>LinksHub Premium</h1>
+  <p class='font-size-12'>Get full analytics, style your profile as you want, and much more. </p>
   <button class='btn btn-get-premium fw-bold checkout-button me-3' data-secret="{{ session_id }}">Get Premium</button>
 
   {% if display_free_trial %}
-  <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Get Free Trial</button>
+  <button class='btn btn-get-premium fw-bold' data-bs-toggle="modal" data-bs-target="#freeTrialModal">Active Free Trial</button>
   {% endif %}
+
+  <p class='font-size-08 mb-0 mt-4'>Purchase premium through https://checkout.stripe.com/</p>
 </div>
 
 <div class="row mx-0">
@@ -347,7 +349,20 @@
             </h2>
             <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
               <div class="accordion-body">
-                grupa „basic” przeznaczona jest dla osób zupełnie początkujących, które dopiero rozpoczynają treningi. W przypadku sportów stójkowych  jest to wprowadzenie do kickboxingu, muay thai, boksu oraz mma.
+                How do i sign up for a free trial, 
+      
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button class="accordion-button collapsed bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                Can I get a refund?
+              </button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+              <div class="accordion-body">
+                We do not offer refunds. 
       
               </div>
             </div>
