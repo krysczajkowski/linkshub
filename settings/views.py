@@ -16,6 +16,7 @@ from django.contrib.auth import logout as django_logout
 from django.contrib.auth.hashers import check_password
 from django.core.mail import EmailMessage
 import threading
+from django.template.loader import render_to_string
 
 from .forms import EditForm, PasswordChangingForm, DeleteAccountForm
 from account.utils import validate_image
@@ -101,7 +102,10 @@ def delete_account(request):
                 if check_password(password, request.user.password):
 
                     # Send email
-                    email_body = f'Hi {request.user.username}. Your account was deleted successfully.'
+                    #email_body = f'Hi {request.user.username}. Your account was deleted successfully.'
+
+                    email_body = render_to_string('mails/delete-account.html')
+
                     email_subject = 'Your account is deleted successfully.'
 
                     email = EmailMessage(
@@ -110,6 +114,8 @@ def delete_account(request):
                         'czajkowski.biznes@gmail.com',
                         [request.user.email],
                     )
+
+                    email.content_subtype = 'html'
                     EmailThread(email).start()
 
                     # Delete user

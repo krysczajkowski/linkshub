@@ -16,6 +16,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 import requests
+from django.template.loader import render_to_string 
 
 
 from .utils import token_generator, username_validation
@@ -226,7 +227,10 @@ class RequestPasswordResetEmail(View):
 
             reset_url = 'http://' + domain + link
 
-            email_body = f'Hi {user[0].username}. Please use this link to reset your password. {reset_url}'
+            # email_body = f'Hi {user[0].username}. Please use this link to reset your password. {reset_url}'
+
+
+            email_body = render_to_string('mails/reset-password.html', {'reset_url': reset_url})
 
             email_subject = 'Password Reset Instructions'
 
@@ -244,9 +248,11 @@ class RequestPasswordResetEmail(View):
                 'czajkowski.biznes@gmail.com',
                 [email],
             )
+            email.content_subtype = 'html'
+
             EmailThread(email).start()
 
-            messages.success(request, 'Log in to your gmail, biatch.')
+            messages.success(request, 'Reset link was sent to your email.')
         else:
             messages.error(request, "This email does not exist")
 

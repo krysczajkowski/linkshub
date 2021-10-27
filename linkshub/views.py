@@ -62,6 +62,8 @@ def profile(request, username):
     # Get all social media platforms
     platforms = UserPlatform.objects.filter(user=user, username__gt='',username__isnull=False)
 
+    # Get user theme function is in account/views.py
+
     context = {
         'user_id': user.id,
         'membership': membership,

@@ -5,12 +5,14 @@ from django.views import generic, View
 from django.contrib.auth import authenticate, login
 import stripe
 import json
+import time
 import datetime
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse, JsonResponse
 import threading
 from django.core.mail import EmailMessage
+from django.template.loader import render_to_string 
 
 from .models import Customer, PremiumFreeTrial
 
@@ -47,9 +49,13 @@ def success(request):
         customer.stripe_subscription_id = session.subscription
         customer.save()
 
+        purchase_date = datetime.datetime.today().strftime('%Y-%m-%d')
+
         # Send success email
         email_subject = 'Thank you for purchasing LinksHub Premium.'
-        email_body = f'Hi {request.user.username}. Thank you for purchasing LinksHub Premium. Info dodatkowe jakies.'
+        # email_body = f'Hi {request.user.username}. Thank you for purchasing LinksHub Premium. Info dodatkowe jakies.'
+
+        email_body = render_to_string('mails/premium-success.html', {'purchase_date': purchase_date})
 
         email = EmailMessage(
             email_subject,
@@ -57,6 +63,8 @@ def success(request):
             'czajkowski.biznes@gmail.com',
             [request.user.email],
         )
+
+        email.content_subtype = 'html'
         EmailThread(email).start()
 
     return render(request, 'premium/success.html')
@@ -159,9 +167,11 @@ def updateaccounts(request):
         if subscription.status != 'active':
             customer.membership = False
 
+            # PREMIUM EXPIRED
             # Send email to user about expired premium
-            email_subject = 'Your LinksHub Premium expired.'
-            email_body = f'Hi {request.user.username}. Your LinksHub Premium expired. Info dodatkowe jakies.'
+            email_subject = 'Your LinksHub Premium has expired.'
+
+            email_body = render_to_string('mails/premium-expired.html', {'username': customer.user.username})
 
             email = EmailMessage(
                 email_subject,
@@ -169,10 +179,36 @@ def updateaccounts(request):
                 'czajkowski.biznes@gmail.com',
                 [customer.user.email],
             )
+
+            email.content_subtype = 'html'
             EmailThread(email).start()
         else:
             customer.membership = True
+
+
+        # PREMIUM IS ABOUT TO EXPIRE
+        if subscription.cancel_at_period_end:
+            # Send email to user about expired premium
+            email_subject = 'Your LinksHub Premium is about to expire.'
+            
+            expire_date = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(subscription.cancel_at))
+
+            email_body = render_to_string('mails/premium-about-to-expire.html', {'username': customer.user.username, 'expire_date': expire_date})
+
+            email = EmailMessage(
+                email_subject,
+                email_body,
+                'czajkowski.biznes@gmail.com',
+                [customer.user.email],
+            )
+
+            email.content_subtype = 'html'
+            EmailThread(email).start()
+
+
+        # Set cancel at period time value
         customer.cancel_at_period_end = subscription.cancel_at_period_end
+
         customer.save()
     return HttpResponse('completed')
 
