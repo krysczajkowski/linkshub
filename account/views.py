@@ -319,25 +319,32 @@ def premium_links(request):
 
     profile = Profile.objects.get(user=request.user)
 
-    # Display popup to set up premium links password
-    if not profile.premium_links_password:
-        change_pass_form = PremiumLinksChangePassword()
+    
+    change_pass_form = PremiumLinksChangePassword()
 
-        context['change_pass_form'] = change_pass_form
-        context['set_password'] = True 
+    context['change_pass_form'] = change_pass_form
+    context['set_password'] = True 
 
-        if request.method == 'POST':
-            change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
-            password = request.POST['premium_links_password']
+    if request.method == 'POST':
+        change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
+        password = request.POST['premium_links_password']
 
-            if change_pass_form.is_valid():
+        if change_pass_form.is_valid():
+            if len(password) >= 2 and len(password) <=60:
                 new_password = change_pass_form.save(commit=False)
                 new_password.premium_links_password = hash_password(password)
                 new_password.save()
 
-                messages.success(request, 'Premium Links code updated.')
-                return redirect('premium_links')
+                messages.success(request, 'Premium Links password updated.')
+                
+            else:
+                messages.info(request, 'Premium Links password must be between 2-60 characters.')      
 
+            return redirect('premium_links')
+
+            
+    if not profile.premium_links_password:
+        context['set_password'] = True
     else:
         context['set_password'] = False
 

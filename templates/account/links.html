@@ -10,33 +10,6 @@
 
       {% include 'partials/_alerts.html' %}
 
-      {% if links_type == 'premium' %}
-        {% if set_password %}
-        <div class='mt-4'>
-          <p class='text-center font-size-12 mb-1'>
-            Set password for your Premium Links 
-            <i class="fas fa-question-circle font-size-08" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Premium Links are ..." aria-label="Premium Links are ..."></i>
-          </p>
-          <p class='text-center mt-0 font-size-08 text-muted'>*Ustaw haslo albo linki sie nie wyswietla</p>
-
-        
-          <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
-              <form method='POST'>
-                {% csrf_token %}
-                <div class="input-group mt-1">
-                  <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
-                  <div class="input-group-append">
-                    <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
-                  </div>
-                </div>
-                <div class='d-flex'>
-                  <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
-                </div>
-              </form>
-          </div>
-        {% endif %}
-      {% endif %}
-
       <div class="row mt-3 mb-2">
           <div class="col-6">
               <h4 class='mb-3 mt-2'>
@@ -153,6 +126,35 @@
           {% endif %}
       {% endfor %}
       </div>
+
+      {% if links_type == 'premium' %}
+      <div class='mt-4'>
+        <p class='text-center font-size-12 mb-1'>
+          {% if set_password %} 
+            Set password for your Premium Links
+          {% else %}
+            Change password for your Premium Links
+          {% endif %}
+          <i class="fas fa-question-circle font-size-08" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Premium Links are ..." aria-label="Premium Links are ..."></i>
+        </p>
+        <p class='text-center mt-0 font-size-08 text-muted'>*Ustaw haslo albo linki sie nie wyswietla</p>
+
+      
+        <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
+            <form method='POST'>
+              {% csrf_token %}
+              <div class="input-group mt-1">
+                <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
+                <div class="input-group-append">
+                  <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
+                </div>
+              </div>
+              <div class='d-flex'>
+                <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
+              </div>
+            </form>
+        </div>
+    {% endif %}
     </div>
   </div>
 </div>
