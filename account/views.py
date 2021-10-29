@@ -432,6 +432,12 @@ class get_user_theme(View):
             btn_outline = 'outline-normal'
             btn_shadow = 'shadow-soft'
 
+        # Get linkshub label
+        if membership:
+            linkshub_label = theme_data.linkshub_label
+        else:
+            linkshub_label = True
+
         data = {
             'bg_bg_color': bg_bg_color,
             'bg_font_color': bg_font_color,
@@ -439,7 +445,8 @@ class get_user_theme(View):
             'btn_bg_color': btn_bg_color,
             'btn_border_color': btn_border_color,
             'btn_outline': btn_outline,
-            'btn_shadow': btn_shadow
+            'btn_shadow': btn_shadow,
+            'linkshub_label': linkshub_label
         }
 
         return JsonResponse({'data': data})

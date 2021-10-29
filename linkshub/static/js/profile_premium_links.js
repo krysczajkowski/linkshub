@@ -8,6 +8,8 @@ function get_user_theme() {
     var tutorial_helper_links = document.querySelectorAll('.tutorial-helper-links')
     var write_your_bio = document.getElementById('write-your-bio')
 
+    var linkshub_label = document.getElementById('linkshub-label')
+
 
     fetch('/profile/get_user_theme', {
         body: JSON.stringify({'user_id': user_id}),
@@ -39,6 +41,12 @@ function get_user_theme() {
             document.querySelectorAll('.platform-link').forEach((platform) => {
                 platform.style.color = data.data.bg_font_color
             })
+
+            // Add (or not) linkshub label
+            if(data.data.linkshub_label == true) {
+                linkshub_label.innerHTML = "<a href='#' class='text-light'>Made with LinksHub.io</a>"
+            }
+
 
             // Style background
             profile_container.style = data.data.bg_bg_color
