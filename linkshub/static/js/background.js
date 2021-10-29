@@ -45,6 +45,8 @@ function load_profile (e) {
             var user_id = document.getElementById('user-id').dataset.id
             var profile_container = document.querySelector('.profile-container')
 
+            var linkshub_label = document.getElementById('linkshub-label')
+
             fetch('/profile/get_user_theme', {
                 body: JSON.stringify({'user_id': user_id}),
                 method: 'POST',
@@ -75,6 +77,15 @@ function load_profile (e) {
                     document.querySelectorAll('.platform-link').forEach((platform) => {
                         platform.style.color = data.data.bg_font_color
                     })
+
+
+                    // Add (or not) linkshub label
+                    if(data.data.linkshub_label == true) {
+                        if (document.body.contains(linkshub_label)) {
+                            linkshub_label.innerHTML = "<a href='#' class='text-light'>Made with LinksHub.io</a>"
+                        }
+                    }
+
 
                     // Style background
                     profile_container.style = data.data.bg_bg_color
