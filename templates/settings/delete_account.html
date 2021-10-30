@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+<div class="mx-3 mt-4">
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-10 offset-lg-1">
+            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel order-1 order-lg-0 mt-5 mt-lg-0">
+        
+            <div class="card card-body text-center">
+                {% include 'partials/_settings_sidebar.html' %}
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9 col-xxl-8 mt-2 mt-lg-0">
+            {% include 'partials/_alerts.html' %}
+            <div class="card card-body">
+                <div class="row">
+                    <div class="col-12 col-md-8 offset-md-2">
+                        <h5>Delete Your Account</h5>
+                        <form action="" method='POST'>
+                            {% csrf_token %}
+                            <input type="email" name='email' placeholder='Your Mail' class='form-control'>
+
+                            <input type="password" name='password' placeholder='Your Password' class='form-control my-2'>
+
+                            <input type="submit" class='btn btn-danger' value="Delete Your Account">
+                        </form>
+                        <br>
+                        <small class='text-muted'>*Nie możesz cofnąć tej akcji, jeśli masz premium stracisz je, itp</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/change_password.js' %}"></script>
+{% endblock %}

@@ -12,6 +12,7 @@ import imghdr
 from imghdr import tests
 from django.contrib.auth.hashers import make_password
 import hashlib
+import datetime
 
 from requests.api import delete
 
@@ -20,7 +21,7 @@ from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
 from .utils import validate_link_form, hash_password, check_password
 from .decorators import check_ban
 from .forms import CustomLinkForm, PremiumLinksChangePassword, CustomPremiumLinkForm
-from premium.models import Customer
+from premium.models import Customer, PremiumFreeTrial
 from dashboard.utils import get_membership
 
 # Create your views here.
@@ -32,7 +33,7 @@ def profile_preview(request):
 
     user_id = request.user.id
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     # Get basic data
     if profile.name:
@@ -45,7 +46,7 @@ def profile_preview(request):
     if profile.image:
         profile_picture = profile.image.url
     else:
-        profile_picture = 'https://ocdn.eu/pulscms-transforms/1/PFLk9kpTURBXy81ZWEyNGM0MDg3ODcyYzNhNGVlMjA4OGE5YmFiMjY1Yy5qcGeTlQNYI80Cfc0BZpUCzQMHAMPDkwmmNWI4MzAxBoGhMAE/weronika-wersow-sowa-znow-ma-problemy.jpg'
+        profile_picture = ''
 
     # Get all links
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
@@ -59,6 +60,7 @@ def profile_preview(request):
     # Get all social media platforms
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
+   
     context = {
         'user_id': user_id, 
         'username': username,
@@ -69,7 +71,7 @@ def profile_preview(request):
         'platforms': platforms,
         'membership': membership,
     }
-
+    
     return render(request, 'account/profile_preview.html', context)
 
 # Premium links check password
@@ -80,7 +82,7 @@ class premium_links_check_password(View):
         user_id = data['user_id']
 
         try:
-            correct_hash = Profile.objects.get(user=request.user).premium_links_password
+            correct_hash = Profile.objects.get(user=user_id).premium_links_password
 
             user = User.objects.get(id=user_id)
 
@@ -231,7 +233,7 @@ def add_link(request):
     initial_animation = LinkAnimation.objects.get(name='None')
     form = CustomLinkForm(initial={'title': '', 'description': '', 'url': '', 'animation': initial_animation}) 
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     if request.method == 'POST':
         form = CustomLinkForm(request.POST, request.FILES)
@@ -299,13 +301,10 @@ def add_premium_link(request):
 @login_required(login_url='/authentication/login/')
 @check_ban
 def premium_links(request):
-    # Check if user is a premium user 
-    try:
-        customer = Customer.objects.get(user=request.user) 
+    # Check if user is a premium user
+    membership = get_membership(request.user)
 
-        if customer.membership != True:
-            return redirect('join')
-    except Customer.DoesNotExist:
+    if not membership:
         return redirect('join')
 
     # Get all active premium links
@@ -320,25 +319,32 @@ def premium_links(request):
 
     profile = Profile.objects.get(user=request.user)
 
-    # Display popup to set up premium links password
-    if not profile.premium_links_password:
-        change_pass_form = PremiumLinksChangePassword()
+    
+    change_pass_form = PremiumLinksChangePassword()
 
-        context['change_pass_form'] = change_pass_form
-        context['set_password'] = True 
+    context['change_pass_form'] = change_pass_form
+    context['set_password'] = True 
 
-        if request.method == 'POST':
-            change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
-            password = request.POST['premium_links_password']
+    if request.method == 'POST':
+        change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
+        password = request.POST['premium_links_password']
 
-            if change_pass_form.is_valid():
+        if change_pass_form.is_valid():
+            if len(password) >= 2 and len(password) <=60:
                 new_password = change_pass_form.save(commit=False)
                 new_password.premium_links_password = hash_password(password)
                 new_password.save()
 
-                messages.success(request, 'Premium Links code updated.')
-                return redirect('premium_links')
+                messages.success(request, 'Premium Links password updated.')
+                
+            else:
+                messages.info(request, 'Premium Links password must be between 2-60 characters.')      
 
+            return redirect('premium_links')
+
+            
+    if not profile.premium_links_password:
+        context['set_password'] = True
     else:
         context['set_password'] = False
 
@@ -356,11 +362,8 @@ class get_user_theme(View):
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-        # Get membership status
-        try: 
-            membership = Customer.objects.get(user=user).membership
-        except:
-            membership = 0
+        # Get membership
+        membership = get_membership(request.user)
 
         # Get background theme
         bg_theme_name = UserTheme.objects.get(user=user).background_theme
@@ -381,7 +384,13 @@ class get_user_theme(View):
             if membership:
                 bg_data = UserTheme.objects.get(user=user).custom_background_theme
 
-                bg_bg_color = bg_data.background_color
+                if bg_data.background_color:
+                    bg_bg_color = bg_data.background_color
+                else:
+                    img_url = "/media/" + str(bg_data.background_image) 
+                    bg_bg_color = f'background-image: url({img_url}); background-repeat: no-repeat;background-position: center;background-size: cover;'
+                    
+                
                 bg_font_color = bg_data.font_color
             else:
                 bg_bg_color = '#fff'
@@ -423,6 +432,12 @@ class get_user_theme(View):
             btn_outline = 'outline-normal'
             btn_shadow = 'shadow-soft'
 
+        # Get linkshub label
+        if membership:
+            linkshub_label = theme_data.linkshub_label
+        else:
+            linkshub_label = True
+
         data = {
             'bg_bg_color': bg_bg_color,
             'bg_font_color': bg_font_color,
@@ -430,7 +445,8 @@ class get_user_theme(View):
             'btn_bg_color': btn_bg_color,
             'btn_border_color': btn_border_color,
             'btn_outline': btn_outline,
-            'btn_shadow': btn_shadow
+            'btn_shadow': btn_shadow,
+            'linkshub_label': linkshub_label
         }
 
         return JsonResponse({'data': data})
@@ -506,7 +522,7 @@ def edit_link(request, link_type, link_id):
 
     link_animation = link.animation
 
-    membership = get_membership(request)
+    membership = get_membership(request.user)
 
     context = {
         'page_title': 'Edit Link',

@@ -45,6 +45,8 @@ function load_profile (e) {
             var user_id = document.getElementById('user-id').dataset.id
             var profile_container = document.querySelector('.profile-container')
 
+            var linkshub_label = document.getElementById('linkshub-label')
+
             fetch('/profile/get_user_theme', {
                 body: JSON.stringify({'user_id': user_id}),
                 method: 'POST',
@@ -66,9 +68,24 @@ function load_profile (e) {
                         link.classList.add(data.data.btn_outline)
                     });
 
+                    // Style images inside links
+                    document.querySelectorAll('.link-image-size').forEach((img) => {
+                        img.classList.add(data.data.btn_outline)
+                    })
+
+                    // Style social platforms
                     document.querySelectorAll('.platform-link').forEach((platform) => {
                         platform.style.color = data.data.bg_font_color
                     })
+
+
+                    // Add (or not) linkshub label
+                    if(data.data.linkshub_label == true) {
+                        if (document.body.contains(linkshub_label)) {
+                            linkshub_label.innerHTML = "<a href='#' class='text-light'>Made with LinksHub.io</a>"
+                        }
+                    }
+
 
                     // Style background
                     profile_container.style = data.data.bg_bg_color
@@ -117,26 +134,14 @@ bg_theme.forEach(item => {
     })
 })
 
-
 // Set custom background theme
-const bg_custom_submit = document.querySelector('#bg_custom_submit')
-bg_custom_submit.addEventListener('click', event => {
-    // Add spinnig effect
-    bg_custom_submit.disabled = true
-    document.querySelector('#bg_submitSpinner').classList.remove('d-none')
- 
-    // Delete spinning effect after .5s 
-    setTimeout((e) => {
-        bg_custom_submit.disabled = false
-        document.querySelector('#bg_submitSpinner').classList.add('d-none')
-    }, 500);
-
+var font_color_input = document.querySelector('#bg_font_color')
+font_color_input.addEventListener('change', event => {
     // Get data
-    bg_color = document.querySelector('#bg_background_color').value 
-    font_color = document.querySelector('#bg_font_color').value 
+    font_color = font_color_input.value 
 
-    fetch('background/custom/choose', {
-        body: JSON.stringify({'bg_color': bg_color, 'font_color': font_color}),
+    fetch('background/font/color', {
+        body: JSON.stringify({'font_color': font_color}),
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -160,6 +165,37 @@ bg_custom_submit.addEventListener('click', event => {
     });
 })
 
+
+// Set custom background theme
+var background_input = document.querySelector('#bg_background_color')
+background_input.addEventListener('change', event => {
+    // Get data
+    bg_color = background_input.value 
+
+    fetch('background/bg/color', {
+        body: JSON.stringify({'bg_color': bg_color}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
+        } else {
+            load_profile()
+        }
+    });
+})
 
 // Choose a button theme
 button_theme = document.querySelectorAll('.button-theme')
@@ -186,26 +222,15 @@ button_theme.forEach(item => {
     })
 })
 
-
-// Set custom button theme
-const btn_custom_submit = document.querySelector('#btn_custom_submit')
-btn_custom_submit.addEventListener('click', event => {
-    // Add spinnig effect
-    btn_custom_submit.disabled = true
-    document.querySelector('#btn_submitSpinner').classList.remove('d-none')
- 
-    // Delete spinning effect after .5s 
-    setTimeout((e) => {
-        btn_custom_submit.disabled = false
-        document.querySelector('#btn_submitSpinner').classList.add('d-none')
-    }, 500);
+// Set button custom background color
+var button_bg_custom_color = document.querySelector('#btn_background_color')
+button_bg_custom_color.addEventListener('change', event => {
 
     // Get data
-    bg_color = document.querySelector('#btn_background_color').value 
-    font_color = document.querySelector('#btn_font_color').value 
+    bg_color = button_bg_custom_color.value 
 
-    fetch('button/custom/choose', {
-        body: JSON.stringify({'bg_color': bg_color, 'font_color': font_color}),
+    fetch('button/bg/color', {
+        body: JSON.stringify({'bg_color': bg_color}),
         method: 'POST',
         headers: {
             'Accept': 'application/json',
@@ -228,6 +253,39 @@ btn_custom_submit.addEventListener('click', event => {
         }
     });
 })
+
+
+// Set button custom font color
+var button_font_custom_color = document.querySelector('#btn_font_color')
+button_font_custom_color.addEventListener('change', event => {
+    // Get data
+    font_color = button_font_custom_color.value 
+
+    fetch('button/font/color', {
+        body: JSON.stringify({'font_color': font_color}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            if (data.error == 'no-premium') {
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
+        } else {
+            load_profile()
+        }
+    });
+})
+
 
 // Set button fill to transparent
 btn_color_area = document.getElementById('btn-color-area')
@@ -423,4 +481,149 @@ click_to_copy.addEventListener('click', () => {
     tempInput.select();
     document.execCommand('copy');
     document.body.removeChild(tempInput);
+})
+
+
+// Change image when pick file 
+const imgPreview = document.getElementById('imgPreview')
+const imageField = document.getElementById('imageField')
+
+// Image validation
+
+// image-box is the id of the div element that will store our cropping image preview
+const imagebox = document.getElementById('image-box')
+    // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+const crop_btn = document.getElementById('crop-btn')
+
+const imageFeedback = document.querySelector('.image-feedback')
+
+imageField.addEventListener('change', () => {
+    imageFeedback.classList.remove('is-invalid')
+    imageFeedback.classList.remove('is-valid')
+    imageFeedback.style.display = 'none'
+
+    const allowedExtensions =  ['jpg','png', 'jpeg'],
+          sizeLimit = 5000000; // 5 megabyte
+
+    // destructuring file name and size from file object
+    const { name:fileName, size:fileSize } = imageField.files[0];
+
+    const fileExtension = fileName.split(".").pop();
+
+    if (!allowedExtensions.includes(fileExtension.toLowerCase())) {
+        // File type not allowed
+        console.log('image invalid')
+
+        // Dispable submit button
+        console.log('zle')
+
+        imageFeedback.style.display = 'block'
+        imageFeedback.innerHTML = 'File type is not allowed.'
+    } else if (fileSize > sizeLimit) {
+        // File size is too large
+
+        console.log('image invalid')
+        // Dispable submit button
+        console.log('zle')
+        imageField.classList.add('is-invalid')
+
+        imageFeedback.style.display = 'block'
+        imageFeedback.innerHTML = 'File size is too large.'
+    } else {
+        // Image is valid
+        console.log('image valid')
+
+        imageField.classList.remove('is-invalid')
+        imageField.classList.add('is-valid')
+
+        // Getting image file object from the input variable
+        const img_data = imageField.files[0]
+        // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+        // The new object URL represents the specified File object or Blob object.
+        const url = URL.createObjectURL(img_data)
+
+        // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+        imagebox.innerHTML = `<img src="${url}" id="image" style="width:100%;">`
+
+        // Storing that cropping view image in a variable
+        const image = document.getElementById('image')
+
+        // Creating a croper object with the cropping view image
+        // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+        // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+        const cropper = new Cropper(image, {
+            autoCropArea: 1,
+            viewMode: 1,
+            scalable: false,
+            zoomable: false,
+            movable: false,
+            minCropBoxWidth: 100,
+            minCropBoxHeight: 100,
+        })
+
+        // When crop button is clicked this event will get triggered
+        crop_btn.addEventListener('click', ()=>{
+            // This method coverts the selected cropped image on the cropper canvas into a blob object
+            cropper.getCroppedCanvas().toBlob((blob)=>{
+                
+                // Gets the original image data
+                let fileInputElement = document.getElementById('imageField');
+                // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+                let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
+                // Create a new container
+                let container = new DataTransfer();
+                // Add the cropped image file to the container
+                container.items.add(file);
+                // Replace the original image file with the new cropped image file
+
+                fileInputElement.files = container.files;
+
+
+                imgPreview.src = URL.createObjectURL(file)
+
+                var data = new FormData()
+                data.append('background_image', file)
+
+                console.log(data)
+
+                // Send file to backend
+                fetch('background/bg/image', {
+                    body: data,
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                        'X-Requested-With':'XMLHttpRequest'
+                    },
+                }).then(res=>res.json()).then(data=>{
+                    console.log('data', data)
+                    if(data.error) {
+                        if (data.error == 'no-premium') {
+                            // Show premium modal
+                            var premiumModal = new bootstrap.Modal(premium_modal, {});
+                            premiumModal.show();
+                            
+                        } else {
+                            alert(data.error)
+                        } 
+                    } else {
+                        load_profile()
+                    }
+                });
+
+                });
+        });
+
+    }
+
+})
+
+
+// Show premium modal after clicking on 'Premium' badge
+document.querySelectorAll('.premium-badge').forEach((badge)=>{
+    badge.addEventListener('click', () => {
+        // Show premium modal
+        var premiumModal = new bootstrap.Modal(premium_modal, {});
+        premiumModal.show();
+    })
 })

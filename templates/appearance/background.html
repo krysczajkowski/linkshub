@@ -9,6 +9,11 @@
 <link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
 
 <div class="mx-3 mt-4">
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-10 offset-lg-1">
+            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
             {% include 'partials/_alerts.html' %}
@@ -50,23 +55,22 @@
                                 {% endfor %}
                             </div>
                     
-                        <div class="mt-5">
+                        <div class="mt-3">
                             <span class="form-label fw-bold font-size-11">Custom Theme</span>
                             {% if membership == 0 %}
-                                <span class="badge ms-1 p-1 font-size-07 bg-success"><i class="me-1 fas fa-lock"></i>Premium</span>
+                                <span class="badge ms-1 p-1 font-size-07 bg-success premium-badge"><i class="me-1 fas fa-lock"></i>Premium</span>
                             {% endif %}
                             
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background color:</p>
-                            <input type="color" class="input_color border p-0" id="bg_background_color" name='background_color' value="#563d7c" title="Choose background color">
-            
+                            <input type="color" class="input_color border p-0" id="bg_background_color" name='background_color' value="{{bg_bg_color}}" title="Choose background color">
+
+
+                            <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background image:</p>
+                            <img src="{{ bg_img_url }}" class="img-fluid rounded-circle mt-1 border" style="height: 50px; width: 50px;" id="imgPreview" onclick="document.getElementById('imageField').click(); return false">
+                            <div class="image-feedback invalid-feedback" style='display:none;'></div>
             
                             <p for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</p>
-                            <input type="color" class="input_color border p-0" id="bg_font_color" name='font_color' value="#000" title="Choose your color">
-                            <br>
-                            <button class='btn btn-primary py-1 px-3 my-1' id='bg_custom_submit'>
-                                <span class="spinner-border spinner-border-sm me-2 d-none" id='bg_submitSpinner' role="status" aria-hidden="true"></span>
-                                Save
-                            </button>
+                            <input type="color" class="input_color border p-0" id="bg_font_color" name='font_color' value="{{bg_font_color}}" title="Choose your color">
                         </div>
 
                     </div>
@@ -75,7 +79,7 @@
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingTwo">
                     <button class="accordion-button collapsed bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                      Buttons
+                      Links
                     </button>
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
@@ -95,20 +99,15 @@
                             <div class="mt-3">
                                 <span class="form-label fw-bold font-size-11">Custom Theme</span>
                                 {% if membership == 0 %}
-                                    <span class="badge ms-1 p-1 font-size-07 bg-success"><i class="me-1 fas fa-lock"></i>Premium</span>
+                                    <span class="badge ms-1 p-1 font-size-07 bg-success text-white premium-badge"><i class="me-1 fas fa-lock "></i>Premium</span>
                                 {% endif %}
 
                                 <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Background/Border color:</p>
-                                <input type="color" class="input_color border p-0" id="btn_background_color" name='background_color' value="#563d7c" title="Choose background color">
+                                <input type="color" class="input_color border p-0" id="btn_background_color" name='background_color' value="{{btn_bg_color}}" title="Choose background color">
                 
                 
                                 <p for="font_color" class='fw-bold font-size-08 text-muted mb-0 mt-2'>Font color:</p>
-                                <input type="color" class="input_color border p-0" id="btn_font_color" name='font_color' value="#000" title="Choose your color">
-                                <br>
-                                <button class='btn btn-primary py-1 px-3 my-1' id='btn_custom_submit'>
-                                    <span class="spinner-border spinner-border-sm me-2 d-none" id='btn_submitSpinner' role="status" aria-hidden="true"></span>
-                                    Save
-                                </button>
+                                <input type="color" class="input_color border p-0" id="btn_font_color" name='font_color' value="{{btn_font_color}}" title="Choose your color">
                             </div>
                         </div>
 
@@ -126,7 +125,7 @@
                         <div class='mt-5'>
                             <span class="form-label fw-bold font-size-11">Outline</span>
                             {% if membership == 0 %}
-                                <span class="badge ms-2 p-1 font-size-07 bg-success"><i class="me-1 fas fa-lock"></i>Premium</span>
+                                <span class="badge ms-2 p-1 font-size-07 bg-success premium-badge"><i class="me-1 fas fa-lock"></i>Premium</span>
                             {% endif %}
                             
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>Sharp</p>
@@ -143,7 +142,7 @@
                         <div class='mt-5'>
                             <span class="form-label fw-bold font-size-11">Shadow</span>
                             {% if membership == 0 %}
-                                <span class="badge ms-2 p-1 font-size-07 bg-success"><i class="me-1 fas fa-lock"></i>Premium</span>
+                                <span class="badge ms-2 p-1 font-size-07 bg-success premium-badge"><i class="me-1 fas fa-lock"></i>Premium</span>
                             {% endif %}
                             
                             <p for="background_color" class='fw-bold font-size-08 text-muted mb-0 mt-1'>None</p>
@@ -174,24 +173,46 @@
     </div>
 </div>
 
+<!-- Background image input -->
+<input type="file" class='d-none' id='imageField' name='background_image' accept='.jpg, .png' data-bs-toggle="modal" data-bs-target="#cropModal">
+
+<!-- Crop Image Modal -->
+<div class="modal fade" id="cropModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop your profile picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="image-box"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary w-100" id="crop-btn" type="button" data-bs-dismiss="modal">Crop</button>
+        </div>
+        </div>
+    </div>
+</div>
+
 <!-- Premium Modal -->
 <div class="modal fade" id='premium-modal' tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title font-size-12 fw-bold"  style='letter-spacing: 0.5px'>LinksHub Premium</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Kup premke.</p>
+          <img src="https://cdn.vox-cdn.com/thumbor/9zHVj4OnM5pYeO8rCX-W4aL-lw0=/0x0:4428x1993/1200x800/filters:focal(1872x1198:2580x1906)/cdn.vox-cdn.com/uploads/chorus_image/image/63371518/shutterstock_785442694.0.jpg" class='img-fluid rounded' alt="">
+          <p class='mt-4 mb-0'>For $3.5 you get blah blah, consectetur adipiscing elit. Maecenas at tincidunt augue. In in lectus pretium, fringilla est nec, sodales urna. In in augue augue. Nam nisi turpis</p>
         </div>
         <div class="d-grid gap-2">
-            <a class="btn btn-primary m-3" type="button" href='{% url "join" %}'>Get Premium</a>
+            <a class="btn btn-primary m-3 fw-bold" type="button"  style='letter-spacing: 0.5px' href='{% url "join" %}'>More Info</a>
           </div>
       </div>
     </div>
   </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
 <script src="{% static 'js/background.js' %}"></script>
-<!-- <script src="{% static 'js/profile_premium_links.js' %}"></script> -->
 {% endblock %}

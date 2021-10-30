@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 from django.contrib import messages
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lcnm-ojf6ts$n)u2(1c5xpt5i3oxbcls&xhy50nr43k*q70hw*'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'settings',
     'dashboard',
     'premium',
+    'sitepolicy',
 ]
 
 MIDDLEWARE = [
@@ -83,8 +85,12 @@ WSGI_APPLICATION = 'linkshub.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'LinksHub',
+        'USER': 'postgres',
+        'PASSWORD': '12345KRYSpostgres',
+        'HOST': 'localhost',
+        'PORT': '5432'
     }
 }
 
@@ -122,12 +128,27 @@ USE_L10N = True
 USE_TZ = True
 
 
+# AWS 
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = 'linkshub'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+AWS_DEFAULT_ACL = 'public-read'
+
+AWS_LOCATION = 'static'
+STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
+
+DEFAULT_FILE_STORAGE = 'linkshub.storages.MediaStore'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # Configure static files
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+#STATIC_URL = '/static/'
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'linkshub/static')
 ]
@@ -150,11 +171,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Email stuff
-# Nie zapomnij wsrac tego do innego pliku
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'czajkowski.krystian@gmail.com'
-EMAIL_HOST_PASSWORD = '12345KRYSgmail'
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 
@@ -162,8 +182,7 @@ EMAIL_USE_TLS = True
 
 GOOGLE_RECAPTCHA_SITE_KEY = '6LcNP9kaAAAAAL2F5s_4o84Ha39xZYXxV4Y3XaCO'
 
-GOOGLE_RECAPTCHA_SECRET_KEY = '6LcNP9kaAAAAAJwdxniqyeZQe6mqFJh0IHWGbqHw'
-
+GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 # GEOIP
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')

@@ -11,5 +11,6 @@ urlpatterns = [
     path('edit/password', views.PasswordChangeView.as_view(template_name='settings/change_password.html'), name='change_password'),
     path('edit/password/done', views.password_reset_done, name='password_reset_done'),
     path('membership', membership, name='membership'),
-    path('logout', views.logout, name='logout')
+    path('logout', views.logout, name='logout'),
+    path('delete_account', views.delete_account, name='delete_account')
 ]

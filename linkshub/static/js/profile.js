@@ -69,3 +69,19 @@ platforms.forEach(platform => {
         });
     })
 })
+
+
+// Register visitor
+fetch('dashboard/register_visitor', {
+    body: JSON.stringify({'user_id': user_id}),
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json; charset=UTF-8',
+        'X-CSRFToken': csrftoken
+      },
+}).then(res=>res.json()).then(data=>{
+    if(data.error) {
+        alert(data.error)
+    }
+});

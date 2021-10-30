@@ -1,6 +1,7 @@
 from django.contrib.gis.geoip2 import GeoIP2
+import datetime
 
-from premium.models import Customer 
+from premium.models import Customer, PremiumFreeTrial
 
 # Get visit of your profile date
 def get_view_date(view):
@@ -38,10 +39,31 @@ def get_location(request):
 
     return {'country': country, 'city': city}
 
-def get_membership(request):
+def get_membership(user):
+    # Get paid membership
     try: 
-        membership = Customer.objects.get(user=request.user).membership
+        membership = Customer.objects.get(user=user).membership
     except:
-        membership = 0
+        membership = False
 
-    return membership
+    # Get Free Trial
+    try:
+        end_date = PremiumFreeTrial.objects.get(user=user).end_date
+        today = datetime.date.today()
+
+        # Get time delta
+        delta = end_date - today
+
+        # Free trial is still on
+        if delta.days >= 0:
+            trial = True 
+        else:
+            trial = False
+    except:
+        trial = False
+
+    # Return status
+    if membership or trial:
+        return True 
+    else:
+        return False

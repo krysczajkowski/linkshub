@@ -16,6 +16,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 import requests
+from django.template.loader import render_to_string 
 
 
 from .utils import token_generator, username_validation
@@ -34,6 +35,10 @@ class EmailThread(threading.Thread):
 # Create your views here.
 class RegistrationView(View):
     def get(self, request):
+        # Check if user is authenticated
+        if request.user.is_authenticated:
+            return redirect('/profile/')
+
         return render(request, 'authentication/register.html', {'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
 
     def post(self, request):
@@ -94,7 +99,7 @@ class RegistrationView(View):
                 bg_theme = BackgroundTheme.objects.get(name='white')
                 btn_theme = ButtonTheme.objects.get(name='dark')
 
-                user_theme = UserTheme(user=user, background_theme=bg_theme, button_theme=btn_theme, button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
+                user_theme = UserTheme.objects.create(user=user, background_theme=bg_theme, button_theme=btn_theme, button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
 
                 email_subject = 'Activate your account'
 
@@ -126,7 +131,7 @@ class RegistrationView(View):
 
                 #email.send(fail_silently=False) # show errors if there are any
 
-                messages.success(request, 'Account created. Activate your account in gmail.')
+                messages.info(request, 'Account created. Activate your account in gmail.')
             else:
                 messages.error(request, error_msg)
 
@@ -156,13 +161,17 @@ class VerificationView(View):
             return redirect('login')
 
         except Exception as e:
-            raise
+            messages.info(request, 'Activation link is invalid.')
 
         return redirect('login')
 
 
 class LoginView(View):
     def get(self, request):
+        # Check if user is authenticated
+        if request.user.is_authenticated:
+            return redirect('/profile/')
+            
         return render(request, 'authentication/login.html')
 
     def post(self, request):
@@ -219,7 +228,10 @@ class RequestPasswordResetEmail(View):
 
             reset_url = 'http://' + domain + link
 
-            email_body = f'Hi {user[0].username}. Please use this link to reset your password. {reset_url}'
+            # email_body = f'Hi {user[0].username}. Please use this link to reset your password. {reset_url}'
+
+
+            email_body = render_to_string('mails/reset-password.html', {'reset_url': reset_url})
 
             email_subject = 'Password Reset Instructions'
 
@@ -237,9 +249,11 @@ class RequestPasswordResetEmail(View):
                 'czajkowski.biznes@gmail.com',
                 [email],
             )
+            email.content_subtype = 'html'
+
             EmailThread(email).start()
 
-            messages.success(request, 'Log in to your gmail, biatch.')
+            messages.success(request, 'Reset link was sent to your email.')
         else:
             messages.error(request, "This email does not exist")
 
@@ -329,11 +343,7 @@ class EmailValidationView(View):
             return JsonResponse({'email_error': 'Email is invalid.'}, status=400)
 
         if User.objects.filter(email=email).exists():
-            if request.user:
-                if request.user.email != email:
-                    return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
-            else:
-                return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
+            return JsonResponse({'email_error': 'Sorry, this email is already in use.'}, status=409)
 
         return JsonResponse({'email_valid': True})
 

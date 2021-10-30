@@ -22,3 +22,11 @@ class PasswordChangingForm(PasswordChangeForm):
     class Meta:
         model = User 
         fields = ('old_password', 'new_password1', 'new_password2')
+
+
+class DeleteAccountForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput())
+
+    class Meta:
+        model = User

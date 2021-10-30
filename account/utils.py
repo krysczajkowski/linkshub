@@ -46,7 +46,6 @@ def validate_image(image, everything_ok, error_msg):
 
     image_extention = imghdr.what(image)
     
-    print(image_extention)
     if image_extention is None:
         everything_ok = False
         error_msg = 'Please provide a valid image.'

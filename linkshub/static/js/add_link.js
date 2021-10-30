@@ -57,7 +57,15 @@ descriptionField.addEventListener('focusout', (e) => {
 })
 
 
-// Url field validation
+// Detect youtube link function
+function detect_youtube_url(url){
+    var regExp = /^https?\:\/\/(?:www\.youtube(?:\-nocookie)?\.com\/|m\.youtube\.com\/|youtube\.com\/)?(?:ytscreeningroom\?vi?=|youtu\.be\/|vi?\/|user\/.+\/u\/\w{1,2}\/|embed\/|watch\?(?:.*\&)?vi?=|\&vi?=|\?(?:.*\&)?vi?=)([^#\&\?\n\/<>"']*)/i;
+    var match = url.match(regExp);
+    return (match && match[1].length==11)? match[1] : false;
+}
+
+
+// Url field validation function
 function validURL(str) {
   var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
     '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
@@ -70,6 +78,15 @@ function validURL(str) {
 
 const urlField = document.querySelector('#urlField')
 const urlFeedback = document.querySelector('.url-feedback')
+const youtubeCheckboxArea = document.querySelector('#youtube-checkbox-area')
+
+// Detect youtube url 
+if (detect_youtube_url(urlField.value)) {
+    youtubeCheckboxArea.classList.remove('d-none')
+} else {
+    youtubeCheckboxArea.classList.add('d-none')
+}
+
 
 urlField.addEventListener('focusout', (e) => {
     const urlValue = e.target.value;
@@ -77,6 +94,13 @@ urlField.addEventListener('focusout', (e) => {
     urlFeedback.classList.remove('is-invalid')
     urlFeedback.classList.remove('is-valid')
     urlFeedback.style.display = 'none'
+
+    // Detect youtube url 
+    if (detect_youtube_url(urlValue)) {
+        youtubeCheckboxArea.classList.remove('d-none')
+    } else {
+        youtubeCheckboxArea.classList.add('d-none')
+    }
 
     if (validURL(urlValue)) {
         // Dispable submit button
@@ -91,6 +115,7 @@ urlField.addEventListener('focusout', (e) => {
 
         urlField.classList.remove('is-invalid')
         urlField.classList.add('is-valid')
+
     }
 })
 
@@ -232,5 +257,4 @@ submitBtn.addEventListener('click', (e) => {
     submitBtn.disabled = true
 
 })
-
 

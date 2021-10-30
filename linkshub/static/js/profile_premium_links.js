@@ -5,6 +5,10 @@ var user_id = document.getElementById('user-id').dataset.id
 // Get user theme
 function get_user_theme() {
     var profile_container = document.querySelector('.profile-container')
+    var tutorial_helper_links = document.querySelectorAll('.tutorial-helper-links')
+    var write_your_bio = document.getElementById('write-your-bio')
+
+    var linkshub_label = document.getElementById('linkshub-label')
 
 
     fetch('/profile/get_user_theme', {
@@ -28,17 +32,38 @@ function get_user_theme() {
                 link.classList.add(data.data.btn_outline)
             });
 
+            // Style images inside links
             document.querySelectorAll('.link-image-size').forEach((img) => {
                 img.classList.add(data.data.btn_outline)
             })
 
+            // Style platforms
             document.querySelectorAll('.platform-link').forEach((platform) => {
                 platform.style.color = data.data.bg_font_color
             })
 
+            // Add (or not) linkshub label
+            if(data.data.linkshub_label == true) {
+                if (document.body.contains(linkshub_label)) {
+                    linkshub_label.innerHTML = "<a href='#' class='text-light'>Made with LinksHub.io</a>"
+                }
+            }
+
+
             // Style background
             profile_container.style = data.data.bg_bg_color
             profile_container.style.color = data.data.bg_font_color
+
+            // Style write your bio helper link
+            if(write_your_bio) {
+                write_your_bio.style.color = data.data.bg_font_color
+            }
+
+            // Style tutorial helper links
+            tutorial_helper_links.forEach((link) => {
+                link.style.color = data.data.bg_font_color;
+                link.style.border = `2px dashed ${data.data.bg_font_color}`
+            });
         }
     });
 }

@@ -84,25 +84,28 @@ imageField.addEventListener('change', () => {
 
         // When crop button is clicked this event will get triggered
         crop_btn.addEventListener('click', ()=>{
-        // This method coverts the selected cropped image on the cropper canvas into a blob object
-        cropper.getCroppedCanvas().toBlob((blob)=>{
-            
-            // Gets the original image data
-            let fileInputElement = document.getElementById('imageField');
-            // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
-            let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
-            // Create a new container
-            let container = new DataTransfer();
-            // Add the cropped image file to the container
-            container.items.add(file);
-            // Replace the original image file with the new cropped image file
+            // This method coverts the selected cropped image on the cropper canvas into a blob object
+            cropper.getCroppedCanvas().toBlob((blob)=>{
+                
+                // Gets the original image data
+                let fileInputElement = document.getElementById('imageField');
+                // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+                let file = new File([blob], img_data.name,{type:"image/*", lastModified:new Date().getTime()});
+                // Create a new container
+                let container = new DataTransfer();
+                // Add the cropped image file to the container
+                container.items.add(file);
+                // Replace the original image file with the new cropped image file
 
-            fileInputElement.files = container.files;
+                fileInputElement.files = container.files;
 
 
-            imgPreview.src = URL.createObjectURL(file)
+                imgPreview.src = URL.createObjectURL(file)
 
-            });
+                });
+
+            // Display Image
+            document.getElementById('profile-picture-info-msg').classList.remove('d-none')
         });
 
     }

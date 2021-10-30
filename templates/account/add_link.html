@@ -32,14 +32,20 @@
                         <div class="url-feedback invalid-feedback" style='display:none;'>
                         </div>
 
-                        
-                            <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
-                                {% if delete_existing_image_checkbox %}
-                                    Pick new thumbnail
-                                {% else %}
-                                    Pick a thumbnail
-                                {% endif %}
-                            </p>
+                        <div class="form-check" id='youtube-checkbox-area'>
+                            <input class="form-check-input mt-2" type="checkbox" id="display_as_yt_embed" name='display_as_yt_embed' {% if form.display_as_yt_embed.value %}checked{%endif%}>
+                            <label class="form-check-label mt-1" for="display_as_yt_embed">
+                            Display as youtube embed
+                            </label>
+                        </div>
+
+                        <p class="pt-3 mb-0 text-muted font-size-08 fw-bold">
+                            {% if delete_existing_image_checkbox %}
+                                Pick new thumbnail
+                            {% else %}
+                                Pick a thumbnail
+                            {% endif %}
+                        </p>
                         
                         <small class="text-muted font-size-08 mb-3">Only .jpg, .jpeg or .png allowed</small>
 
@@ -132,7 +138,8 @@
         var currently_selected = animation_selector.selectedOptions[0].text
 
         // Check if not premium user selects a premium animation
-        if (currently_selected != 'None' && membership == 0) {
+        if (currently_selected != 'None' && membership == 'False') {
+            
             // Not premium user selected a premium animation
             animation_selector.selectedIndex = 0
 

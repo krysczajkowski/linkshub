@@ -26,71 +26,136 @@
     <title>{{ username }} | Linkshub.io</title>
   </head>
   <body>
+    <!-- Load youtube embed  -->
+    <script src='{% static "js/load_youtube_embed.js" %}'></script>
+
     <div class="profile-container">
         {% include 'partials/_navbar.html' %}
 
         <div class="row mt-4 mx-0">
             <div class='col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3'>
-                <div class="d-flex justify-content-center">
-                    <img src="{{ profile_picture }}" alt="" style='width: 90px; height: 90x;' class='rounded-circle'> 
+                <div class="d-flex justify-content-center position-relative">
+                    {% if profile_picture %}
+                        <img src="{{ profile_picture }}" alt="" style='width: 90px; height: 90px;' class='rounded-circle'> 
+                    {% else %}
+                        <a style='width: 90px; height: 90px;' class='rounded-circle tutorial-helper-links position-relative' href='{% url "edit" %}'>
+                            <i class="fas fa-camera position-absolute top-50 start-50 translate-middle" style='font-size: 2.3rem;'></i>
+                        </a>
+                    {% endif %}
+
+                    <a class="badge bg-light position-absolute top-0 end-0 text-dark" href='{% url "appearance" %}'><h6 class="fw-bold mb-0">Change Theme</h6></a>
                 </div>     
                 <div class="col-12 text-center mt-2">
                     <p class='fw-bold font-size-11 mb-2'>{{username}}</p>
-                    <p style='white-space: pre-line; '>{{description}}</p>
+                    {% if description %}
+                        <p style='white-space: pre-line; '>{{description}}</p>
+                    {% else %}
+                        <a href="{% url 'edit' %}" id='write-your-bio'>
+                            <i class="far fa-edit me-1"></i>Write Your Bio</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         
-        
-        <div class="row mx-0 pb-4">
-            {% for link in links %}
-            <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
-                <div class="row my-2">
-                    <div class="d-grid gap-2">
-                        <a href="{{link.url}}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__animated {% if membership %} animate__{{link.animation}} {%endif%}  animate__infinite animate__slow styled-link" target="_blank">
-                            {% if link.image %}
-                            <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
-                                <img src="{{ link.image.url }}" class="link-image-size">
-                            </div>
-                            <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
-                                    <span class="font-size-08 link-description">{{ link.description }}</span>
+        <div class='mt-3'>
+            {% if links %}
+            <div class="row mx-0 pb-4">
+                {% for link in links %}
+                    <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                        <div class="row my-2">
+                            <div class="d-grid gap-2">
+                                {% if not link.display_as_yt_embed %}
+                                <a href="{{link.url}}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__animated {% if membership %} animate__{{link.animation}} {%endif%}  animate__infinite animate__slow styled-link" target="_blank">
+                                    {% if link.image %}
+                                    <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
+                                        <img src="{{ link.image.url }}" class="link-image-size">
+                                    </div>
+                                    <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
+                                        <div class="d-flex flex-column text-center">
+                                            <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
+                                            <span class="font-size-08 link-description">{{ link.description }}</span>
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-12 py-2">
+                                        <div class="d-flex flex-column text-center">
+                                            <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
+                                            <span class='font-size-08'>{{ link.description }}</span>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </a>
+                                {% else %}
+                                <div class="embed-container" id='embed-{{link.id}}'>
                                 </div>
+                                <script>
+                                    load_youtube_embed('{{link.url}}', 'embed-{{link.id}}')
+                                </script>
+                                {% endif %}
                             </div>
-                            {% else %}
-                            <div class="col-12 py-2">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">{{ link.title }}</strong></span>
-                                    <span class='font-size-08'>{{ link.description }}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            {% else %}
+            <div class="row mx-0 mb-1">
+                <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                    <div class="row my-2">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'links' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 tutorial-helper-links">
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">
+                                            <i class="fas fa-plus"></i> 
+                                            Add Your Links</strong></span>
+                                    </div>
                                 </div>
-                            </div>
-                            {% endif %}
-                        </a>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
-            {% endfor %}
+            {% endif %}
         </div>
 
         <div class="row pb-3 mx-0">
+            {% if platforms %}
             <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-4 offset-xl-4">
                 <div class="row">
-                {% for platform in platforms %}
-                    <div class="col pb-3 d-flex align-items-center justify-content-center">
-                        <i class="fab fa-{{ platform.platform }}  platform-link"></i>
-                    </div>
-                {% endfor %}
+                    {% for platform in platforms %}
+                        <div class="col pb-3 d-flex align-items-center justify-content-center">
+                            <i class="fab fa-{{ platform.platform }}  platform-link"></i>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
+            {% else %}
+                <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                    <div class="row my-2">
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'platforms' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 tutorial-helper-links">
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">
+                                            <i class="fas fa-plus"></i> 
+                                            Add Social Media Links</strong></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            
         </div>
 
         {% if display_premium_links_password and membership %}
         <div class="row pb-3 mx-0 mt-4" id='premium-links-container'>
             <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
-                <p class='text-center font-size-11'>Premium Links</p>
+                <p class='font-size-08 fw-bold text-center mb-0'>PREMIUM LINKS</p>
                 <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 mt-2">
                         <input type="text" class="form-control border-0" id='premium_links_code' placeholder='Code for Premium Links'>
                         <div class="btn btn-light" id='premium-links-submit'>Submit</div>
                     </div>

@@ -30,7 +30,8 @@ class BackgroundTheme(models.Model):
 
 class CustomBackgroundTheme(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    background_color = models.CharField(max_length=100)
+    background_color = models.CharField(max_length=400)
+    background_image = models.ImageField(upload_to='background_image', null=True, blank=True)
     font_color = models.CharField(max_length=100)
 
     def __str__(self):
@@ -63,6 +64,7 @@ class UserTheme(models.Model):
     button_fill = models.CharField(max_length=120, blank=True)
     button_outline = models.CharField(max_length=120, blank=True)
     button_shadow = models.CharField(max_length=120, blank=True)
+    linkshub_label = models.BooleanField(default=True)
 
     def __str__(self):
         return f'{self.user.username}'

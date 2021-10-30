@@ -1,22 +1,27 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.models import User
+import datetime
 
 from account.models import UserPlatform, Platform, CustomLink, Profile, BannedUser, PremiumCustomLink
 from dashboard.models import ProfileView
 from appearance.models import BackgroundTheme, Theme, UserTheme, ButtonTheme
-from dashboard.utils import get_ip, get_location
-from premium.models import Customer
+from dashboard.utils import get_ip, get_location, get_membership
+from premium.models import Customer, PremiumFreeTrial
+
+def index(request):
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        return redirect('/profile/')
+    
+    return render(request, 'linkshub/index.html')
 
 def profile(request, username):
     # Get user 
     user = get_object_or_404(User, username=username)
     profile = get_object_or_404(Profile, user=user)
 
-    # Get membership status
-    try: 
-        membership = Customer.objects.get(user=user).membership
-    except:
-        membership = 0
+    # Get membership
+    membership = get_membership(request.user)
 
     # Check user ban
     try:
@@ -35,29 +40,6 @@ def profile(request, username):
     else:
         display_premium_links_password = False
 
-
-    ip = get_ip(request)
-    
-    # Get visitors location
-    location_info = get_location(request)
-    country = location_info['country']
-    city = location_info['city']
-
-    # Register visitor in database if it doesn't exist
-    # if not ProfileView.objects.filter(ip_address=ip, user=user).exists():
-
-    user_agent = request.META['HTTP_USER_AGENT']
-
-    keywords = ['Mobile','Opera Mini','Android']
-
-    if any(word in user_agent for word in keywords):
-        device = 'Mobile'
-    else:
-        device = 'Desktop'
-
-    new_visitor = ProfileView.objects.create(user=user, ip_address=ip, country=country, city=city, device=device)
-    new_visitor.save()
-
     # Get profile
     profile = Profile.objects.get(user=user)
 
@@ -72,13 +54,15 @@ def profile(request, username):
     if profile.image:
         profile_picture = profile.image.url
     else:
-        profile_picture = 'https://ocdn.eu/pulscms-transforms/1/PFLk9kpTURBXy81ZWEyNGM0MDg3ODcyYzNhNGVlMjA4OGE5YmFiMjY1Yy5qcGeTlQNYI80Cfc0BZpUCzQMHAMPDkwmmNWI4MzAxBoGhMAE/weronika-wersow-sowa-znow-ma-problemy.jpg'
+        profile_picture = '/media/profile_pic/defaultProfilePicture.png'
 
     # Get all links
     links = CustomLink.objects.filter(user=user, is_active=1).order_by('position')
 
     # Get all social media platforms
     platforms = UserPlatform.objects.filter(user=user, username__gt='',username__isnull=False)
+
+    # Get user theme function is in account/views.py
 
     context = {
         'user_id': user.id,

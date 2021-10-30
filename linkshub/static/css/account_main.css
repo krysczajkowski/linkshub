@@ -22,6 +22,26 @@ a{text-decoration: none}
     animation: jump 1s 2s forwards cubic-bezier(.84,-0.54,.31,1.19);
 }
 
+.embed-container {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+}
+
+.embed-container iframe, .embed-container object, .embed-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.premium-badge {
+    cursor: pointer;
+}
+
 /* Dashboard dots */
 .views-dot {
     height: 8px;
@@ -59,13 +79,11 @@ a{text-decoration: none}
 .btn-get-premium {
     font-size: 18px;
     color: #55c0eb;
-    letter-spacing: 1px;
     line-height: 15px;
     border: 2px solid #fff;
     background-color: #fff;
-    border-radius: 40px;
     transition: all 0.3s ease 0s;
-    padding: 0.9rem 1.6rem;
+    padding: 0.7rem 1.7rem;
 }
   
 .btn-get-premium:hover {
@@ -79,7 +97,8 @@ border: 2px solid #fff;
 }
 
 .background-premium { 
-    background-image: linear-gradient(315deg, #84dbff 0%, #55c0eb 74%);
+    background-color: #0093E9;
+    background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
 }
 
 .appearance-disable {
@@ -103,6 +122,10 @@ border: 2px solid #fff;
     border-radius: 50%;
 }
 
+.border-dashed {
+    border: 1px dashed #000;
+}
+
 /* Font sizes */
 .font-size-07 {
     font-size: 0.7rem!important;
@@ -114,6 +137,10 @@ border: 2px solid #fff;
 
 .font-size-09 {
     font-size: 0.9rem!important;
+}
+
+.font-size-10 {
+    font-size: 1rem!important;
 }
 
 .font-size-11 {
@@ -130,6 +157,10 @@ border: 2px solid #fff;
 
 .font-size-15 {
     font-size: 1.5rem
+}
+
+.font-size-2 {
+    font-size: 2rem;
 }
 
 .theme-contrainer {
@@ -220,6 +251,49 @@ th {
     width: 20%;
 }
 
+
+.showPasswordToggle:focus {
+    outline: none;
+    box-shadow: none;
+    }
+    
+
+/* Gradient text classes */
+.text-gradient-pink-blue {
+    background: -webkit-linear-gradient(-70deg, #db469f 0%, #2188ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    font-size: 3rem;
+}
+
+.text-gradient-mint-blue {
+    background: -webkit-linear-gradient(-70deg, #24C6DC 0%, #514A9D 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    font-size: 3rem;
+}
+
+.text-gradient-purple-coral {
+    background: -webkit-linear-gradient(-70deg, #9867f0 0%, #ed4e50 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    font-size: 3rem;
+}
+
+.text-gradient-coral-yellow-dark {
+    background: -webkit-linear-gradient(-70deg, #ff7170 0%, #ffe57f 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-box-decoration-break: clone;
+    font-size: 3rem;
+}
 
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {

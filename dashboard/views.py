@@ -1,5 +1,5 @@
 from django import views
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views import View
 import json
@@ -19,7 +19,7 @@ from premium.models import Customer
 @login_required(login_url='/authentication/login/')
 @check_ban
 def dashboard(request):
-    membership = get_membership(request)
+    membership = get_membership(request.user)
     return render(request, 'dashboard/dashboard.html', {'membership': membership})
 
 @login_required(login_url='/authentication/login/')
@@ -479,6 +479,39 @@ class platform_click(View):
 
             platform = UserPlatform.objects.get(id=platform_id, user=user)
             platform_click = PlatformClick.objects.create(user=user, platform=platform, country=country, city=city)
+
+        except:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+
+class register_visitor(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        user_id = data['user_id']
+
+        ip = get_ip(request)
+        
+        # Get visitors location
+        location_info = get_location(request)
+        country = location_info['country']
+        city = location_info['city']
+
+        user_agent = request.META['HTTP_USER_AGENT']
+
+        keywords = ['Mobile','Opera Mini','Android']
+
+        if any(word in user_agent for word in keywords):
+            device = 'Mobile'
+        else:
+            device = 'Desktop'
+
+        try:
+            user = User.objects.get(id=user_id)
+
+            new_visitor = ProfileView.objects.create(user=user, ip_address=ip, country=country, city=city, device=device)
+            new_visitor.save()
 
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
