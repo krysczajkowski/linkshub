@@ -160,6 +160,33 @@
                     </div>
                   </div>
                 </div>
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingThree">
+                      <button class="accordion-button bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                        Profile
+                      </button>
+                    </h2>
+                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                      <div class="accordion-body">  
+                        <!-- Display linkshub logo -->
+                        <span class='mb-3'>
+                            <span class="form-label fw-bold font-size-11">Other</span>
+                            {% if membership == 0 %}
+                                <span class="badge ms-2 p-1 font-size-07 bg-success premium-badge"><i class="me-1 fas fa-lock"></i>Premium</span>
+                            {% endif %}
+                        </span>
+
+                        <br>
+                        <span class=''>
+                            <input class="form-check-input" type="checkbox" {% if linkshub_label %} checked {% endif %} id='displayLinkshubLogoCheckbox'>
+                            <label class="form-check-label ms-2" for="displayLinkshubLogoCheckbox">
+                                Display Linkshub logo
+                            </label>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
               </div>
 
         </div>

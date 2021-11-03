@@ -397,6 +397,40 @@ btn_shadow.forEach(item => {
 })
 
 
+// Choose if display linkshub logo
+var linkshub_logo_checkbox = document.getElementById('displayLinkshubLogoCheckbox')
+
+linkshub_logo_checkbox.addEventListener('click', (e) => {
+    var display_logo = linkshub_logo_checkbox.checked 
+
+    fetch('profile/display_logo', {
+        body: JSON.stringify({'display_logo': display_logo}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+        },
+    }).then(res=>res.json()).then(data=>{
+        if(data.error) {
+            if (data.error == 'no-premium') {
+                // Check back checkbox
+                linkshub_logo_checkbox.checked = true
+
+                // Show premium modal
+                var premiumModal = new bootstrap.Modal(premium_modal, {});
+                premiumModal.show();
+                
+            } else {
+                alert(data.error)
+            } 
+        } else {
+            load_profile()
+        }
+    })
+})
+
+
 // Click to copy
 const click_to_copy = document.querySelector('#click-to-copy')
 const click_to_copy_text = document.querySelector('#click-to-copy-text')

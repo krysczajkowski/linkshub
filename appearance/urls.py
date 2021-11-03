@@ -14,5 +14,6 @@ urlpatterns = [
     path('background/bg/image', views.custom_bg_image.as_view(), name='custom_bg_image'),
     path('background/font/color', views.custom_bg_font_color.as_view(), name='custom_bg_font_color'),
     path('button/bg/color', views.custom_button_bg_color.as_view(), name='custom_button_bg_color'),
-    path('button/font/color', views.custom_button_font_color.as_view(), name='custom_button_font_color')
+    path('button/font/color', views.custom_button_font_color.as_view(), name='custom_button_font_color'),
+    path('profile/display_logo', views.display_logo.as_view(), name='display_logo')
 ]

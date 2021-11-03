@@ -41,6 +41,9 @@ def appearance(request):
         btn_transparent = True
 
 
+    # Get linkshub label
+    linkshub_label = theme_data.linkshub_label
+
     # Get background theme
     bg_theme_name = theme_data.background_theme
 
@@ -89,7 +92,8 @@ def appearance(request):
         'bg_bg_color': bg_bg_color,
         'bg_font_color': bg_font_color,
         'btn_bg_color': btn_bg_color,
-        'btn_font_color': btn_font_color
+        'btn_font_color': btn_font_color,
+        'linkshub_label': linkshub_label
     }
 
     return render(request, 'appearance/background.html', context)
@@ -384,5 +388,23 @@ class choose_shadow(View):
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
         else:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+
+# Decide if show linkshub logo
+class display_logo(View):
+    def post(self, request):
+        # Check membership
+        membership = get_membership(request.user)
+        if membership != 1:
+            return JsonResponse({'error': 'no-premium'})
+
+        data = json.loads(request.body)
+        display_logo = bool(data['display_logo'])
+
+        user_theme = UserTheme.objects.get(user=request.user)
+        user_theme.linkshub_label = display_logo
+        user_theme.save()
 
         return JsonResponse({'success': True})
