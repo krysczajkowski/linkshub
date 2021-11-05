@@ -45,7 +45,9 @@ function get_user_theme() {
             // Add (or not) linkshub label
             if(data.data.linkshub_label == true) {
                 if (document.body.contains(linkshub_label)) {
-                    linkshub_label.innerHTML = "<a href='#' class='text-light'>Made with LinksHub.io</a>"
+                    linkshub_label.innerHTML = "<a href='https://linkshub.io/' id='linkshub-label-link'>Made with LinksHub.io</a>"
+
+                    document.getElementById('linkshub-label-link').style.color = data.data.bg_font_color
                 }
             }
 
