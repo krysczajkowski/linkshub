@@ -363,7 +363,7 @@ class get_user_theme(View):
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         # Get membership
-        membership = get_membership(request.user)
+        membership = get_membership(user)
 
         # Get background theme
         bg_theme_name = UserTheme.objects.get(user=user).background_theme

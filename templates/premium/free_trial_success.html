@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-12 col-md-8 col-lg-6 offset-md-2 offset-lg-3">
+      <div class="card" style='z-index: 1000000000;'>
+        <div class="card-body text-center">
+          <img src="/media/premium/success.png" class="text-center w-25 mb-4" alt="...">
+
+          <h5 class="card-title fw-bold font-size-15 text-success">You are Premium now!</h5>
+          <p class="card-text">Thank you for activating LinksHub Premium Free Trial. We hope you like it!</p>
+
+          <p class='card-text'>
+            Your free trial ends at <span id='free_trial_end_date_span' class='fw-bold'></span>.
+          </p>
+
+          <div class="d-grid gap-2 mt-5"> 
+              <a href="{% url 'appearance' %}" class="btn btn-success fw-bold font-size-12">Go to Appearance</a>
+              <a href="{% url 'dashboard' %}" class="btn btn-light fw-bold font-size-09">Go to Analytics</a>
+              <a href="{% url 'premium_links' %}" class="btn btn-light fw-bold font-size-09">Go to Private Links</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{% static 'js/confetti.js' %}"></script>
+<script>
+    // Display free trial end date
+    if (sessionStorage.getItem('free_trial_end_date')) {
+        const free_trial_end_date = sessionStorage.getItem('free_trial_end_date').slice(0, 10)
+    
+        document.getElementById('free_trial_end_date_span').innerHTML = free_trial_end_date
+    }
+
+
+    // for starting the confetti 
+    const start = () => {
+        setTimeout(function() {
+            confetti.start()
+        }, 1000); 
+    };
+
+    //  for stopping the confetti 
+    const stop = () => {
+        setTimeout(function() {
+            confetti.stop()
+        }, 3500);
+    };
+    // after this here we are calling both the function so it works
+    start();
+    stop();
+</script>
+{% endblock %}

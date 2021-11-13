@@ -215,13 +215,16 @@ def updateaccounts(request):
 # Add premium link click  
 class start_free_trial(View):
     def post(self, request):
+        date = datetime.datetime.now() + datetime.timedelta(days=45)
+
         try:
             get_trial = PremiumFreeTrial.objects.get(user=request.user)
 
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409) 
         except PremiumFreeTrial.DoesNotExist:
-            date = datetime.datetime.now() + datetime.timedelta(days=45)
             PremiumFreeTrial.objects.create(user=request.user, end_date=date)
+        
+        return JsonResponse({'end_date': date})
 
-
-        return JsonResponse({'success': True})
+def free_trial_success(request):
+    return render(request, 'premium/free_trial_success.html')

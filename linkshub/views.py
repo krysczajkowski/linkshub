@@ -21,7 +21,7 @@ def profile(request, username):
     profile = get_object_or_404(Profile, user=user)
 
     # Get membership
-    membership = get_membership(request.user)
+    membership = get_membership(user)
 
     # Check user ban
     try:

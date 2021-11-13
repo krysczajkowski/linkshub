@@ -50,7 +50,7 @@
                 <div class="row my-2">
                     <div class="d-grid gap-2">
                         {% if not link.display_as_yt_embed %}
-                            <a href="#" id='{{ link.id }}' class="btn mt-2 mx-0 row d-flex px-2 py-1 link-click animate__animated {% if membership %} animate__{{link.animation}} {%endif%} animate__infinite animate__slow styled-link" target="_blank">
+                            <a href="{{ link.url }}" id='{{ link.id }}' class="btn mt-2 mx-0 row d-flex px-2 py-1 link-click animate__animated {% if membership %} animate__{{link.animation}} {%endif%} animate__infinite animate__slow styled-link" target="_blank">
                                 {% if link.image %}
                                 <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
                                     <img src="{{ link.image.url }}" class="link-image-size">

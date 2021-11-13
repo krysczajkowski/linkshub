@@ -176,6 +176,7 @@ EMAIL_PORT = '587'
 EMAIL_HOST_USER = 'czajkowski.krystian@gmail.com'
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'Linkshub.io <noreply@linkshub.io>'
 
 
 # Google recaptcha

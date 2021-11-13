@@ -1,7 +1,7 @@
 from functools import wraps
 from django.http import HttpResponseRedirect
-
 from django.shortcuts import render, redirect
+
 from .models import BannedUser
 
 def check_ban(function):

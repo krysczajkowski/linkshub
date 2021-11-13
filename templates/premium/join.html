@@ -486,7 +486,10 @@
           if(data.error) {
               alert(data.error)
           } else {
-              location.replace('http://127.0.0.1:8000/premium/success')
+              // Set free trial end date
+              sessionStorage.setItem('free_trial_end_date', data.end_date)
+              
+              location.replace('http://127.0.0.1:8000/premium/success/free_trial')
           }
       });
     })

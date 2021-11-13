@@ -167,12 +167,7 @@
         transform: translateZ(0) scaleY(1);
     }
 }
-.animate__bounce {
-    -webkit-animation-name: bounce;
-    animation-name: bounce;
-    -webkit-transform-origin: center bottom;
-    transform-origin: center bottom;
-}
+
 @-webkit-keyframes flash {
     0%,
     50%,
@@ -232,6 +227,7 @@
     animation-name: pulse;
     -webkit-animation-timing-function: ease-in-out;
     animation-timing-function: ease-in-out;
+    animation-duration: 2.5s;
 }
 @-webkit-keyframes rubberBand {
     0% {
@@ -293,10 +289,7 @@
         transform: scaleX(1);
     }
 }
-.animate__rubberBand {
-    -webkit-animation-name: rubberBand;
-    animation-name: rubberBand;
-}
+
 @-webkit-keyframes shakeX {
     0%,
     to {
@@ -450,6 +443,7 @@
     animation-timing-function: ease-in-out;
     -webkit-animation-name: headShake;
     animation-name: headShake;
+    animation-duration: 2.5s;
 }
 @-webkit-keyframes swing {
     20% {
@@ -548,6 +542,7 @@
 .animate__tada {
     -webkit-animation-name: tada;
     animation-name: tada;
+    animation-duration: 2.5s;
 }
 @-webkit-keyframes wobble {
     0% {
@@ -637,12 +632,7 @@
         transform: skewX(-1.125deg) skewY(-1.125deg);
     }
 }
-.animate__jello {
-    -webkit-animation-name: jello;
-    animation-name: jello;
-    -webkit-transform-origin: center;
-    transform-origin: center;
-}
+
 @-webkit-keyframes heartBeat {
     0% {
         -webkit-transform: scale(1);
@@ -3616,4 +3606,64 @@
 .animate__slideOutUp {
     -webkit-animation-name: slideOutUp;
     animation-name: slideOutUp;
+}
+
+/* Animations for mobile phones */
+@media (max-width: 800px) {
+
+    /* Bounce */
+    .animate__bounce {
+        -webkit-animation-name: bounce;
+        animation-name: bounce;
+        animation-duration: 4s;
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+    }
+
+    /* Rubber Band */
+    .animate__rubberBand {
+        -webkit-animation-name: rubberBand;
+        animation-name: rubberBand;
+        animation-duration: 4s;
+    }
+
+    /* Jello */
+    .animate__jello {
+        -webkit-animation-name: jello;
+        animation-name: jello;
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        animation-duration: 4s;
+    }
+
+}
+
+/* Animations for desktops */
+@media (min-width: 800px) {
+
+    /* Bounce */
+    .animate__bounce {
+        -webkit-animation-name: bounce;
+        animation-name: bounce;
+        animation-duration: 2.5s;
+        -webkit-transform-origin: center bottom;
+        transform-origin: center bottom;
+    }
+
+    /* Rubber Band */
+    .animate__rubberBand {
+        -webkit-animation-name: rubberBand;
+        animation-name: rubberBand;
+        animation-duration: 2.5s;
+    }
+
+    /* Jello */
+    .animate__jello {
+        -webkit-animation-name: jello;
+        animation-name: jello;
+        -webkit-transform-origin: center;
+        transform-origin: center;
+        animation-duration: 2.5s;
+    }
+
 }
