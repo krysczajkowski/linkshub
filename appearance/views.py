@@ -93,7 +93,8 @@ def appearance(request):
         'bg_font_color': bg_font_color,
         'btn_bg_color': btn_bg_color,
         'btn_font_color': btn_font_color,
-        'linkshub_label': linkshub_label
+        'linkshub_label': linkshub_label,
+        'username': request.user.username
     }
 
     return render(request, 'appearance/background.html', context)

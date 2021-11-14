@@ -221,39 +221,31 @@ class RequestPasswordResetEmail(View):
         user = User.objects.filter(email=email)
 
         if user.exists():
-            uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
-            domain = get_current_site(request).domain
+            try:
+                uidb64 = urlsafe_base64_encode(force_bytes(user[0].pk))
+                domain = get_current_site(request).domain
 
-            link = reverse('reset-user-password', kwargs={'uidb64': uidb64, 'token': PasswordResetTokenGenerator().make_token(user[0])})
+                link = reverse('reset-user-password', kwargs={'uidb64': uidb64, 'token': PasswordResetTokenGenerator().make_token(user[0])})
 
-            reset_url = 'http://' + domain + link
+                reset_url = 'http://' + domain + link
 
-            # email_body = f'Hi {user[0].username}. Please use this link to reset your password. {reset_url}'
+                email_body = render_to_string('mails/reset-password.html', {'reset_url': reset_url})
 
+                email_subject = 'Password Reset Instructions'
 
-            email_body = render_to_string('mails/reset-password.html', {'reset_url': reset_url})
+                email = EmailMessage(
+                    email_subject,
+                    email_body,
+                    'czajkowski.biznes@gmail.com',
+                    [email],
+                )
+                email.content_subtype = 'html'
 
-            email_subject = 'Password Reset Instructions'
+                EmailThread(email).start()
 
-            '''
-            email = send_mail(
-                email_subject,
-                email_body,
-                'czakowski.biznes@gmail.com',
-                [email],
-            )
-            '''
-            email = EmailMessage(
-                email_subject,
-                email_body,
-                'czajkowski.biznes@gmail.com',
-                [email],
-            )
-            email.content_subtype = 'html'
-
-            EmailThread(email).start()
-
-            messages.success(request, 'Reset link was sent to your email.')
+                messages.success(request, 'Reset link was sent to your email.')
+            except:
+                messages.error(request, "Sorry, something went wrong")
         else:
             messages.error(request, "This email does not exist")
 
