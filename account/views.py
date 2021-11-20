@@ -192,6 +192,17 @@ def platforms(request):
                 error_msg_platform = f'{platform.name}'
                 error_msg = f'Link: "{platform.link}{platform_username}" is invalid'
 
+            # Check if url is not doubled (in case if someone pasted whole url to the field)
+
+            # Platforms urls 
+            platforms_url = ['https://instagram.com/', 'https://tiktok.com/', 'https://youtube.com/', 'https://twitter.com/', 'https://twitch.tv/', 'https://facebook.com/', 'https://snapchat.com/add/', 'https://linkedin.com/in/', 'https://pinterest.com/', 'https://open.spotify.com/', 'https://soundcloud.com/', 'https://github.com/','https://www.instagram.com/', 'https://www.tiktok.com/', 'https://www.youtube.com/', 'https://www.twitter.com/', 'https://www.twitch.tv/', 'https://www.facebook.com/', 'https://www.snapchat.com/add/', 'https://www.linkedin.com/in/', 'https://www.pinterest.com/', 'https://www.open.spotify.com/', 'https://www.soundcloud.com/', 'https://www.github.com/']
+
+            # Cut platform url from platform_username
+            for platform_url in platforms_url:
+                if platform_url in platform_username:
+                    platform_username = platform_username.replace(platform_url, '')
+
+
             # Update platformy
             if everything_ok == 1:
                 UserPlatformInstance = UserPlatform.objects.get(user=request.user, platform=platform.name)
