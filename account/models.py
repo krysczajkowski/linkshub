@@ -61,6 +61,7 @@ class PremiumCustomLink(models.Model):
     image = models.ImageField(upload_to='premium_link_img', blank=True, null=True)
     animation = models.ForeignKey(LinkAnimation, on_delete=models.SET_NULL, null=True)
     is_active = models.BooleanField(default=True)
+    display_as_yt_embed = models.BooleanField(default=False)
     position = models.IntegerField(default=0, blank=True)
 
     def __str__(self):

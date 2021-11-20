@@ -378,7 +378,7 @@ def city_table(request):
     # Whole table data
     data = []
     for city, country in cities:
-        visitors_num = visitors.filter(city=city).count()
+        visitors_num = visitors.filter(city=city, country=country).count()
         links_clicks_num = links_clicks.filter(city=city).count()
         premium_links_clicks_num = premium_links_clicks.filter(country=country).count()
         platforms_clicks_num = platforms_clicks.filter(city=city).count()
@@ -386,6 +386,8 @@ def city_table(request):
         temp_dict = {'city': city, 'country': country, 'visitors': visitors_num, 'links_clicks': links_clicks_num, 'premium_links_clicks': premium_links_clicks_num, 'platforms_clicks': platforms_clicks_num}
 
         data.append(temp_dict)
+
+    print(data)
 
     return JsonResponse({'data': data}, safe=False)
 

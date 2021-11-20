@@ -39,10 +39,33 @@
                   <img src="{{ link.image.url }}" class="img-fluid rounded" style="max-height: 150px!important; width: auto;" alt="...">
               </div>
               <div class="col-8 col-md-10">
-                <div class="card-body py-1 pl-0">
+                <div class="card-body py-1">
+                  <!-- Title -->
                   <h5 class="mt-2">{{ link.title }}</h5>
-                  <p class="mb-1">{{ link.description }}</p>
-                  <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+
+                  <!-- Description -->
+                  <p class="mb-3">{{ link.description }}</p>
+
+                  <div class="font-size-09 mb-2">
+                    <!-- Animation -->
+                    {% if link.animation.name != "None" %}
+                      <p class='card-text mb-1' style='text-transform: capitalize;'>
+                        <i class="far fa-eye pe-1 text-dark"></i>
+                        {{link.animation}}
+                      </p>
+                    {% endif %}
+
+                    <!-- YT embed -->
+                    {% if link.display_as_yt_embed %}
+                      <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
+                    {% endif %}
+
+                    <!-- Link -->
+                    <p class="card-text"><small class="text-muted">
+                      <i class="fas fa-link text-muted pe-1"></i>
+                      {{ link.url }}</small>
+                    </p>
+                  </div>
                 </div>
               </div>
               <div class="col-2 col-md-1">
@@ -84,9 +107,32 @@
             <div class="row g-0">
               <div class="col-10 col-md-11">
                 <div class="card-body py-1">
+                  <!-- Title -->
                   <h5 class="mt-2">{{ link.title }}</h5>
-                  <p class="mb-1">{{ link.description }}</p>
-                  <p class="card-text"><small class="text-muted">{{ link.url }}</small></p>
+
+                  <!-- Description -->
+                  <p class="mb-3">{{ link.description }}</p>
+
+                  <div class="font-size-09 mb-2">
+                    <!-- Animation -->
+                    {% if link.animation.name != "None" %}
+                      <p class='card-text mb-1' style='text-transform: capitalize;'>
+                        <i class="far fa-eye pe-1 text-dark"></i>
+                        {{link.animation}}
+                      </p>
+                    {% endif %}
+
+                    <!-- YT embed -->
+                    {% if link.display_as_yt_embed %}
+                      <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
+                    {% endif %}
+
+                    <!-- Link -->
+                    <p class="card-text"><small class="text-muted">
+                      <i class="fas fa-link text-muted pe-1"></i>
+                      {{ link.url }}</small>
+                    </p>
+                  </div>
                 </div>
               </div>
               <div class="col-2 col-md-1">
