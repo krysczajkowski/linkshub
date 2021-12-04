@@ -99,6 +99,7 @@ class premium_links_check_password(View):
                     temp_dict['url'] = premium_link.url
                     temp_dict['description'] = premium_link.description
                     temp_dict['animation'] = premium_link.animation.name
+                    temp_dict['display_as_yt_embed'] = premium_link.display_as_yt_embed
 
                     if premium_link.image:
                         temp_dict['image'] = premium_link.image.url

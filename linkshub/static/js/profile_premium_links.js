@@ -98,38 +98,53 @@ if (premium_submit) {
                     premium_links_container.innerHTML = `<p class='font-size-08 fw-bold text-center mb-0'>PREMIUM LINKS</p>`
             
                     data.premium_links.forEach(link => {
-                        premium_link_html = `
-                        <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                        if (link.display_as_yt_embed) {
+
+                            // HTML for a yt embed
+                            var premium_link_html = `
+                            <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
                             <div class="row my-2">
                                 <div class="d-grid gap-2">
-                                    <a href="${link.url}" id="${link.id}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__${link.animation} animate__infinite animate__slow styled-link premium-link-click" target="_blank">`
-                        
-                        if (link.image) {
-                            premium_link_html += `
-                            <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
-                                <img src="${link.image}" class="link-image-size">
-                            </div>
-                            <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">${link.title}</strong></span>
-                                    <span class="font-size-08 link-description">${link.description}</span>
-                                </div>
-                            </div>`
+                                <div class="embed-container" id="embed-${link.id}"></div></div></div></div>`
+
+                            // Add HTML to DOM
+                            premium_links_container.innerHTML += premium_link_html
+
+                            // YT embed js
+                            load_youtube_embed(link.url, `embed-${link.id}`)
+
                         } else {
-                            premium_link_html += `
-                            <div class="col-12 py-2">
-                                <div class="d-flex flex-column text-center">
-                                    <span class='font-size-1'><strong style="letter-spacing: 0.5px;">${link.title}</strong></span>
-                                    <span class='font-size-08'>${link.description}</span>
+                            var premium_link_html = `
+                            <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
+                                <div class="row my-2">
+                                    <div class="d-grid gap-2">
+                                        <a href="${link.url}" id="${link.id}" class="btn mt-2 mx-0 row d-flex px-2 py-1 animate__animated animate__${link.animation} animate__infinite animate__slow styled-link premium-link-click" target="_blank">`
+                            
+                            if (link.image) {
+                                premium_link_html += `
+                                <div class="col-1 col-md-2 d-flex align-items-center justify-content-start p-0">
+                                    <img src="${link.image}" class="link-image-size">
                                 </div>
-                            </div>`
+                                <div class="col-9 col-md-8 py-2 ms-2 ms-md-0 d-flex align-items-center justify-content-center">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">${link.title}</strong></span>
+                                        <span class="font-size-08 link-description">${link.description}</span>
+                                    </div>
+                                </div>`
+                            } else {
+                                premium_link_html += `
+                                <div class="col-12 py-2">
+                                    <div class="d-flex flex-column text-center">
+                                        <span class='font-size-1'><strong style="letter-spacing: 0.5px;">${link.title}</strong></span>
+                                        <span class='font-size-08'>${link.description}</span>
+                                    </div>
+                                </div>`
+                            }
+                
+                            premium_link_html += `</a></div></div></div>`
+                
+                            premium_links_container.innerHTML += premium_link_html
                         }
-            
-                        premium_link_html += `</a></div></div></div>`
-            
-                        premium_links_container.innerHTML += premium_link_html
-            
-            
                        
                     });
             

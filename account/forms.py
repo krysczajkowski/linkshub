@@ -17,7 +17,7 @@ class CustomLinkForm(forms.ModelForm):
 class CustomPremiumLinkForm(forms.ModelForm):
     class Meta:
         model = PremiumCustomLink 
-        fields = ('title', 'description', 'url', 'image', 'animation')
+        fields = ('title', 'description', 'url', 'image', 'animation', 'display_as_yt_embed')
 
     def __init__(self, *args, **kwargs):
         super(CustomPremiumLinkForm, self).__init__(*args, **kwargs)
