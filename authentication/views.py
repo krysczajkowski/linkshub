@@ -113,25 +113,22 @@ class RegistrationView(View):
 
                 email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
 
-                '''
-                email = send_mail(
-                    email_subject,
-                    email_body,
-                    'czakowski.biznes@gmail.com',
-                    [email],
-                )
-                '''
-                email = EmailMessage(
+
+                emailMsg = EmailMessage(
                     email_subject,
                     email_body,
                     'czajkowski.biznes@gmail.com',
                     [email],
                 )
-                EmailThread(email).start()
+                EmailThread(emailMsg).start()
 
                 #email.send(fail_silently=False) # show errors if there are any
 
-                messages.info(request, 'Account created. Activate your account in gmail.')
+                # Set session with email and user's username
+                request.session['user_email'] = email
+                request.session['user_username'] = username
+
+                return redirect('confirm-email')
             else:
                 messages.error(request, error_msg)
 
@@ -349,3 +346,11 @@ class PasswordValidationView(View):
             return JsonResponse({'password_error': 'Password must be between 6 or 40 characters.'}, status=409)
 
         return JsonResponse({'password_valid': True})
+
+
+def confirmEmail(request):
+    # Check if user is authenticated
+    if request.user.is_authenticated:
+        return redirect('/profile/')
+        
+    return render(request, 'authentication/confirm-email.html')

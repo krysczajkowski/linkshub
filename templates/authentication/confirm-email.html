@@ -1,0 +1,19 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="row mx-0 mt-5">
+        <div class="col-12 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
+            <div class="border p-5 pt-4 text-center shadow rounded">
+                <img src="https://cdn-icons-png.flaticon.com/512/4630/4630926.png" class='text-center w-25 mb-4 p-0 p-md-3' alt="">
+                <h3 class=" fw-bold text-success">Complete Registration</h3>
+                <p style='font-size: 1.1rem; word-wrap: break-word;'>Hello {{ request.session.user_username }}! <strong>In order to complete registration please verify your email address.</strong> We sent you an email to {{ request.session.user_email }}.</p>
+                <hr class="my-4">
+                <p>Sometimes it takes a couple minutes for an email to get sent. <br> Note: Don't forget to check spam folder.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
