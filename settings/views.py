@@ -45,7 +45,10 @@ def edit(request):
     user = profile.user 
     username = user.username
 
-    profile_pic = profile.image
+    if profile.image:
+        profile_pic = profile.image.url
+    else:
+        profile_pic = '/media/profile_pic/defaultProfilePicture.png'
 
     if request.method == 'POST':
         form = EditForm(request.POST, request.FILES, instance=profile)
@@ -63,7 +66,7 @@ def edit(request):
     context = {
         'form': form,
         'username': username,
-        'image': profile_pic
+        'profile_pic': profile_pic
     }
 
     return render(request, 'settings/edit.html', context)

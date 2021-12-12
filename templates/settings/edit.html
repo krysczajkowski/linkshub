@@ -26,11 +26,7 @@
                     <input type="file" class='d-none' id='imageField' name='image' accept='.jpg, .png' data-bs-toggle="modal" data-bs-target="#cropModal">
                     <div class="row">
                         <div class="col-3 d-flex justify-content-end">
-                            {% if image %}
-                                <img src="{{image.url}}" class='img-fluid rounded-circle mt-1' style='height: 50px; width: 50px;' id='imgPreview'>
-                            {% else %}
-                                <img src="/media/profile_pic/defaultProfilePicture.png" class='img-fluid rounded-circle mt-1' style='height: 50px; width: 50px;' id='imgPreview'>
-                            {% endif %}
+                            <img src="{{profile_pic}}" class='img-fluid rounded-circle mt-1' style='height: 50px; width: 50px;' id='imgPreview'>
                         </div>
                         <div class="col-9 col-md-6">
                             <p class='fw-bold mb-0'>{{ username }}</p>
