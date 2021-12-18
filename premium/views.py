@@ -41,6 +41,8 @@ def success(request):
             pass   
 
         session = stripe.checkout.Session.retrieve(request.GET['session_id'],)
+
+        # Create customer object in db
         customer = Customer()
         customer.user = request.user
         customer.stripeid = session.customer
@@ -140,6 +142,24 @@ def join(request):
 def membership(request):
     membership = False
     cancel_at_period_end = False
+
+    context = {}
+
+    # Check if user has premium membership
+    if Customer.objects.filter(user=request.user).exists():
+        subscription = stripe.Subscription.retrieve(request.user.customer.stripe_subscription_id)
+
+        current_period_end = datetime.datetime.fromtimestamp(subscription.current_period_end)
+        pretty_current_period_end = f"{current_period_end:%Y-%m-%d %H:%M}"
+        context['current_period_end'] = pretty_current_period_end
+
+        # Check if they canceled premium
+        if subscription.cancel_at_period_end:
+            premium_cancel_at = datetime.datetime.fromtimestamp(subscription.cancel_at)
+            pretty_premium_cancel_at = f"{premium_cancel_at:%Y-%m-%d %H:%M}"
+            context['premium_cancel_at'] = pretty_premium_cancel_at
+
+    # User canceled premium membership
     if request.method == 'POST':
         subscription = stripe.Subscription.retrieve(request.user.customer.stripe_subscription_id)
         subscription.cancel_at_period_end = True
@@ -151,12 +171,19 @@ def membership(request):
         try:
             if request.user.customer.membership:
                 membership = True
+                purchase_date = datetime.datetime.fromtimestamp(subscription.created)
+                pretty_purchase_date = f"{purchase_date:%Y-%m-%d %H:%M}" 
+                context['purchase_date'] = pretty_purchase_date
+
             if request.user.customer.cancel_at_period_end:
                 cancel_at_period_end = True
         except Customer.DoesNotExist:
             membership = False
-    return render(request, 'settings/membership.html', {'membership':membership,
-    'cancel_at_period_end':cancel_at_period_end})
+
+    context['membership'] = membership
+    context['cancel_at_period_end'] = cancel_at_period_end
+
+    return render(request, 'settings/membership.html', context)
 
 
 @user_passes_test(lambda u: u.is_superuser)

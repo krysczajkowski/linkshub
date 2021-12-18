@@ -2,7 +2,7 @@
 
 {% load static %}
 
-{% block title %}Settings{% endblock %}
+{% block title %}Settings | Membership{% endblock %}
 
 {% block content %}
 <div class="mx-3 mt-4">
@@ -22,20 +22,72 @@
         <div class="col-12 col-lg-9 col-xxl-8 mt-2 mt-lg-0">
             {% include 'partials/_alerts.html' %}
             <div class="card card-body">
-                {% if cancel_at_period_end %}
-                Your membership will run to the end of your billing cycle.
-                {% elif membership %}
-                <form action="{% url 'membership' %}" method="POST">
-                  {% csrf_token %}
-                  <input type="submit" value="Cancel Membership?">
-                </form>
-                {% else %}
-                <a href="{% url 'join' %}">Get a membership</a>
-                {% endif %}
+                <div class="row">
+                    <div class='col-12 col-md-8 offset-md-2'>
+                        <h3 class='fw-bold font-size-13'>Membership</h3>
+                
+                        {% if cancel_at_period_end %}
+                            <!-- Membership about to expire -->
+                            <p class='mb-4'>Your Plan: <a class='text-dark fw-bold' href='#'>Linkshub Free</a></p>
+
+                            <p class='fw-bold'>Your membership will last until {{ premium_cancel_at }}. Your account will no longer be charged. Thank you for being with us. (w czasie przeszłym) </p>
+                        {% elif membership %}
+                            <!-- PREMIUM Membership -->
+                            <p class='mb-1'>Your Plan: <a class='text-success fw-bold' href='#'>Linkshub Premium</a></p>
+
+                            <p class='mb-1'>Purchase date: <strong>{{purchase_date}}</strong></p>
+
+                            <p class='mb-5'>Total Price: <strong>$3.5/month</strong></p>
+                            
+                            <!-- Cancel Premium trigger modal -->
+                            <p data-bs-toggle="modal" style='cursor: pointer;' class='text-muted mb-1' data-bs-target="#cancelPremiumModal">
+                                If you wish to cancel premium membership, click <span class='text-primary'>here</span>
+                            </p>
+
+                            <!-- Cancel Premium Modal -->
+                            <div class="modal fade" id="cancelPremiumModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="text-center pt-4">
+                                            <h5 class="font-size-14 fw-bold" id="exampleModalLabel">Cancel Your Membership?</h5>
+                                            
+                                        </div>
+                                        <div class="modal-body px-4 text-center">
+                                            <p>Click "Cancel Membership" to cancel your membership. <br> If your renewal is stopped, your subscription will end on <strong>{{current_period_end}}</strong>. Your account will not be charged anymore.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary py-1" data-bs-dismiss="modal">Close</button>
+                                            <form action="{% url 'membership' %}" method="POST" id='membership-form'>
+                                                {% csrf_token %}
+                                                    <button type="button" class="btn btn-danger py-1" id='cancel-membership'>Cancel Linkshub Premium</button>
+                                                </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% else %}
+                            <!-- FREE Membership -->
+                            <p class='mb-4'>Your Plan: <a class='text-dark fw-bold' href='#'>Linkshub Free</a></p>
+                            
+                            <a href="{% url 'join' %}" class='text-dark fw-bold mb-1'>If you wish to get 
+                                <span class='text-success'>Linkshub Premium</span>, click <span class='text-success'>here</span>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>
 </div>
+  
+<script>
+    var form = document.getElementById("membership-form");
 
+    document.getElementById("cancel-membership").addEventListener("click", function () {
+        form.submit();
+    });
+</script>
 <script src="{% static 'js/change_password.js' %}"></script>
 {% endblock %}
