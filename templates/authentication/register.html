@@ -16,13 +16,13 @@
 </script>
 
 <div class="container mt-4">
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-md-6 d-none d-md-block">obrazek</div>
         <div class="col-12 col-md-6">
             <form method='POST' id='registration_form'>
                 {% csrf_token %}
-                <h5 class='mb-0'>Linkshub.io</h5>
-                <small class='font-weight-bold text-muted mb-2'>Create a free account</small><br>
+                <h5 class='mb-0 fw-bold'>Create a free account.</h5>
+                <span class='fw-bold text-muted mb-2 font-size-09'>LinksHub.io - All Your Content in One Link</span><br>
 
                 <!-- Username -->
                 <div class="mt-2">
@@ -67,7 +67,7 @@
                 <input type="hidden" id="g-recaptcha-response" name="g-recaptcha-response">
 
                 <!-- Submit -->
-                <input type="submit" name='submitBtn' value='Sign Up' id='submitBtn' class='btn btn-success font-weight-bold btn-block mt-2' style='letter-spacing: 0.7px;'>
+                <input type="submit" name='submitBtn' value='Sign Up' id='submitBtn' class='btn btn-success fw-bold px-3 py-1 btn-block mt-2' style='letter-spacing: 1px;'>
             </form>
 
         </div>

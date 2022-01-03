@@ -6,13 +6,13 @@
 {% block content %}
 
 <div class="container mt-4">
-    <div class="row">
+    <div class="row mt-5">
         <div class="col-md-6 d-none d-md-block">obrazek</div>
         <div class="col-12 col-md-6">
             <form method='POST'>
                 {% csrf_token %}
-                <h5 class='mb-0'>Linkshub.io</h5>
-                <small class='font-weight-bold text-muted mb-2'>Log in to your account</small><br>
+                <h5 class='mb-0 fw-bold'>Log in to your account.</h5>
+                <span class='fw-bold text-muted mb-2 font-size-09'>LinksHub.io - All Your Content in One Link</span><br>
 
                 <!-- Username -->
                 <div class="mt-2">
@@ -34,7 +34,7 @@
                 {% include 'partials/_alerts.html' %}
 
                 <!-- Submit -->
-                <input type="submit" name='submit' value='Log In' id='submit' class='btn btn-primary font-weight-bold btn-block mt-2 mb-0' style='letter-spacing: 0.7px;'>
+                <input type="submit" name='submit' value='Log In' id='submit' class='btn btn-primary fw-bold px-3 py-1 btn-block mt-2 ' style='letter-spacing: 1px;'>
             </form>
             <p class="text-right mt-2 mb-0"><a href="{% url 'register' %}" class='link text-secondary'>Create an account.</a></p>
             <p class="text-right"><a href="{% url 'request-password' %}" class='link text-secondary'>Forgot your password?</a></p>
