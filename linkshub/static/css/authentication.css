@@ -4,7 +4,16 @@ box-shadow: none;
 }
 
 
+.index-image-padding {
+    padding: 3% 10%;
+}
 
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (max-width: 992px) {
+    .index-image-padding {
+        padding: 0;
+    }
+}
 
 /* Gradient text classes */
 .text-gradient-pink-blue {
@@ -13,7 +22,9 @@ box-shadow: none;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-box-decoration-break: clone;
-    font-size: 3rem;
+    font-size: 2.9rem;
+    font-family: 'Work Sans', sans-serif;
+    letter-spacing: 1px;
 }
 
 .text-gradient-mint-blue {
@@ -22,7 +33,9 @@ box-shadow: none;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-box-decoration-break: clone;
-    font-size: 3rem;
+    font-size: 2.9rem;
+    font-family: 'Work Sans', sans-serif;
+    letter-spacing: 1px;
 }
 
 .text-gradient-purple-coral {
@@ -31,7 +44,9 @@ box-shadow: none;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-box-decoration-break: clone;
-    font-size: 3rem;
+    font-size: 2.9rem;
+    font-family: 'Work Sans', sans-serif;
+    letter-spacing: 1px;
 }
 
 .text-gradient-coral-yellow-dark {
@@ -40,5 +55,7 @@ box-shadow: none;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     -webkit-box-decoration-break: clone;
-    font-size: 3rem;
+    font-size: 2.9rem;
+    font-family: 'Work Sans', sans-serif;
+    letter-spacing: 1px;
 }
