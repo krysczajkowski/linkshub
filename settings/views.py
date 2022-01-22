@@ -21,7 +21,8 @@ from django.template.loader import render_to_string
 from .forms import EditForm, PasswordChangingForm, DeleteAccountForm
 from account.utils import validate_image
 from authentication.utils import username_validation
-from account.models import Profile
+from account.models import Profile, CustomLink, PremiumCustomLink, UserPlatform
+from appearance.models import UserTheme
 from account.decorators import check_ban
 
 # Create your views here.
@@ -135,3 +136,57 @@ def delete_account(request):
             messages.error(request, 'Form is not valid.')
 
     return render(request, 'settings/delete_account.html')
+
+
+# Display Account Data
+@login_required(login_url='/authentication/login/')
+def account_data(request):
+    profile = Profile.objects.get(user = request.user)
+
+    # Links
+    active_links = CustomLink.objects.filter(user=request.user, is_active=True)
+    not_active_links = CustomLink.objects.filter(user=request.user, is_active=False)
+
+    # Premium Links
+    premium_active_links = PremiumCustomLink.objects.filter(user=request.user, is_active=True)
+    premium_not_active_links = PremiumCustomLink.objects.filter(user=request.user, is_active=False)
+
+    # Platforms
+    platforms = UserPlatform.objects.filter(user=request.user)
+
+    # User Theme
+    user_theme = UserTheme.objects.get(user=request.user)
+
+    # Background theme
+    if user_theme.background_theme:
+        background_theme = user_theme.background_theme
+    else:
+        background_theme = 'Custom'
+
+    # Button theme
+    if user_theme.button_theme:
+        button_theme = user_theme.button_theme
+    else:
+        button_theme = 'Custom'
+
+    context = {
+        'name': profile.name,
+        'username': request.user.username,
+        'email': request.user.email,
+        'description': profile.description,
+        'date_joined': request.user.date_joined,
+        'last_login': request.user.last_login,
+        'active_links': active_links,
+        'not_active_links': not_active_links,
+        'premium_active_links': premium_active_links,
+        'premium_not_active_links': premium_not_active_links,
+        'platforms': platforms,
+        'linkshub_label': user_theme.linkshub_label,
+        'background_theme' : background_theme,
+        'button_theme': button_theme,
+        'button_shadow': user_theme.button_shadow[7:],
+        'button_fill' : user_theme.button_fill,
+        'button_outline': user_theme.button_outline[8:]
+    }
+
+    return render(request, 'settings/account_data.html', context)

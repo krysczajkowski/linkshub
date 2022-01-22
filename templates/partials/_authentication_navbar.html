@@ -7,7 +7,7 @@
 
     <!-- Logo Part -->
     <a class="col-4 d-flex" href="https://linkshub.io">
-        <img src="https://static.wikia.nocookie.net/dogelore/images/2/26/Walter.png/revision/latest?cb=20190617095152" alt="" style="width: auto!important; height: 35px;" class="mx-auto">
+        <img src="https://static.wikia.nocookie.net/dogelore/images/2/26/Walter.png/revision/latest?cb=20190617095152" id='logo' alt="" style="width: auto!important; height: 35px;" class="mx-auto">
     </a>
 
     <!-- Sign In or Settings part -->
@@ -15,3 +15,11 @@
         <span class="link fw-bold mx-auto text-dark" style='letter-spacing: 0.5px;'>Sign Up!</span>
     </a>
 </nav>
+
+<script>
+    // Change logo for smaller mobile phone users
+    let windowWidth = window.innerWidth;
+    if (windowWidth <= 768) {
+        document.getElementById("logo").src="https://i.ytimg.com/vi/HeU2esFxpLo/hqdefault.jpg";
+    }
+</script>

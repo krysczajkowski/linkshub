@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Account Data{% endblock %}
+
+{% block content %}
+<div class="mx-3 mt-4">
+    <div class="row mt-3 mb-2">
+        <div class="col-lg-10 offset-lg-1">
+            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel order-1 order-lg-0 mt-5 mt-lg-0">
+        
+            <div class="card card-body text-center">
+                {% include 'partials/_settings_sidebar.html' %}
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-9 col-xxl-8 mt-2 mt-lg-0">
+            {% include 'partials/_alerts.html' %}
+            <div class="card card-body">
+                <div class="row">
+                    <div class='col-12 col-md-8 offset-md-2'>
+
+                        <h3 class='fw-bold font-size-11 mb-1'>Account</h3>
+                        <div class="ms-3">
+                            <strong>Username:</strong> {{ username }} <br>
+                            <strong>Name:</strong> {{ name }} <br>
+                            <strong>Email:</strong> {{ email }} <br>
+                            <strong>Description:</strong> {{ description}} <br>
+                            <strong>Last Login:</strong> {{ last_login }} <br>
+                            <strong>Date Joined:</strong> {{ date_joined }}
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Theme</h3>
+                        <div class="ms-3">
+                            <strong>Button theme:</strong> {{ button_theme }} <br>
+                            <strong>Button shadow:</strong> {{ button_shadow }} <br>
+                            <strong>Button outline:</strong> {{ button_outline }} <br>
+                            <strong>Button fill:</strong> {{ button_fill }} <br>
+                            <strong>Background theme:</strong> {{ background_theme }} <br>
+                            <strong>Display LinksHub label:</strong> {{ linkshub_label }} <br>
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Active Links</h3>
+                        <div class='ms-3'>
+                            {% for active_link in active_links %}
+                                <div class="mb-3">
+                                    <strong>Title:</strong> {{active_link.title}} <br>
+                                    <strong>Description:</strong> {{active_link.description}} <br>
+                                    <strong>Url:</strong> {{active_link.url}} <br>
+                                    <strong>Image:</strong> {{active_link.image}} <br>
+                                    <strong>Animation:</strong> {{active_link.animation}} <br>
+                                    <strong>Display as youtube embed: </strong> {{active_link.display_as_yt_embed}} <br>
+                                    <strong>Position:</strong> {{active_link.position}} <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Not Active Links</h3>
+                        <div class='ms-3'>
+                            {% for not_active_link in not_active_links %}
+                                <div class="mb-3">
+                                    <strong>Title:</strong> {{not_active_link.title}} <br>
+                                    <strong>Description:</strong> {{not_active_link.description}} <br>
+                                    <strong>Url:</strong> {{not_active_link.url}} <br>
+                                    <strong>Image:</strong> {{not_active_link.image}} <br>
+                                    <strong>Animation:</strong> {{not_active_link.animation}} <br>
+                                    <strong>Display as youtube embed: </strong> {{not_active_link.display_as_yt_embed}} <br>
+                                    <strong>Position:</strong> {{not_active_link.position}} <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Active Premium Links</h3>
+                        <div class='ms-3'>
+                            {% for premium_active_link in premium_active_links %}
+                                <div class="mb-3">
+                                    <strong>Title:</strong> {{premium_active_link.title}} <br>
+                                    <strong>Description:</strong> {{premium_active_link.description}} <br>
+                                    <strong>Url:</strong> {{premium_active_link.url}} <br>
+                                    <strong>Image:</strong> {{premium_active_link.image}} <br>
+                                    <strong>Animation:</strong> {{premium_active_link.animation}} <br>
+                                    <strong>Display as youtube embed: </strong> {{premium_active_link.display_as_yt_embed}} <br>
+                                    <strong>Position:</strong> {{premium_active_link.position}} <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Not Active Premium Links</h3>
+                        <div class='ms-3'>
+                            {% for premium_not_active_link in premium_not_active_links %}
+                                <div class="mb-3">
+                                    <strong>Title:</strong> {{premium_not_active_link.title}} <br>
+                                    <strong>Description:</strong> {{premium_not_active_link.description}} <br>
+                                    <strong>Url:</strong> {{premium_not_active_link.url}} <br>
+                                    <strong>Image:</strong> {{premium_not_active_link.image}} <br>
+                                    <strong>Animation:</strong> {{premium_not_active_link.animation}} <br>
+                                    <strong>Display as youtube embed: </strong> {{premium_not_active_link.display_as_yt_embed}} <br>
+                                    <strong>Position:</strong> {{premium_not_active_link.position}} <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <h3 class='fw-bold font-size-11 mb-1 mt-4'>Social Media Platforms</h3>
+                        <div class='ms-3'>
+                            {% for platform in platforms %}
+                                <div class="mb-3">
+                                    <strong>Platform:</strong> {{platform.platform}} <br>
+                                    <strong>Url:</strong> {{platform.platform_url}}{{platform.username}} <br>
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
