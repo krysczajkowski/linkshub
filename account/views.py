@@ -52,7 +52,7 @@ def profile_preview(request):
     links = CustomLink.objects.filter(user=request.user, is_active=1).order_by('position')
 
     # Get premium links
-    if PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position') and profile.premium_links_password:
+    if PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position') and profile.premium_links_password and profile.display_premium_links:
         display_premium_links_password = True 
     else: 
         display_premium_links_password = False
@@ -331,6 +331,7 @@ def premium_links(request):
 
     profile = Profile.objects.get(user=request.user)
 
+    context['display_premium_links_switch_value'] = profile.display_premium_links
     
     change_pass_form = PremiumLinksChangePassword()
 
@@ -595,6 +596,22 @@ class change_positions(View):
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         except (ValueError, CustomLink.DoesNotExist) as e:
+            return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
+
+        return JsonResponse({'success': True})
+
+
+class display_premium_links_switch(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        checked = data['checked']
+
+        try:
+            profile = Profile.objects.get(user=request.user)
+
+            profile.display_premium_links = checked 
+            profile.save()
+        except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
         return JsonResponse({'success': True})

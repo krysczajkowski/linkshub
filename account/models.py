@@ -8,6 +8,7 @@ class Profile(models.Model):
     image = models.ImageField(upload_to='profile_pic', null=True, blank=True)
     description = models.CharField(max_length=300, blank=True, default='')
     premium_links_password = models.CharField(max_length=100, null=True, blank=True)
+    display_premium_links = models.BooleanField(default=True)
 
 class BannedUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)

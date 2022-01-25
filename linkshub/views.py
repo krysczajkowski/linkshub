@@ -33,7 +33,7 @@ def profile(request, username):
 
     # Get premium links
     if membership:
-        if PremiumCustomLink.objects.filter(user=user, is_active=1).order_by('position') and profile.premium_links_password:
+        if PremiumCustomLink.objects.filter(user=user, is_active=1).order_by('position') and profile.premium_links_password and profile.display_premium_links:
             display_premium_links_password = True 
         else: 
             display_premium_links_password = False

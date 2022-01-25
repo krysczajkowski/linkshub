@@ -6,30 +6,94 @@
 <div class="mx-3">
   <div class="row mx-0">
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 p-0 mt-3">
-      <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
+      <div class="row">
+        <div class="col-6">
+          <a href='{% url "profile_preview" %}' class='text-dark d-flex align-items-end'>
+            <i class="fas fa-chevron-left pb-1"></i> Back To Profile
+          </a>
+        </div>
+        <div class="col-6 text-end">
+          {% if links_type == 'premium' %}
+            <a class="btn btn-light border border-dark py-1 px-3" data-bs-toggle="collapse" href="#collapseSettings" aria-expanded="false">
+              <i class="fas fa-cog"></i>
+              Settings
+            </a>
+          {% endif %}
+        </div>
+      </div>
+      
+
+      <!-- Settings collapse -->
+      <div class="collapse" id="collapseSettings">
+        <div class="card card-body my-5">
+          <div class="col-10 offset-1 col-lg-8 offset-lg-2 pt-1 pb-2">
+            <h3 class="fw-bold font-size-11">Premium Links Settings</h3>
+
+            <div class="form-check form-switch mt-4">
+              <input class="form-check-input" type="checkbox" role="switch" id="displayPremiumLinks" {% if display_premium_links_switch_value %} checked {% endif %}>
+              <label class="form-check-label" for="displayPremiumLinks">Display premium links on your profile?</label>
+            </div>
+
+            {% if links_type == 'premium' %}
+            <div class='mt-4'>
+              <span class='mb-1'>
+                {% if set_password %} 
+                  Set password for your Premium Links
+                {% else %}
+                  Change password for your Premium Links
+                {% endif %}
+              </span>
+
+              <form method='POST'>
+                {% csrf_token %}
+                <div class="input-group mt-1">
+                  <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
+                  <div class="input-group-append">
+                    <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
+                  </div>
+                </div>
+                <div class='d-flex'>
+                  <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
+                </div>
+              </form>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
 
       {% include 'partials/_alerts.html' %}
 
-      <div class="row mt-3 mb-2">
+      <div class="row mt-3 mb-3">
           <div class="col-6">
-              <h4 class='mb-3 mt-2 fw-bold font-size-12'>
+              <p class='mt-2 font-size-12 mb-0'>
                 {% if links_type == 'premium' %} 
-                <i class="far fa-question-circle font-size-10" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Sratatata" aria-label="Sratatata"></i>
-                Premium 
-                {% endif %} Links: {{ links_count }}
-              </h4>
+                Premium {% endif %} Links: {{ links_count }}
+              </p>
+              <p class="mb-0 mt-0 pt-0 font-size-09" data-bs-toggle="collapse" data-bs-target="#whatArePremiumLinksCollapse" aria-expanded="false" aria-controls="collapseExample" style='cursor: pointer;'>
+                <i class="far fa-question-circle font-size-08 me-1" aria-hidden="true"></i>What are premium links
+              </p>
           </div>
           {% if links_type == 'premium' %}
           <div class="col-6 d-flex">
-              <span class='ms-auto mt-2'><a href="{% url 'add_premium_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Premium Link</a></span>
+              <span class='ms-auto mt-2'><a href="{% url 'add_premium_link' %}" class='btn btn-primary py-1 px-3'><i class="fas fa-plus"></i> Add Premium Link</a></span>
           </div>
           {% else %}
           <div class="col-6 d-flex">
-            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary'><i class="fas fa-plus"></i> Add Link</a></span>
+            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary py-1 px-3'><i class="fas fa-plus"></i> Add Link</a></span>
         </div>  
         {% endif %}
           
       </div>
+
+      <div class="collapse my-3" id="whatArePremiumLinksCollapse">
+        <div class="card card-body text-center py-4">
+          <h5 class='fw-bold font-size-11'>Password Protected Links</h5>
+          <p class='mb-1'>If you want to <b>restrict access to your content</b>, use this feature.</p>
+          <p class='mb-1'>You can treat it as your vault and only <b>authorized users</b> will have access to your password protected links.</p>
+        </div>
+      </div>
+
       <div class="links">
       {% for link in links %}
           {% if link.image %}
@@ -172,35 +236,6 @@
           {% endif %}
       {% endfor %}
       </div>
-
-      {% if links_type == 'premium' %}
-      <div class='mt-4'>
-        <p class='text-center font-size-12 mb-1'>
-          {% if set_password %} 
-            Set password for your Premium Links
-          {% else %}
-            Change password for your Premium Links
-          {% endif %}
-          <i class="fas fa-question-circle font-size-08" data-bs-toggle="tooltip" data-bs-placement="bottom" title="" aria-hidden="true" data-bs-original-title="Premium Links are ..." aria-label="Premium Links are ..."></i>
-        </p>
-        <p class='text-center mt-0 font-size-08 text-muted'>*Ustaw haslo albo linki sie nie wyswietla</p>
-
-      
-        <div class="col-10 offset-1 col-md-8 offset-md-2 col-xl-6 offset-xl-3">
-            <form method='POST'>
-              {% csrf_token %}
-              <div class="input-group mt-1">
-                <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
-                <div class="input-group-append">
-                  <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
-                </div>
-              </div>
-              <div class='d-flex'>
-                <input type="submit" class='btn btn-dark py-1 px-3 mt-2 ms-auto' value='Save'>
-              </div>
-            </form>
-        </div>
-    {% endif %}
     </div>
   </div>
 </div>

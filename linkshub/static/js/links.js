@@ -1,6 +1,31 @@
 const activeLinkSlider = document.querySelectorAll('.active_link_slider')
 const deleteLink = document.querySelectorAll('.delete-link-btn')
 
+
+// Display Premium Links toggle
+var displayPremiumLinksSwitch = document.getElementById('displayPremiumLinks')
+
+document.getElementById('displayPremiumLinks').addEventListener('change', event => {
+    const checked = displayPremiumLinksSwitch.checked
+    
+    fetch('/profile/premium_links/display', {
+        body: JSON.stringify({'checked': checked}),
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json; charset=UTF-8',
+            'X-CSRFToken': csrftoken
+            },
+    }).then(res=>res.json()).then(data=>{
+        console.log('data', data)
+        if(data.error) {
+            alert(data.error)
+        }
+    });
+})
+
+
+
 // Activate link toggle
 activeLinkSlider.forEach(item => {
     item.addEventListener('change', event => {
