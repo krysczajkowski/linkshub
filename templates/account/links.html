@@ -3,6 +3,21 @@
 {% block title %}Social Media Platforms{% endblock %}
 
 {% block content %}
+{% if links_type == 'premium' and membership == False %}
+  <!-- User has no premium -->
+  <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2 mt-4">
+    <div class="card-body text-center">
+        <h4 class='fw-bold'>Get premium or active a free trial to access Premium Links!</h4>
+
+        <span class='text-muted'>Purchase premium for $3.5/mo to get advanced analytics, Premium Links feature and much more!</span>
+
+        <div class="d-grid gap-2 mt-4"> 
+            <a href="{% url 'join' %}" class='btn btn-success fw-bold font-size-12'>Get Premium or Active Free Trial</a>
+        </div>
+    </div>
+  </div>
+{% else %}
+<!-- User has premium -->
 <div class="mx-3">
   <div class="row mx-0">
     <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 p-0 mt-3">
@@ -25,11 +40,11 @@
 
       <!-- Settings collapse -->
       <div class="collapse" id="collapseSettings">
-        <div class="card card-body my-5">
+        <div class="card card-body my-4">
           <div class="col-10 offset-1 col-lg-8 offset-lg-2 pt-1 pb-2">
             <h3 class="fw-bold font-size-11">Premium Links Settings</h3>
 
-            <div class="form-check form-switch mt-4">
+            <div class="form-check form-switch mt-2">
               <input class="form-check-input" type="checkbox" role="switch" id="displayPremiumLinks" {% if display_premium_links_switch_value %} checked {% endif %}>
               <label class="form-check-label" for="displayPremiumLinks">Display premium links on your profile?</label>
             </div>
@@ -47,7 +62,7 @@
               <form method='POST'>
                 {% csrf_token %}
                 <div class="input-group mt-1">
-                  <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control'>
+                  <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control passwordField'>
                   <div class="input-group-append">
                     <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
                   </div>
@@ -70,9 +85,11 @@
                 {% if links_type == 'premium' %} 
                 Premium {% endif %} Links: {{ links_count }}
               </p>
+              {% if links_type == 'premium' %} 
               <p class="mb-0 mt-0 pt-0 font-size-09" data-bs-toggle="collapse" data-bs-target="#whatArePremiumLinksCollapse" aria-expanded="false" aria-controls="collapseExample" style='cursor: pointer;'>
                 <i class="far fa-question-circle font-size-08 me-1" aria-hidden="true"></i>What are premium links
               </p>
+              {% endif %}
           </div>
           {% if links_type == 'premium' %}
           <div class="col-6 d-flex">
@@ -86,6 +103,7 @@
           
       </div>
 
+      <!-- What are premium links collapse -->
       <div class="collapse my-3" id="whatArePremiumLinksCollapse">
         <div class="card card-body text-center py-4">
           <h5 class='fw-bold font-size-11'>Password Protected Links</h5>
@@ -93,6 +111,29 @@
           <p class='mb-1'>You can treat it as your vault and only <b>authorized users</b> will have access to your password protected links.</p>
         </div>
       </div>
+
+      <!-- Set password  -->
+      {% if set_password %} 
+      <div class='card card-body text-center py-4 my-3'>
+        <div class='col-10 offset-1 col-lg-8 offset-lg-2 pt-1 pb-2'>
+          <h4 class='fw-bold font-size-12'>Set Password For Your Links</h4>
+          <p class='text-muted font-size-09'>Set a password, so your links can be protected with it. </p>
+          <form method='POST'>
+            {% csrf_token %}
+            <div class="input-group mt-1">
+              <input type="password" name='premium_links_password' placeholder='Password' id='passwordField' class='form-control passwordField'>
+              <div class="input-group-append">
+                <button class="btn border showPasswordToggle" type="button" id="button-addon2"><i class="far fa-eye"></i></button>
+              </div>
+            </div>
+            <div class='d-flex'>
+              <input type="submit" class='btn btn-primary py-1 px-3 mt-2 ms-auto' value='Save Password'>
+            </div>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+
 
       <div class="links">
       {% for link in links %}
@@ -239,6 +280,7 @@
     </div>
   </div>
 </div>
+{% endif %}
 <input type="hidden" data-type='{{ links_type }}' id='links-type'>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js" integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
@@ -302,21 +344,33 @@
   }
 
 // Show password toggle
-const showPasswordToggle = document.querySelector('.showPasswordToggle')
+const showPasswordToggle = document.querySelectorAll('.showPasswordToggle')
+const passwordFields = document.querySelectorAll('.passwordField')
 
 function handleToggleInput(e) {
-    if (showPasswordToggle.innerHTML == '<i class="far fa-eye" aria-hidden="true"></i>') {
-        showPasswordToggle.innerHTML = '<i class="far fa-eye-slash"></i>'
+    if (showPasswordToggle[0].innerHTML == '<i class="far fa-eye" aria-hidden="true"></i>') {
 
-        passwordField.setAttribute('type', 'text')
+        showPasswordToggle.forEach(item=> {
+          item.innerHTML = '<i class="far fa-eye-slash"></i>'
+        })
+        
+        passwordFields.forEach(item=> {
+          item.setAttribute('type', 'text')
+        })
     } else {
-        showPasswordToggle.innerHTML = '<i class="far fa-eye"></i>'
+        showPasswordToggle.forEach(item=> {
+          item.innerHTML = '<i class="far fa-eye"></i>'
+        })
 
-        passwordField.setAttribute('type', 'password')
+        passwordFields.forEach(item=> {
+          item.setAttribute('type', 'password')
+        })
     }
 }
 if (showPasswordToggle) {
-  showPasswordToggle.addEventListener('click', handleToggleInput)
+  showPasswordToggle.forEach(item=> {
+    item.addEventListener('click', handleToggleInput)
+  })
 }
 </script>
 <script src="{% static 'js/links.js' %}"></script>
