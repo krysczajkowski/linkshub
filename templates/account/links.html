@@ -5,8 +5,16 @@
 {% block content %}
 {% if links_type == 'premium' and membership == False %}
   <!-- User has no premium -->
-  <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 card mb-2 mt-4">
-    <div class="card-body text-center">
+  <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 mb-2 mt-4 px-3">
+    
+    <!-- What are premium links -->
+    <div class="card card-body text-center py-4 mt-4 mb-4">
+      <h5 class='fw-bold font-size-11'>Password Protected Links</h5>
+      <p class='mb-1'>If you want to <b>restrict access to your content</b>, use this feature.</p>
+      <p class='mb-1'>You can treat it as your vault and only <b>authorized users</b> will have access to your password protected links.</p>
+    </div>
+  
+    <div class="card card-body text-center">
         <h4 class='fw-bold'>Get premium or active a free trial to access Premium Links!</h4>
 
         <span class='text-muted'>Purchase premium for $3.5/mo to get advanced analytics, Premium Links feature and much more!</span>

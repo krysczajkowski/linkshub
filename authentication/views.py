@@ -111,8 +111,8 @@ class RegistrationView(View):
 
                 activate_url = 'http://' + domain + link
 
-                email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
-
+                #email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
+                email_body = render_to_string('mails/verify-email.html', {'username': user.username, 'verify_email_url': activate_url})
 
                 emailMsg = EmailMessage(
                     email_subject,
@@ -120,6 +120,8 @@ class RegistrationView(View):
                     'czajkowski.biznes@gmail.com',
                     [email],
                 )
+
+                email.content_subtype = 'html'
                 EmailThread(emailMsg).start()
 
                 #email.send(fail_silently=False) # show errors if there are any

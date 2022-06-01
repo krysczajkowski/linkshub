@@ -85,7 +85,10 @@ imageField.addEventListener('change', () => {
         // When crop button is clicked this event will get triggered
         crop_btn.addEventListener('click', ()=>{
             // This method coverts the selected cropped image on the cropper canvas into a blob object
-            cropper.getCroppedCanvas().toBlob((blob)=>{
+            cropper.getCroppedCanvas({
+                width: 200,
+                height: 200
+              }).toBlob((blob)=>{
                 
                 // Gets the original image data
                 let fileInputElement = document.getElementById('imageField');

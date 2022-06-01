@@ -227,12 +227,15 @@ def platforms(request):
 def links(request):
     links = CustomLink.objects.filter(user=request.user).order_by('position')
 
+    membership = get_membership(request.user)
+
     links_count = links.count()
 
     context = {
     'links': links,
     'links_count': links_count,
     'links_type': 'public',
+    'membership': membership
     }
 
     return render(request, 'account/links.html', context)
@@ -316,9 +319,6 @@ def premium_links(request):
     # Check if user is a premium user
     membership = get_membership(request.user)
 
-    if not membership:
-        return redirect('join')
-
     # Get all active premium links
     links = PremiumCustomLink.objects.filter(user=request.user).order_by('position')
     links_count = links.count()
@@ -328,6 +328,8 @@ def premium_links(request):
         'links_count': links_count,
         'links_type': 'premium',
     }
+
+    context['membership'] = membership
 
     profile = Profile.objects.get(user=request.user)
 
