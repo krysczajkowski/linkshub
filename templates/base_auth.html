@@ -35,10 +35,14 @@
     </style>
   </head>
   <body>
-    {% include 'partials/_authentication_navbar.html' %}
-    {% block content %}{% endblock %}
-
+    <!-- Picking right navigation -->
+    {% if user.is_authenticated %}
+        {% include 'partials/_navbar.html' %}
+    {% else %}
+        {% include 'partials/_authentication_navbar.html' %}
+    {% endif %}
     
+    {% block content %}{% endblock %}
 
     <!-- Cookie banner script -->
     <script src="{% static 'js/cookieBanner.js' %}"></script>

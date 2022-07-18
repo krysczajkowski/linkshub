@@ -142,7 +142,7 @@
       </div>
       {% endif %}
 
-
+      <!-- Links  -->
       <div class="links">
       {% for link in links %}
           {% if link.image %}
@@ -154,10 +154,10 @@
               <div class="col-8 col-md-10">
                 <div class="card-body py-1">
                   <!-- Title -->
-                  <h5 class="mt-2">{{ link.title }}</h5>
+                  <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
 
                   <!-- Description -->
-                  <p class="mb-3">{{ link.description }}</p>
+                  <p class="mb-2">{{ link.description }}</p>
 
                   <div class="font-size-09 mb-2">
                     <!-- Animation -->
@@ -216,15 +216,16 @@
             </div>
           </div>
           {% else %}
+          <!-- Premium Links -->
           <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
             <div class="row g-0">
               <div class="col-10 col-md-11">
                 <div class="card-body py-1">
                   <!-- Title -->
-                  <h5 class="mt-2">{{ link.title }}</h5>
+                  <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
 
                   <!-- Description -->
-                  <p class="mb-3">{{ link.description }}</p>
+                  <p class="mb-2">{{ link.description }}</p>
 
                   <div class="font-size-09 mb-2">
                     <!-- Animation -->

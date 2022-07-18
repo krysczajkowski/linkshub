@@ -133,6 +133,8 @@ USE_L10N = True
 
 USE_TZ = True
 
+# Login URL
+LOGIN_URL= '/authentication/login/'
 
 # AWS 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')

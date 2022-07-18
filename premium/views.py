@@ -29,7 +29,7 @@ class EmailThread(threading.Thread):
         self.email.send(fail_silently=False)
 
 
-@login_required
+@login_required(login_url='/authentication/login/')
 def success(request):
     if request.method == 'GET' and 'session_id' in request.GET:
 
@@ -76,7 +76,7 @@ def cancel(request):
     return render(request, 'premium/cancel.html')
 
 
-@login_required
+@login_required(login_url='/authentication/login/')
 def join(request):
     try:
         if request.user.customer.membership:
@@ -138,7 +138,7 @@ def join(request):
 
         return render(request, 'premium/join.html', context)
 
-@login_required
+@login_required(login_url='/authentication/login/')
 def membership(request):
     membership = False
     cancel_at_period_end = False
@@ -187,6 +187,7 @@ def membership(request):
 
 
 @user_passes_test(lambda u: u.is_superuser)
+@login_required(login_url='/authentication/login/')
 def updateaccounts(request):
     customers = Customer.objects.all()
     for customer in customers:
@@ -253,5 +254,6 @@ class start_free_trial(View):
         
         return JsonResponse({'end_date': date})
 
+@login_required(login_url='/authentication/login/')
 def free_trial_success(request):
     return render(request, 'premium/free_trial_success.html')
