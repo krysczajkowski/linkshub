@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% block title %}Thank you for your support{% endblock %}
 {% block content %}
 <div class="container mt-5">
   <div class="row">
@@ -9,7 +10,7 @@
           <img src="/media/premium/success.png" class="text-center w-25 mb-4" alt="...">
 
           <h5 class="card-title fw-bold font-size-15 text-success">You are Premium now!</h5>
-          <p class="card-text">Thank you for purchasing LinksHub Premium. We’re so lucky to have customers like you!</p>
+          <p class="card-text">Thank you for purchasing LinksHub Premium. We’re lucky to have customers like you!</p>
 
           <div class="d-grid gap-2 mt-5"> 
               <a href="{% url 'appearance' %}" class="btn btn-success fw-bold font-size-12">Go to Appearance</a>

@@ -17,7 +17,7 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 import requests
 from django.template.loader import render_to_string 
-
+from django.utils.safestring import mark_safe
 
 from .utils import token_generator, username_validation
 from account.models import Profile
@@ -180,6 +180,8 @@ class LoginView(View):
         if username and password:
             user = auth.authenticate(username=username, password=password)
 
+            print(user)
+
             if user:
                 if user.is_active:
                     auth.login(request, user)
@@ -192,7 +194,7 @@ class LoginView(View):
                     return redirect('profile_preview')
 
                 else:
-                    messages.error(request, 'Account is not active, please check your email.')
+                    messages.error(request, mark_safe('Account is not active, please check your email.<br> Click to resend activation link.'))
             else:
                 messages.error(request, 'Invalid credentials, try again.')
         else:

@@ -195,3 +195,6 @@ GOOGLE_RECAPTCHA_SECRET_KEY = config('GOOGLE_RECAPTCHA_SECRET_KEY')
 
 # GEOIP
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
+
+# Not active user is not none
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']

@@ -9,10 +9,8 @@
 <link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
 
 <div class="mx-3 mt-4">
-    <div class="row mt-3 mb-2">
-        <div class="col-lg-10 offset-lg-1">
-            <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
-        </div>
+    <div class="row mt-3 mb-2 ms-1">
+        <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
     </div>
     <div class="row">
         <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
@@ -25,14 +23,18 @@
                 </div>
             </div>
 
+            <div class="text-center text-muted fw-bold font-size-08 mb-1">
+                CHOOSE WHAT TO STYLE
+            </div>
+
             <div class="accordion" id="accordionExample">
                 <div class="accordion-item">
                   <h2 class="accordion-header" id="headingOne">
-                    <button class="accordion-button bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    <button class="accordion-button bg-light text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-controls="collapseOne" aria-expanded="false">
                       Background
                     </button>
                   </h2>
-                  <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">  
                             <p class='fw-bold font-size-08 text-muted mb-0 mt-1'>COLORS</p>
                             <div class='color-div'>
@@ -164,7 +166,7 @@
                 </div>
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="headingThree">
-                      <button class="accordion-button bg-light text-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+                      <button class="accordion-button bg-light text-dark collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
                         Profile
                       </button>
                     </h2>
