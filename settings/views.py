@@ -72,7 +72,6 @@ def edit(request):
 
     return render(request, 'settings/edit.html', context)
 
-
 class PasswordChangeView(PasswordChangeView):
     form_class = PasswordChangingForm
     success_url = reverse_lazy('password_reset_done') 
