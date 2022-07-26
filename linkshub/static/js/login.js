@@ -14,3 +14,4 @@ function handleToggleInput(e) {
 }
 
 showPasswordToggle.addEventListener('click', handleToggleInput)
+

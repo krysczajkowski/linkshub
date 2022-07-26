@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 import json
 from django.conf import settings
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.models import User
 from validate_email import validate_email
 from django.contrib import messages
@@ -19,7 +19,7 @@ import requests
 from django.template.loader import render_to_string 
 from django.utils.safestring import mark_safe
 
-from .utils import token_generator, username_validation
+from .utils import token_generator, username_validation, send_acc_activation_email
 from account.models import Profile
 from appearance.models import BackgroundTheme, ButtonTheme, UserTheme
 
@@ -101,27 +101,9 @@ class RegistrationView(View):
 
                 user_theme = UserTheme.objects.create(user=user, background_theme=bg_theme, button_theme=btn_theme, button_fill='filled', button_outline='outline-normal', button_shadow='shadow-soft')
 
-                email_subject = 'Activate your account'
+                emailMsg = send_acc_activation_email(request, user, user.email)
 
-                # Path to view
-                uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-
-                domain = get_current_site(request).domain
-                link = reverse('activate', kwargs={'uidb64': uidb64, 'token': token_generator.make_token(user)})
-
-                activate_url = 'http://' + domain + link
-
-                #email_body = f'Hi {user.username}. Please use this link to verify your account. {activate_url}'
-                email_body = render_to_string('mails/verify-email.html', {'username': user.username, 'verify_email_url': activate_url})
-
-                emailMsg = EmailMessage(
-                    email_subject,
-                    email_body,
-                    'czajkowski.biznes@gmail.com',
-                    [email],
-                )
-
-                email.content_subtype = 'html'
+                emailMsg.content_subtype = 'html'
                 EmailThread(emailMsg).start()
 
                 #email.send(fail_silently=False) # show errors if there are any
@@ -138,6 +120,41 @@ class RegistrationView(View):
             messages.error(request, 'Invalid reCAPTCHA. Please try again.')
 
         return render(request, 'authentication/register.html', {'recaptcha_site_key':settings.GOOGLE_RECAPTCHA_SITE_KEY})
+
+
+class ResendActivationEmail(View):
+    def get(self, request):
+        return render(request, 'authentication/resend-activation-email.html')
+
+    def post(self, request):
+        email = request.POST['email']
+
+        # Email validaiton
+        if not validate_email(email):
+            messages.error(request, 'Please supply a valid email.')
+        else:
+            try:
+                user = User.objects.get(email=email)
+
+                if user.is_active:
+                    messages.error(request, "Account with this email doesn't exist or is an active account.")
+                else:
+                    emailMsg = send_acc_activation_email(request, user, email)
+
+                    emailMsg.content_subtype = 'html'
+                    EmailThread(emailMsg).start()
+
+                    # Set session with email and user's username
+                    request.session['user_email'] = email
+                    request.session['user_username'] = user.username
+
+                    return redirect('confirm-email')
+
+            except:
+                messages.error(request, "Account with this email doesn't exist or is an active account.")
+
+
+        return render(request, 'authentication/resend-activation-email.html')
 
 
 class VerificationView(View):
@@ -194,7 +211,7 @@ class LoginView(View):
                     return redirect('profile_preview')
 
                 else:
-                    messages.error(request, mark_safe('Account is not active, please check your email.<br> Click to resend activation link.'))
+                    messages.error(request,  mark_safe('Account is not active, please check your email.<br> <a href="resend-activation-email">Click here to resend activation link.</a>'))
             else:
                 messages.error(request, 'Invalid credentials, try again.')
         else:
@@ -311,6 +328,7 @@ class CompletePasswordReset(View):
                 messages.error(request, 'Sorry, something went wrong. Please try again.')
 
         return render(request, 'authentication/set-new-password.html', context)
+
 
 class UsernameValidationView(View):
     def post(self, request):
