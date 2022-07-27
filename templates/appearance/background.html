@@ -9,21 +9,14 @@
 <link rel="stylesheet" href="{% static 'css/animate.css' %}"/>
 
 <div class="mx-3 mt-4">
-    <div class="row mt-3 mb-2 ms-1">
+    <div class="row mt-3 mb-2">
         <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
     </div>
     <div class="row">
         <div class="col-12 col-lg-3 col-xxl-2 offset-xxl-1 appearance-left-panel">
             {% include 'partials/_alerts.html' %}
 
-            <div class="card mb-4" id='click-to-copy'>
-                <div class="card-body text-center">
-                    <p class='m-0 p-0'><strong>My Linkshub: </strong> <a href="#" class='link text-muted' id='click-to-copy-link'>https://linkshub.io/{{ username }}</a></p>
-                    <p class='text-muted fw-bold font-size-08 text-center p-0 m-0' id='click-to-copy-text'>Click to Copy</p>
-                </div>
-            </div>
-
-            <div class="text-center text-muted fw-bold font-size-08 mb-1">
+            <div class="text-center fw-bold font-size-08 mb-1 mt-2">
                 CHOOSE WHAT TO STYLE
             </div>
 
@@ -36,6 +29,7 @@
                   </h2>
                   <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                     <div class="accordion-body">  
+                        <span class="form-label fw-bold font-size-11">Ready Themes</span>
                             <p class='fw-bold font-size-08 text-muted mb-0 mt-1'>COLORS</p>
                             <div class='color-div'>
                                 {% for theme in bg_color_themes %}
@@ -88,8 +82,9 @@
                   </h2>
                   <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
                     <div class="accordion-body">
-
+                        
                         <div id='btn-color-area' class='mb-4'>
+                            <span class="form-label fw-bold font-size-11">Ready Themes</span>
                             <p class='fw-bold font-size-08 text-muted mb-0 mt-1'>COLORS</p>
                             <div class='color-div'>
                                 {% for theme in button_color_themes %}

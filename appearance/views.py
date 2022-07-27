@@ -178,7 +178,6 @@ class custom_bg_image(View):
         validate_image_output = validate_image(image, True, '')
 
         if validate_image_output['everything_ok']:
-            print('wszystko kox')
             try:
                 custom_background_theme, created = CustomBackgroundTheme.objects.get_or_create(user=request.user)
 
