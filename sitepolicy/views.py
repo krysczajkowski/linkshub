@@ -6,3 +6,6 @@ def terms(request):
 
 def privacy_policy(request):
     return render(request, 'sitepolicy/privacy-policy.html')
+
+def cookie_policy(request):
+    return render(request, 'sitepolicy/cookie-policy.html')

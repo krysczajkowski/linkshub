@@ -13,11 +13,11 @@ from django.http import HttpResponse, JsonResponse
 import threading
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string 
+from decouple import config
 
 from .models import Customer, PremiumFreeTrial
 
-
-stripe.api_key = "sk_test_51ImLvDFwBE1S4q2SI1GTEplWzXlrPpHkOAbZHjIZ5fon8deh1DuBCQXd7v46ZduiqrTNv0LuNhOyTUD0SXkUBc8L00pZQCKvFb"
+stripe.api_key = config('STRIPE_SECRET')
 
 
 class EmailThread(threading.Thread):

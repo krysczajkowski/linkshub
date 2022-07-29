@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_admin_env_notice',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -72,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                "django_admin_env_notice.context_processors.from_settings",
             ],
         },
     },
@@ -198,3 +200,8 @@ GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 
 # Not active user is not none
 AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.AllowAllUsersModelBackend']
+
+# Admin banner
+ENVIRONMENT_NAME = "Test server"
+ENVIRONMENT_COLOR = "#90EE90"
+ENVIRONMENT_FLOAT = True

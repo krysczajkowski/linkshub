@@ -23,17 +23,17 @@
             <div class="card card-body">
                 <div class="row">
                     <div class="col-12 col-md-8 offset-md-2">
-                        <h5>Delete Your Account</h5>
+                        <h5 class="font-size-13 fw-bold">Delete Your Account</h5>
                         <form action="" method='POST'>
                             {% csrf_token %}
-                            <input type="email" name='email' placeholder='Your Mail' class='form-control'>
+                            <input type="email" name='email' placeholder='Your email' class='form-control'>
 
-                            <input type="password" name='password' placeholder='Your Password' class='form-control my-2'>
+                            <input type="password" name='password' placeholder='Your password' class='form-control my-2'>
 
                             <input type="submit" class='btn btn-danger' value="Delete Your Account">
                         </form>
                         <br>
-                        <small class='text-muted'>*Nie możesz cofnąć tej akcji, jeśli masz premium stracisz je, itp</small>
+                        <small class='text-muted'>If you delete your account, you will permanently lose your premium subscription. This action cannot be undone.</small>
                     </div>
                 </div>
             </div>
