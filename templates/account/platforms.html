@@ -5,10 +5,10 @@
 {% block content %}
 <div class="mx-3">
   <div class="row mx-0">
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 p-0 mt-3">
+    <div class="col-12 col-md-8 col-xxl-6 offset-md-2 offset-xxl-3 p-0 mt-3">
       <a href='{% url "profile_preview" %}' class='text-dark'><i class="fas fa-chevron-left"></i> Back To Profile</a>
 
-      <h5 class='fw-bold mt-3'>Social Media Platforms</h5>
+      <h2 class='fw-bold mt-3'>Social Media Platforms</h2>
       {% include 'partials/_alerts.html' %}
 
       <form action="" class='mt-3' method='POST' id='platforms-form'>
@@ -55,14 +55,13 @@
           </button>
   
       </form>
+
+      <div class="mt-5 font-size-08 text-muted">
+        Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      </div>
     </div>
   </div>
-</div>
 
-<div class='row mt-3 mx-0'>
-  <div class='col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 '>
-    Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
-  </div>
 </div>
 
 <script src="{% static 'js/platforms.js' %}"></script>

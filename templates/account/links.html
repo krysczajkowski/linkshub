@@ -28,7 +28,7 @@
 <!-- User has premium -->
 <div class="mx-3">
   <div class="row mx-0">
-    <div class="col-12 col-md-10 col-xxl-8 offset-md-1 offset-xxl-2 p-0 mt-3">
+    <div class="col-12 col-md-8 col-xxl-6 offset-md-2 offset-xxl-3 p-0 mt-3">
       <div class="row">
         <div class="col-6">
           <a href='{% url "profile_preview" %}' class='text-dark d-flex align-items-end'>
@@ -89,11 +89,9 @@
 
       <div class="row mt-3 mb-3">
           <div class="col-6">
-              <p class='mt-2 font-size-12 mb-0'>
-                {% if links_type == 'premium' %} 
-                Premium {% endif %} Links: {{ links_count }}
-              </p>
-              {% if links_type == 'premium' %} 
+              <h2 class="fw-bold mt-2 mb-1">Your {% if links_type == 'premium' %} Premium {% endif %} Links</h2>
+
+              {% if links_type == 'premium' %}  
               <p class="mb-0 mt-0 pt-0 font-size-09" data-bs-toggle="collapse" data-bs-target="#whatArePremiumLinksCollapse" aria-expanded="false" aria-controls="collapseExample" style='cursor: pointer;'>
                 <i class="far fa-question-circle font-size-08 me-1" aria-hidden="true"></i>What are premium links
               </p>
@@ -101,11 +99,11 @@
           </div>
           {% if links_type == 'premium' %}
           <div class="col-6 d-flex">
-              <span class='ms-auto mt-2'><a href="{% url 'add_premium_link' %}" class='btn btn-primary py-1 px-3'><i class="fas fa-plus"></i> Add Premium Link</a></span>
+              <span class='ms-auto mt-2'><a href="{% url 'add_premium_link' %}" class='btn btn-primary py-1 px-3 font-size-11 mt-1'><i class="fas fa-plus me-1"></i> Add Link</a></span>
           </div>
           {% else %}
           <div class="col-6 d-flex">
-            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary py-1 px-3'><i class="fas fa-plus"></i> Add Link</a></span>
+            <span class='ms-auto mt-2'><a href="{% url 'add_link' %}" class='btn btn-primary py-1 px-3 font-size-11 mt-1'><i class="fas fa-plus me-1"></i> Add Link</a></span>
         </div>  
         {% endif %}
           
