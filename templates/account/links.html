@@ -123,7 +123,8 @@
       <div class='card card-body text-center py-4 my-3'>
         <div class='col-10 offset-1 col-lg-8 offset-lg-2 pt-1 pb-2'>
           <h4 class='fw-bold font-size-12'>Set Password For Your Links</h4>
-          <p class='text-muted font-size-09'>Set a password, so your links can be protected with it. </p>
+          <p class='text-muted font-size-09 mb-0'>Set a password, so your links can be protected with it. </p>
+          <p class='text-muted font-size-09 mb-1'>Otherwise, they are not visible on your profile.</p>
           <form method='POST'>
             {% csrf_token %}
             <div class="input-group mt-1">
@@ -141,149 +142,159 @@
       {% endif %}
 
       <!-- Links  -->
-      <div class="links">
-      {% for link in links %}
-          {% if link.image %}
-          <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
-            <div class="row g-0">
-              <div class="col-2 col-md-1 p-0 p-2 m-0 m-0">
-                  <img src="{{ link.image.url }}" class="img-fluid rounded" style="max-height: 150px!important; width: auto;" alt="...">
-              </div>
-              <div class="col-8 col-md-10">
-                <div class="card-body py-1">
-                  <!-- Title -->
-                  <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
-
-                  <!-- Description -->
-                  <p class="mb-2">{{ link.description }}</p>
-
-                  <div class="font-size-09 mb-2">
-                    <!-- Animation -->
-                    {% if link.animation.name != "None" %}
-                      <p class='card-text mb-1' style='text-transform: capitalize;'>
-                        <i class="far fa-eye pe-1 text-dark"></i>
-                        {{link.animation}}
-                      </p>
-                    {% endif %}
-
-                    <!-- YT embed -->
-                    {% if link.display_as_yt_embed %}
-                      <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
-                    {% endif %}
-
-                    <!-- Link -->
-                    <p class="card-text"><small class="text-muted">
-                      <i class="fas fa-link text-muted pe-1"></i>
-                      {{ link.url }}</small>
-                    </p>
+      {% if links %}
+        <div class="links">
+          {% for link in links %}
+              {% if link.image %}
+              <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
+                <div class="row g-0">
+                  <div class="col-2 col-md-1 p-0 p-2 m-0 m-0">
+                      <img src="{{ link.image.url }}" class="img-fluid rounded" style="max-height: 150px!important; width: auto;" alt="...">
                   </div>
-                </div>
-              </div>
-              <div class="col-2 col-md-1">
-                <div class="row">
-                  <div class="col-12">
-                    <div class="form-check form-switch mt-2">
-                      <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
+                  <div class="col-8 col-md-10">
+                    <div class="card-body py-1">
+                      <!-- Title -->
+                      <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
+
+                      <!-- Description -->
+                      <p class="mb-2">{{ link.description }}</p>
+
+                      <div class="font-size-09 mb-2">
+                        <!-- Animation -->
+                        {% if link.animation.name != "None" %}
+                          <p class='card-text mb-1' style='text-transform: capitalize;'>
+                            <i class="far fa-eye pe-1 text-dark"></i>
+                            {{link.animation}}
+                          </p>
+                        {% endif %}
+
+                        <!-- YT embed -->
+                        {% if link.display_as_yt_embed %}
+                          <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
+                        {% endif %}
+
+                        <!-- Link -->
+                        <p class="card-text"><small class="text-muted">
+                          <i class="fas fa-link text-muted pe-1"></i>
+                          {{ link.url }}</small>
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div class="col-12 mt-2">
-                    <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
-                      <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="collapse" id="delete-{{ link.id }}">
-              <div>
-                <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
-                <div class="row">
-                  <div class="col-10 offset-1 col-md-8 offset-md-2">
-                    <div class="d-grid gap-2 mb-3">
-                      <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
-                        <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
-                        Delete
-                      </button>
+                  <div class="col-2 col-md-1">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
+                        </div>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
+                          <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          {% else %}
-          <!-- Premium Links -->
-          <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
-            <div class="row g-0">
-              <div class="col-10 col-md-11">
-                <div class="card-body py-1">
-                  <!-- Title -->
-                  <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
-
-                  <!-- Description -->
-                  <p class="mb-2">{{ link.description }}</p>
-
-                  <div class="font-size-09 mb-2">
-                    <!-- Animation -->
-                    {% if link.animation.name != "None" %}
-                      <p class='card-text mb-1' style='text-transform: capitalize;'>
-                        <i class="far fa-eye pe-1 text-dark"></i>
-                        {{link.animation}}
-                      </p>
-                    {% endif %}
-
-                    <!-- YT embed -->
-                    {% if link.display_as_yt_embed %}
-                      <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
-                    {% endif %}
-
-                    <!-- Link -->
-                    <p class="card-text"><small class="text-muted">
-                      <i class="fas fa-link text-muted pe-1"></i>
-                      {{ link.url }}</small>
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-2 col-md-1">
-                <div class="row">
-                  <div class="col-12">
-                    <div class="form-check form-switch mt-2">
-                      <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
-                    </div>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
-                  </div>
-                  <div class="col-12 mt-2">
-                    <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
-                      <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="collapse" id="delete-{{ link.id }}">
-              <div>
-                <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
-                <div class="row">
-                  <div class="col-10 offset-1 col-md-8 offset-md-2">
-                    <div class="d-grid gap-2 mb-3">
-                      <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
-                        <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
-                        Delete
-                      </button>
+                <div class="collapse" id="delete-{{ link.id }}">
+                  <div>
+                    <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
+                    <div class="row">
+                      <div class="col-10 offset-1 col-md-8 offset-md-2">
+                        <div class="d-grid gap-2 mb-3">
+                          <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
+                            <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              {% else %}
+              <!-- Premium Links -->
+              <div class="card shadow-sm mb-3" data-index="{{link.id}}" data-position="{{link.position}}">
+                <div class="row g-0">
+                  <div class="col-10 col-md-11">
+                    <div class="card-body py-1">
+                      <!-- Title -->
+                      <h5 class="mt-2 mb-1 fw-bold">{{ link.title }}</h5>
+
+                      <!-- Description -->
+                      <p class="mb-2">{{ link.description }}</p>
+
+                      <div class="font-size-09 mb-2">
+                        <!-- Animation -->
+                        {% if link.animation.name != "None" %}
+                          <p class='card-text mb-1' style='text-transform: capitalize;'>
+                            <i class="far fa-eye pe-1 text-dark"></i>
+                            {{link.animation}}
+                          </p>
+                        {% endif %}
+
+                        <!-- YT embed -->
+                        {% if link.display_as_yt_embed %}
+                          <p class='card-text mb-1'><i class="fab fa-youtube pe-1" style='color: #c4302b;'></i> Display as youtube embed</p>
+                        {% endif %}
+
+                        <!-- Link -->
+                        <p class="card-text"><small class="text-muted">
+                          <i class="fas fa-link text-muted pe-1"></i>
+                          {{ link.url }}</small>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-2 col-md-1">
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="form-check form-switch mt-2">
+                          <input class="form-check-input active_link_slider" type="checkbox" id="{{ link.id }}" {% if link.is_active %} checked {% endif %}>
+                        </div>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <a href="{% url 'edit_link' links_type link.id %}" class='text-secondary'><i class="fas fa-cog ms-1 mt-1 font-size-13"></i></a>
+                      </div>
+                      <div class="col-12 mt-2">
+                        <a class="text-secondary" data-bs-toggle="collapse" href="#delete-{{ link.id }}" aria-expanded="false">
+                          <i class="fas fa-trash-alt font-size-13 ms-1 mb-3"></i>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="collapse" id="delete-{{ link.id }}">
+                  <div>
+                    <p class="text-center font-size11 mt-2 mb-1">Delete this link forever?</p>
+                    <div class="row">
+                      <div class="col-10 offset-1 col-md-8 offset-md-2">
+                        <div class="d-grid gap-2 mb-3">
+                          <button class='btn btn-danger py-1 delete-link-btn' id='{{ link.id }}'>
+                            <span class="spinner-border spinner-border-sm me-2 d-none deleteSpinner-{{ link.id }}" role="status" aria-hidden="true"></span>
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+          {% endfor %}
+        </div>
+      {% else %}
+        {% if not set_password %} 
+            <div class="text-center mt-5">
+              <h5>Your don't have any links to display</h5>
+              <p>Click the button above to add one.</p>
             </div>
-          </div>
-          {% endif %}
-      {% endfor %}
-      </div>
+        {% endif %}
+      {% endif %}
+      
     </div>
   </div>
 </div>
