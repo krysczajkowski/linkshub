@@ -44,7 +44,7 @@
             <div class='col-12 col-md-10 offset-md-1 col-xl-6 offset-xl-3'>
                 <div class="d-flex justify-content-center position-relative">
                     {% if profile_picture %}
-                        <img src="{{ profile_picture }}" alt="" style='width: 90px; height: 90px;' class='rounded-circle'> 
+                        <img src="{{ profile_picture }}" alt="" style='width: 90px; height: 90px;' class='rounded-circle'>
                     {% else %}
                         <a style='width: 90px; height: 90px;' class='rounded-circle tutorial-helper-links position-relative' href='{% url "edit" %}'>
                             <i class="fas fa-camera position-absolute top-50 start-50 translate-middle" style='font-size: 2.3rem;'></i>
@@ -52,7 +52,7 @@
                     {% endif %}
 
                     <a class="badge bg-light position-absolute top-0 end-0 text-dark" href='{% url "appearance" %}'><h6 class="fw-bold mb-0">Change Theme</h6></a>
-                </div>     
+                </div>
                 <div class="col-12 text-center mt-2">
                     <p class='fw-bold font-size-11 mb-2'>{{username}}</p>
                     {% if description %}
@@ -64,7 +64,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class='mt-3'>
             {% if links %}
             <div class="row mx-0 pb-4">
@@ -111,11 +111,11 @@
                 <div class="col-12 col-md-10 offset-md-1 col-xl-8 col-xxl-6 offset-xl-2 offset-xxl-3">
                     <div class="row my-2">
                         <div class="d-grid gap-2">
-                            <a href="{% url 'links' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 tutorial-helper-links">
+                            <a href="{% url 'add_link' %}" class="btn mt-2 mx-0 row d-flex px-2 py-1 tutorial-helper-links">
                                 <div class="col-12 py-2">
                                     <div class="d-flex flex-column text-center">
                                         <span class='font-size-1'><strong style="letter-spacing: 0.5px;">
-                                            <i class="fas fa-plus"></i> 
+                                            <i class="fas fa-plus"></i>
                                             Add Your Links</strong></span>
                                     </div>
                                 </div>
@@ -146,7 +146,7 @@
                                 <div class="col-12 py-2">
                                     <div class="d-flex flex-column text-center">
                                         <span class='font-size-1'><strong style="letter-spacing: 0.5px;">
-                                            <i class="fas fa-plus"></i> 
+                                            <i class="fas fa-plus"></i>
                                             Add Social Media Links</strong></span>
                                     </div>
                                 </div>
@@ -155,7 +155,7 @@
                     </div>
                 </div>
             {% endif %}
-            
+
         </div>
 
         {% if display_premium_links_password and membership %}
@@ -187,7 +187,7 @@ var click_counter = 0
 function resetCopyMessage() {
     // Set text back to Click To Copy
     reset = setTimeout(()=>{
-        click_to_copy_text.innerHTML = 'Click To Copy' 
+        click_to_copy_text.innerHTML = 'Click To Copy'
     }, 2000)
 }
 
@@ -195,9 +195,9 @@ function displayNewCopyMessage(msg, color) {
     if(color == 'green') {
         click_to_copy_text.innerHTML = `<span class="text-success">${msg}</span>`
     } else if (color == 'yellow') {
-        click_to_copy_text.innerHTML = `<span class="text-warning">${msg}</span>` 
+        click_to_copy_text.innerHTML = `<span class="text-warning">${msg}</span>`
     } else if (color == 'red') {
-        click_to_copy_text.innerHTML = `<p class="text-danger m-0 p-0 animate__animated animate__shakeX animate__infinite">${msg}</p>` 
+        click_to_copy_text.innerHTML = `<p class="text-danger m-0 p-0 animate__animated animate__shakeX animate__infinite">${msg}</p>`
     }
 
     clearTimeout(reset);
@@ -247,10 +247,10 @@ click_to_copy.addEventListener('click', () => {
     } else if (click_counter == 9) {
         displayNewCopyMessage('GODLIKE!!!', 'red')
         click_counter = 10
-        
+
     } else if (click_counter == 10) {
         displayNewCopyMessage('BEYOND GODLIKE!!!', 'red')
-        
+
     }
 
     // Copy to clipboard

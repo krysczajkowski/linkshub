@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Add profile photo{% endblock %}
+
+{% block content %}
+<div class="mx-3 mt-4 mb-5">
+    <div class="row">
+        <div class="col-12 col-md-6 col-xxl-4 offset-md-3 offset-xxl-4 p-0 mt-3 px-3">
+            {% include 'partials/_alerts.html' %}
+            <div class="card card-body pt-4 pb-5">
+                <form method='POST' enctype="multipart/form-data" id='edit-form'>
+                    {% csrf_token %}
+                    <div class="row col-10 offset-1">
+                        <div class="row mx-0 px-0">
+
+                            <input type="file" class='d-none' id='imageField' name='image' accept='.jpg, .png' data-bs-toggle="modal" data-bs-target="#cropModal">
+                            <div class="col-12 text-center font-size-15 mb-3 fw-bold">
+                              Add profile photo
+                            </div>
+                            <div class="col-12 text-center mb-1">
+                                <img src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" class='img-fluid rounded-circle mt-1' style='height: 130px; width: 130px;' id='imgPreview'>
+                            </div>
+                            <div class="col-12 text-center">
+                                <p class='fw-bold mb-0'>{{ username }}</p>
+                                <a href="#" class='fw-bold' onclick="document.getElementById('imageField').click(); return false" id='profile_img_change'>Change profile photo</a>
+                                <div class="image-feedback invalid-feedback" style='display:none;'>
+                                </div>
+                                <p class='m-0 text-success fw-bold d-none ' id='profile-picture-info-msg'>Save changes to apply your new profile picture.</p>
+                            </div>
+
+
+                            <div class="col-12 mt-4">
+                                <span class='fw-bold'>Name</span>
+                            </div>
+                            <div class="col-12">
+                                <input type="text" name='name' placeholder='Name' id='nameField' class='form-control' value='{{form.name.value}}'>
+                                <div class="name-feedback invalid-feedback" style='display:none;'>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-12 mt-4">
+                                <span class='fw-bold'>Description</span>
+                            </div>
+
+                            <div class="col-12">
+                                <textarea class='form-control' name='description' placeholder='Bio' id='descriptionField'>{{ form.description.value }}</textarea>
+                                <div class="description-feedback invalid-feedback" style='display:none;'>{{ form.description.errors }}
+                                </div>
+                            </div>
+
+                            <div class="col-12 mt-4 d-grid gap-2">
+                                <button class='btn btn-primary btn-block py-2 fw-bold' id='submitBtn'>
+                                    <span class="spinner-border spinner-border-sm me-2 d-none" id='submitSpinner' role="status" aria-hidden="true"></span>
+                                    NEXT
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="cropModal" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Crop your profile picture</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div id="image-box"></div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary w-100" id="crop-btn" type="button" data-bs-dismiss="modal">Crop</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.js"></script>
+<script src="{% static 'js/edit.js' %}"></script>
+
+{% endblock %}

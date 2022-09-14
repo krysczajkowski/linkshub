@@ -13,6 +13,7 @@ urlpatterns = [
     path('settings/', include('settings.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('premium/', include('premium.urls')),
+    path('set-up-account/', include('setUpAccount.urls')),
     path('s/', include('sitepolicy.urls')),
     path('<slug:username>', views.profile),
     path('user_banned/', views.user_banned, name='user_banned'),

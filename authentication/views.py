@@ -16,7 +16,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 import threading
 import requests
-from django.template.loader import render_to_string 
+from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
 from .utils import token_generator, username_validation, send_acc_activation_email
@@ -95,7 +95,7 @@ class RegistrationView(View):
                 # Create profile
                 profile = Profile.objects.create(user=user)
 
-                # Themes 
+                # Themes
                 bg_theme = BackgroundTheme.objects.get(name='white')
                 btn_theme = ButtonTheme.objects.get(name='dark')
 
@@ -173,8 +173,12 @@ class VerificationView(View):
             user.is_active = True
             user.save()
 
+            # Create set up account cookie
+            response = redirect('login')
+            response.set_cookie('set-up-account', True)
+
             messages.success(request, 'Account activated successfully! You can log in now.')
-            return redirect('login')
+            return response
 
         except Exception as e:
             messages.info(request, 'Activation link is invalid.')
@@ -187,7 +191,7 @@ class LoginView(View):
         # Check if user is authenticated
         if request.user.is_authenticated:
             return redirect('/profile/')
-            
+
         return render(request, 'authentication/login.html')
 
     def post(self, request):
@@ -202,13 +206,16 @@ class LoginView(View):
             if user:
                 if user.is_active:
                     auth.login(request, user)
-                    messages.success(request, 'Welcome, ' + user.username)
 
                     if not request.POST.get('remember_me', False):
                         request.session.set_expiry(0)
                         request.session.modified = True
-                    
-                    return redirect('profile_preview')
+
+                    # Redirect to profile_preview or set-up-account tutorial
+                    if 'set-up-account' in request.COOKIES.keys():
+                        return redirect('set-up-profile-photo')
+                    else:
+                        return redirect('profile_preview')
 
                 else:
                     messages.error(request,  mark_safe('Account is not active, please check your email.<br> <a href="resend-activation-email">Click here to resend activation link.</a>'))
@@ -222,7 +229,6 @@ class LoginView(View):
 class LogoutView(View):
     def post(self, request):
         auth.logout(request)
-        messages.success(request, 'You have been logged out.')
         return redirect('login')
 
 
@@ -374,5 +380,5 @@ def confirmEmail(request):
     # Check if user is authenticated
     if request.user.is_authenticated:
         return redirect('/profile/')
-        
+
     return render(request, 'authentication/confirm-email.html')

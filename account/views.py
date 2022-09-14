@@ -40,7 +40,7 @@ def profile_preview(request):
         username = profile.name
     else:
         username = request.user.username
-        
+
     description = profile.description
 
     if profile.image:
@@ -53,16 +53,16 @@ def profile_preview(request):
 
     # Get premium links
     if PremiumCustomLink.objects.filter(user=request.user, is_active=1).order_by('position') and profile.premium_links_password and profile.display_premium_links:
-        display_premium_links_password = True 
-    else: 
+        display_premium_links_password = True
+    else:
         display_premium_links_password = False
 
     # Get all social media platforms
     platforms = UserPlatform.objects.filter(user=request.user, username__gt='',username__isnull=False)
 
-   
+
     context = {
-        'user_id': user_id, 
+        'user_id': user_id,
         'username': username,
         'description': description,
         'profile_picture': profile_picture,
@@ -71,7 +71,7 @@ def profile_preview(request):
         'platforms': platforms,
         'membership': membership,
     }
-    
+
     return render(request, 'account/profile_preview.html', context)
 
 # Premium links check password
@@ -195,7 +195,7 @@ def platforms(request):
 
             # Check if url is not doubled (in case if someone pasted whole url to the field)
 
-            # Platforms urls 
+            # Platforms urls
             platforms_url = ['https://instagram.com/', 'https://tiktok.com/', 'https://youtube.com/', 'https://twitter.com/', 'https://twitch.tv/', 'https://facebook.com/', 'https://snapchat.com/add/', 'https://linkedin.com/in/', 'https://pinterest.com/', 'https://open.spotify.com/', 'https://soundcloud.com/', 'https://github.com/','https://www.instagram.com/', 'https://www.tiktok.com/', 'https://www.youtube.com/', 'https://www.twitter.com/', 'https://www.twitch.tv/', 'https://www.facebook.com/', 'https://www.snapchat.com/add/', 'https://www.linkedin.com/in/', 'https://www.pinterest.com/', 'https://www.open.spotify.com/', 'https://www.soundcloud.com/', 'https://www.github.com/']
 
             # Cut platform url from platform_username
@@ -211,7 +211,13 @@ def platforms(request):
                 UserPlatformInstance.username = platform_username
                 UserPlatformInstance.save()
 
-        messages.success(request, 'Social media platforms updated successfully.')                
+        if 'set-up-platforms' in request.COOKIES.keys():
+            response = redirect('profile_preview')
+            response.delete_cookie('set-up-platforms')
+
+            return response
+
+        messages.success(request, 'Social media platforms updated successfully.')
 
 
     context = {
@@ -219,6 +225,7 @@ def platforms(request):
         'error_msg_platform': error_msg_platform,
         'error_msg': error_msg
     }
+
     return render(request, 'account/platforms.html', context)
 
 
@@ -246,7 +253,7 @@ def links(request):
 def add_link(request):
     # Nie wiem czy to tu
     initial_animation = LinkAnimation.objects.get(name='None')
-    form = CustomLinkForm(initial={'title': '', 'description': '', 'url': '', 'animation': initial_animation}) 
+    form = CustomLinkForm(initial={'title': '', 'description': '', 'url': '', 'animation': initial_animation})
 
     membership = get_membership(request.user)
 
@@ -266,7 +273,6 @@ def add_link(request):
 
             newLink.save()
 
-            messages.success(request, 'Link added successfully.')
             return redirect('links')
 
         else:
@@ -286,7 +292,7 @@ def add_link(request):
 @login_required(login_url='/authentication/login/')
 @check_ban
 def add_premium_link(request):
-    form = CustomPremiumLinkForm(initial={'title': '', 'description': '', 'url': ''}) 
+    form = CustomPremiumLinkForm(initial={'title': '', 'description': '', 'url': ''})
 
     if request.method == 'POST':
         form = CustomPremiumLinkForm(request.POST, request.FILES)
@@ -296,7 +302,6 @@ def add_premium_link(request):
             newLink.user = request.user
             newLink.save()
 
-            messages.success(request, 'Link added successfully.')
             return redirect('premium_links')
 
         else:
@@ -334,11 +339,11 @@ def premium_links(request):
     profile = Profile.objects.get(user=request.user)
 
     context['display_premium_links_switch_value'] = profile.display_premium_links
-    
+
     change_pass_form = PremiumLinksChangePassword()
 
     context['change_pass_form'] = change_pass_form
-    context['set_password'] = True 
+    context['set_password'] = True
 
     if request.method == 'POST':
         change_pass_form = PremiumLinksChangePassword(request.POST, instance=profile)
@@ -351,13 +356,13 @@ def premium_links(request):
                 new_password.save()
 
                 messages.success(request, 'Premium Links password updated.')
-                
+
             else:
-                messages.info(request, 'Premium Links password must be between 2-60 characters.')      
+                messages.info(request, 'Premium Links password must be between 2-60 characters.')
 
             return redirect('premium_links')
 
-            
+
     if not profile.premium_links_password:
         context['set_password'] = True
     else:
@@ -372,7 +377,7 @@ class get_user_theme(View):
         user_id = data['user_id']
 
         # Get user
-        try: 
+        try:
             user = User.objects.get(id=user_id)
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -390,7 +395,7 @@ class get_user_theme(View):
             # Check if user uses premium theme and does not have a membership
             if bg_data.is_premium and not membership:
                 bg_bg_color = '#fff'
-                bg_font_color = '#000' 
+                bg_font_color = '#000'
             else:
                 bg_bg_color = bg_data.background_color
                 bg_font_color = bg_data.font_color
@@ -402,10 +407,10 @@ class get_user_theme(View):
                 if bg_data.background_color:
                     bg_bg_color = bg_data.background_color
                 else:
-                    img_url = "/media/" + str(bg_data.background_image) 
+                    img_url = "/media/" + str(bg_data.background_image)
                     bg_bg_color = f'background-image: url({img_url}); background-repeat: no-repeat;background-position: center;background-size: cover;'
-                    
-                
+
+
                 bg_font_color = bg_data.font_color
             else:
                 bg_bg_color = '#fff'
@@ -483,7 +488,7 @@ class activate_link(View):
             else:
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
-            link.is_active = is_active 
+            link.is_active = is_active
             link.save()
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -504,13 +509,12 @@ class delete_link(View):
                 link = PremiumCustomLink.objects.get(id=link_id, user=request.user)
             else:
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
-    
+
             link.delete()
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
 
 
-        messages.success(request, 'Link deleted successfully.')
         return JsonResponse({'success': True})
 
 
@@ -541,7 +545,7 @@ def edit_link(request, link_type, link_id):
 
     context = {
         'page_title': 'Edit Link',
-        'delete_existing_image_checkbox': link.image, 
+        'delete_existing_image_checkbox': link.image,
         'form': form,
         'membership': membership
     }
@@ -557,8 +561,6 @@ def edit_link(request, link_type, link_id):
         if form.is_valid():
             form.save()
 
-            messages.success(request, 'Link edited successfully.')
-            
             if link_type == 'public':
                 return redirect('links')
             elif link_type == 'premium':
@@ -582,17 +584,17 @@ class change_positions(View):
         positions = data['positions']
         links_type = data['links_type']
         print(links_type)
-        
+
         try:
             if links_type == 'public':
                 for id, position in positions:
                     link = CustomLink.objects.get(id=id)
-                    link.position = position 
+                    link.position = position
                     link.save()
             elif links_type == 'premium':
                 for id, position in positions:
                     link = PremiumCustomLink.objects.get(id=id)
-                    link.position = position 
+                    link.position = position
                     link.save()
             else:
                 return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)
@@ -611,7 +613,7 @@ class display_premium_links_switch(View):
         try:
             profile = Profile.objects.get(user=request.user)
 
-            profile.display_premium_links = checked 
+            profile.display_premium_links = checked
             profile.save()
         except:
             return JsonResponse({'error': 'Error: unauthorized operation.'}, status=409)

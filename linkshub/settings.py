@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'dashboard',
     'premium',
     'sitepolicy',
+    'setUpAccount',
 ]
 
 MIDDLEWARE = [
